@@ -1,37 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Louve Frontend
 
-## Getting Started
+Louve is a sub-brand **from the house of Palmonas**.
 
-First, run the development server:
+This repo contains the Louve website frontend built with **Next.js (App Router)**, Tailwind v4, and
+**shadcn/ui**.
+
+## Brand snapshot
+
+- Louve (she-wolf): instinct, independence, protection, quiet leadership
+- Core values: **Instinct**, **Independence**, **Territory**, **Quiet power**
+- Tagline: **“Mark your Presence.”**
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Common commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm lint
+pnpm build
+pnpm start
+```
 
-## Learn More
+Makefile shortcuts (optional):
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+make install
+make build
+make start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project docs
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `docs/README.md` — onboarding + architecture + brand notes
+- `docs/DEVELOPMENT.md`
+- `docs/DEPLOYMENT.md`
 
-## Deploy on Vercel
+## Routing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Public pages live under the route group:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# louve-frontend
+- `src/app/(public)/about/page.tsx` → `/about`
+- `src/app/(public)/collections/page.tsx` → `/collections`
+
+## Deployment
+
+- **AWS Amplify**: `amplify.yaml`
+- **Docker**: `deployment/Dockerfile`
+- **PM2**: `deployment/ecosystem.config.cjs`
+

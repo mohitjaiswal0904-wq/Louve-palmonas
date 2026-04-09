@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import Link from "next/link";
-import { ComingSoon } from "@/components/feature/coming-soon";
+import { ComingSoon } from "@/components/common/coming-soon";
 import { createMetadata } from "@/components/seo/metadata";
 import { seoConfig } from "@/lib/config/seo";
 import { Button } from "@/components/ui/button";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { ComingSoon } from "@/components/feature/coming-soon";
+import { ComingSoon } from "@/components/common/coming-soon";
 import { createMetadata } from "@/components/seo/metadata";
 import { seoConfig } from "@/lib/config/seo";
 

@@ -10,15 +10,18 @@ described in [FLOW.md](./FLOW.md).
 | `src/app/` | Next.js App Router: routes, layouts, `generateMetadata`, API route handlers |
 | `src/components/` | Reusable UI: `ui/` (shadcn), `layout/`, `common/`, `seo/` |
 | `src/features/` | Optional feature bundles (e.g. home sections) composed of components + hooks |
-| `src/lib/` | Shared utilities: `client/`, `config/`, `l10n/`, `utils.ts` |
+| `src/lib/` | Shared code: `client/`, `config/`, `l10n/`, `live/` — see `src/lib/README.md` |
 | `src/services/` | Service layer: orchestrates API calls via `lib/client` |
 | `src/state/` | React context and client state consumed by hooks |
 | `src/hooks/` | Thin hooks for locale, messages, media queries, etc. |
 | `src/types/` | TypeScript types; `types/config/` holds **l10n and message shapes** |
 | `src/providers/` | App-level providers (`AppProviders`, layout UI state) |
-| `src/utils/` | Small helpers (e.g. `cn`, `interpolate`) |
+| `src/utils/` | Pure helpers: format, money, motion, debounce — see `src/utils/README.md` |
 | `deployment/` | Docker, PM2 |
 | `docs/` | Human-facing documentation |
+| `public/` | Static assets (`/icon.png`, etc.) — see `public/README.md` |
+
+**README files:** Major folders under `src/`, `public/`, and `deployment/` include a **`README.md`** with A–Z guidance. The table above is the short map; the READMEs are the long form.
 
 ## Configuration vs localization
 

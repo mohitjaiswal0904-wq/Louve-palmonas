@@ -14,6 +14,7 @@
 - `src/state/` — React context (e.g. locale)
 - `src/hooks/` — `useMessages`, `useLocale`, etc.
 - `src/types/config/` — `AppMessages`, locale types
+- `src/utils/` — **pure helpers**: `formatMoney`, `formatRelativeTime`, `convertMoney`, `interpolate`, `visibleRatio`, debounce/throttle, motion — see **`src/utils/README.md`** and **`src/utils/index.ts`**
 
 See also:
 

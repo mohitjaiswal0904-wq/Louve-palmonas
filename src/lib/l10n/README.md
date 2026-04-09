@@ -1,11 +1,26 @@
-# `src/lib/l10n`
+# `src/lib/l10n/`
 
-Locale folders (**English**, **Hindi**, **French**, **Spanish**) each export a typed
-`messages` object that implements `AppMessages` from `src/types/config/messages.ts`.
+**Typed localization bundles** for Louve. Each language folder exports **`messages`** satisfying **`AppMessages`** (`src/types/config/messages.ts`).
 
-- `getMessages(locale)` — synchronous lookup (safe on server and client).
-- `getLocale` / `getMessagesForRequest` — read the `LOUVE_LOCALE` cookie on the server (`server.ts`).
+## Locale folders
 
-Add a new language by creating a folder, exporting `messages`, and registering it in `get-messages.ts`.
+| Folder | Code (`AppLocale`) |
+|--------|---------------------|
+| **`English/`** | `en` |
+| **`Hindi/`** | `hi` |
+| **`French/`** | `fr` |
+| **`Spanish/`** | `es` |
 
-See `docs/LOCALIZATION.md`.
+## Core files
+
+- **`get-messages.ts`** — `getMessages(locale)`, `resolveLocale`.
+- **`server.ts`** — `getLocale()` from **`LOUVE_LOCALE`** cookie; `getMessagesForRequest()`.
+- **`build-page-metadata.ts`** — `buildStaticPageMetadata`, dynamic product/search title builders using **`interpolate`**.
+
+## Rules
+
+1. Add keys to **`AppMessages`** in TypeScript **first**.
+2. Update **all four** `messages.ts` files.
+3. Use **`useMessages()`** (client) or **`getMessages(await getLocale())`** (server).
+
+See **`docs/LOCALIZATION.md`**. Each locale folder has a short **`README.md`**.

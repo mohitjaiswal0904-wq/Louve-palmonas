@@ -5,6 +5,20 @@ jewellery website.
 
 This frontend is a **Next.js App Router** project with Tailwind v4 and **shadcn/ui** components.
 
+## Documentation index
+
+| Doc | Purpose |
+|-----|---------|
+| **[../README.md](../README.md)** | Project overview, stack, quick start, deployment summary |
+| **[STRUCTURE.md](./STRUCTURE.md)** | Folder map (aligns with **FLOW**) |
+| **[FLOW.md](./FLOW.md)** | Mandatory layering: client → service → state → hooks → components → pages |
+| **[LOCALIZATION.md](./LOCALIZATION.md)** | Four locales, cookies, metadata |
+| **[NEW_FEATURE.md](./NEW_FEATURE.md)** | Checklist for new routes and APIs |
+| **[DEVELOPMENT.md](./DEVELOPMENT.md)** | shadcn, Tailwind, **utils** |
+| **[DEPLOYMENT.md](./DEPLOYMENT.md)** | Amplify, Docker, PM2 |
+
+**Per-folder READMEs:** Under **`src/`**, **`public/`**, and **`deployment/`**, almost every directory has a **`README.md`** explaining its role and conventions — start at **[../src/README.md](../src/README.md)**.
+
 ## UI reference
 
 We are taking inspiration from the simplicity and spacing of
@@ -147,4 +161,3 @@ Create `.env.local` for local overrides.
 
 - `NEXT_PUBLIC_SITE_URL` — public website base URL (used for sitemap/canonicals)
 - `NEXT_PUBLIC_API_URL` — Louve API base (defaults to `https://api-louve.palmonas.tech`)
-

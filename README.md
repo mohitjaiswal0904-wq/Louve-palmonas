@@ -1,15 +1,27 @@
 # Louve Frontend
 
-Louve is a sub-brand **from the house of Palmonas**.
+Customer-facing website for **Louve** — a contemporary fine-jewellery house **from the house of Palmonas**. This app is the public storefront and account experience; it talks to **Louve backend** (`NEXT_PUBLIC_API_URL`, default `https://api-louve.palmonas.tech`) via a typed client and service layer.
 
-This repo contains the Louve website frontend built with **Next.js (App Router)**, Tailwind v4, and
-**shadcn/ui**.
+## Stack
 
-## Brand snapshot
+| Layer | Technology |
+|-------|------------|
+| Framework | **Next.js 16** (App Router), **React 19** |
+| Styling | **Tailwind CSS v4**, CSS variables for Louve palette |
+| UI primitives | **shadcn/ui** (Base UI) — add components with CLI, do not hand-roll duplicates |
+| Language | **TypeScript** |
+| Package manager | **pnpm** |
+| Font | **Montserrat** (see `src/app/layout.tsx`) |
 
-- Louve (she-wolf): instinct, independence, protection, quiet leadership
-- Core values: **Instinct**, **Independence**, **Territory**, **Quiet power**
-- Tagline: **“Mark your Presence.”**
+## Architecture (required flow)
+
+Data and side effects flow **down** this stack (see **`docs/FLOW.md`** and **`.cursorrules`**):
+
+```
+Pages (src/app) → Components / Features → Hooks → State & Providers → Services → lib/client → API
+```
+
+**Localization:** all user-visible copy lives in **`src/lib/l10n/{English,Hindi,French,Spanish}/messages.ts`**, typed by **`src/types/config/messages.ts`**. Non-translated env URLs live in **`src/lib/config/env.ts`**.
 
 ## Quick start
 
@@ -18,9 +30,7 @@ pnpm install
 pnpm dev
 ```
 
-Open `http://localhost:3000`.
-
-## Common commands
+Open [http://localhost:3000](http://localhost:3000). Set **`NEXT_PUBLIC_SITE_URL`** in `.env.local` for sitemap/canonicals when needed.
 
 ```bash
 pnpm lint
@@ -28,34 +38,40 @@ pnpm build
 pnpm start
 ```
 
-Makefile shortcuts (optional):
+**Makefile** (optional): `make install`, `make build`, `make start`, `make restart` (PM2).
 
-```bash
-make install
-make build
-make start
-```
+## Documentation map
 
-## Project docs
+| Document | Purpose |
+|----------|---------|
+| **[docs/README.md](docs/README.md)** | Onboarding, brand, routing, SEO, deployment index |
+| **[docs/STRUCTURE.md](docs/STRUCTURE.md)** | Repository folder map |
+| **[docs/FLOW.md](docs/FLOW.md)** | Client → service → state → hooks → components → pages |
+| **[docs/LOCALIZATION.md](docs/LOCALIZATION.md)** | Locales, cookies, adding strings |
+| **[docs/NEW_FEATURE.md](docs/NEW_FEATURE.md)** | Checklist for new features |
+| **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)** | shadcn, Tailwind, tooling |
+| **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** | Amplify, Docker, PM2 |
 
-- `docs/README.md` — onboarding + architecture + brand notes
-- `docs/STRUCTURE.md` — folder map
-- `docs/FLOW.md` — client → service → state → hooks → components → pages
-- `docs/LOCALIZATION.md` — locales and message bundles
-- `docs/NEW_FEATURE.md` — feature checklist
-- `docs/DEVELOPMENT.md`
-- `docs/DEPLOYMENT.md`
+**Per-folder READMEs:** under **`src/`**, **`docs/`**, **`deployment/`**, **`public/`** — each explains what belongs there and how it connects to the rest of the app (start with **[src/README.md](src/README.md)**).
 
-## Routing
+## Routing (summary)
 
-Public pages live under the route group:
-
-- `src/app/(public)/about/page.tsx` → `/about`
-- `src/app/(public)/collections/page.tsx` → `/collections`
+| Area | Path | Note |
+|------|------|------|
+| Public | `(public)/*` | Marketing, catalog shells, auth *pages* at `/auth/*` |
+| Account | `(auth)/*` | Cart, wishlist, account — route group does not prefix URL |
+| API | `app/api/locale` | Sets `LOUVE_LOCALE` cookie for language |
 
 ## Deployment
 
-- **AWS Amplify**: `amplify.yaml`
-- **Docker**: `deployment/Dockerfile`
-- **PM2**: `deployment/ecosystem.config.cjs`
+- **AWS Amplify:** `amplify.yaml`
+- **Docker:** `deployment/Dockerfile` (Next **standalone** output)
+- **PM2:** `deployment/ecosystem.config.cjs`
 
+## Related
+
+- **Louve backend** — separate repo; CORS must allow this site’s **browser origin** (not the API hostname).
+
+## Brand (short)
+
+Louve — *she-wolf*: instinct, independence, territory, quiet power. Tagline: **“Mark your Presence.”** Palette and values are documented in **`docs/README.md`**.

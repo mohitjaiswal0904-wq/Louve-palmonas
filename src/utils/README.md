@@ -1,20 +1,27 @@
-# `src/utils`
+# `src/utils/`
 
-Small, reusable helpers (no React). Prefer these over ad-hoc `Intl` / `fetch` logic in components.
+**Pure helpers** — no React, safe to import from server or client unless noted.
+
+## Modules
 
 | Module | Role |
 |--------|------|
-| `locale.ts` | Map `AppLocale` → BCP 47 for `Intl` (`en-IN`, `hi-IN`, …). |
-| `locale-display.ts` | `Intl.DisplayNames` for languages, currencies, regions; plural categories. |
-| `money-core.ts` | Parse / round / add / subtract `Money`; ISO minor units. |
-| `currency.ts` | Convert between currencies using an `FxSnapshot` (placeholder rates — replace via `services` + API). |
-| `format.ts` | `formatMoney`, `formatNumber`, `formatDate`, `formatRelativeTime`, … with locale. |
-| `interpolate.ts` | `{token}` replacement; optional HTML escaping. |
-| `visibility.ts` | Pure rect intersection / visible ratio (e.g. lazy loading, view tracking). |
-| `motion.ts` | Reduced-motion aware scroll helpers (client-safe). |
-| `debounce.ts` / `throttle.ts` | Rate-limit handlers without pulling a library. |
-| `cn.ts` | Tailwind class merge (see shadcn). |
+| **`cn.ts`** | Tailwind class merge (used across shadcn components). |
+| **`interpolate.ts`** | `{token}` string replacement; **`interpolateHtml`** escapes values. |
+| **`locale.ts`** | Map **`AppLocale`** → BCP 47 for **`Intl`** (`en-IN`, `hi-IN`, …). |
+| **`locale-display.ts`** | `Intl.DisplayNames` for languages, currencies, regions; plural **`select`**. |
+| **`money-core.ts`** | Parse/round **`Money`**, minor units per currency, add/subtract same currency. |
+| **`currency.ts`** | Convert between currencies using **`FxSnapshot`** (placeholder rates — replace via **`services`**). |
+| **`format.ts`** | **`formatMoney`**, **`formatNumber`**, **`formatDate`**, **`formatRelativeTime`**, etc. |
+| **`visibility.ts`** | Pure rect intersection / **visible ratio** (lazy load, analytics). |
+| **`motion.ts`** | **`getPrefersReducedMotion`**, smooth **`scrollIntoView`** / **`scrollTo`**. |
+| **`debounce.ts`**, **`throttle.ts`** | Rate-limited callbacks with **`.cancel()`**. |
+| **`index.ts`** | Barrel re-exports. |
 
-**Localization:** pass `useLocale().locale` or `AppLocale` into `format*` / `display*` functions.
+## Usage with i18n
 
-**FX:** `FALLBACK_FX_SNAPSHOT` is static; production should load rates in the **service** layer and pass a snapshot into `convertMoney`.
+Pass **`useLocale().locale`** or **`AppLocale`** into **`format*`** and **`display*`** functions.
+
+## Backend FX
+
+**`FALLBACK_FX_SNAPSHOT`** is static — production should load rates in **`services`** and pass a snapshot into **`convertMoney`**.

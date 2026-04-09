@@ -266,10 +266,15 @@ export const messages = {
     },
     authForgotPassword: {
       metaTitle: "Forgot password — Louve",
-      metaDescription: "Reset your Louve password — coming soon.",
+      metaDescription: "Reset your Louve password.",
       comingSoonTitle: "Forgot password",
-      comingSoonBody:
-        "This feature is coming soon. The website is being crafted — check back soon.",
+      comingSoonBody: "Enter your email and we'll send you a reset link.",
+    },
+    authResetPassword: {
+      metaTitle: "Reset password — Louve",
+      metaDescription: "Choose a new password for your Louve account.",
+      comingSoonTitle: "Reset password",
+      comingSoonBody: "Set a new password for your account.",
     },
     account: {
       metaTitle: "Account — Louve",

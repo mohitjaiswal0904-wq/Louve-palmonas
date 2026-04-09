@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useMessages } from "@/hooks/use-messages";
 import { HEADER_ACTION_ICONS } from "./header-actions";
 import { LanguageSwitcher } from "./language-switcher";
+import { UserMenu } from "./user-menu";
 
 export function Header() {
   const { toggleSidebar } = useLayoutContext();
@@ -40,6 +41,7 @@ export function Header() {
         <div className="flex flex-1 items-center justify-end gap-0.5 sm:gap-1">
           <LanguageSwitcher />
           {m.navigation.header.actions.map((a) => {
+            if (a.key === "account") return null;
             const Icon = HEADER_ACTION_ICONS[a.key];
             if (!Icon) return null;
             return (
@@ -55,6 +57,7 @@ export function Header() {
               </Link>
             );
           })}
+          <UserMenu />
         </div>
       </div>
     </header>

@@ -82,6 +82,7 @@ export type PagesMessages = {
   authLogin: BasePageMessages;
   authSignup: BasePageMessages;
   authForgotPassword: BasePageMessages;
+  authResetPassword: BasePageMessages;
   account: BasePageMessages;
   cart: BasePageMessages;
   wishlist: BasePageMessages;

@@ -1,15 +1,14 @@
 "use client";
 
-import { getApiBaseUrl } from "@/lib/config/env";
 import { createApiClient } from "./create-api-client";
 
 /**
- * Browser-only API client (e.g. called from hooks after user interaction).
- * Sends cookies if the API is same-site; extend with auth headers when you add auth.
+ * Browser-only API client that talks to Next.js API routes (BFF layer).
+ * Auth tokens live in HTTP-only cookies, so credentials: "include" sends them automatically.
  */
 export function createCsrApiClient() {
   return createApiClient({
-    baseUrl: getApiBaseUrl(),
+    baseUrl: "",
     fetchImpl: (input, init) =>
       fetch(input, {
         ...init,

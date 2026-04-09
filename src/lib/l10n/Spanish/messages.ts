@@ -266,10 +266,15 @@ export const messages = {
     },
     authForgotPassword: {
       metaTitle: "Olvidé mi contraseña — Louve",
-      metaDescription: "Restablece tu contraseña Louve — próximamente.",
+      metaDescription: "Restablece tu contraseña Louve.",
       comingSoonTitle: "Olvidé mi contraseña",
-      comingSoonBody:
-        "Esta función llegará pronto. El sitio está en preparación — vuelve pronto.",
+      comingSoonBody: "Ingresa tu correo y te enviaremos un enlace de restablecimiento.",
+    },
+    authResetPassword: {
+      metaTitle: "Restablecer contraseña — Louve",
+      metaDescription: "Elige una nueva contraseña para tu cuenta Louve.",
+      comingSoonTitle: "Restablecer contraseña",
+      comingSoonBody: "Establece una nueva contraseña para tu cuenta.",
     },
     account: {
       metaTitle: "Cuenta — Louve",

@@ -1,13 +1,18 @@
 import "server-only";
 
+import { cookies } from "next/headers";
+
 import { getApiBaseUrl } from "@/lib/config/env";
 import { createApiClient } from "./create-api-client";
 
 /**
- * Server Components, Route Handlers, and Server Actions should use this client
- * so all backend calls stay on the server.
+ * Server-only client that talks directly to the Go backend,
+ * forwarding the access token from the HTTP-only cookie.
  */
-export function createSsrApiClient() {
+export async function createSsrApiClient() {
+  const store = await cookies();
+  const accessToken = store.get("louve_access_token")?.value;
+
   return createApiClient({
     baseUrl: getApiBaseUrl(),
     fetchImpl: (input, init) =>
@@ -15,5 +20,8 @@ export function createSsrApiClient() {
         ...init,
         cache: "no-store",
       }),
+    defaultHeaders: accessToken
+      ? { Authorization: `Bearer ${accessToken}` }
+      : undefined,
   });
 }

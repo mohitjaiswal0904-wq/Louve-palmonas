@@ -266,10 +266,15 @@ export const messages = {
     },
     authForgotPassword: {
       metaTitle: "पासवर्ड भूल गए — Louve",
-      metaDescription: "अपना Louve पासवर्ड रीसेट करें — जल्द आ रहा है।",
+      metaDescription: "अपना Louve पासवर्ड रीसेट करें।",
       comingSoonTitle: "पासवर्ड भूल गए",
-      comingSoonBody:
-        "यह सुविधा जल्द आ रही है। वेबसाइट तैयार की जा रही है — जल्द फिर देखें।",
+      comingSoonBody: "अपना ईमेल दर्ज करें और हम आपको रीसेट लिंक भेजेंगे।",
+    },
+    authResetPassword: {
+      metaTitle: "पासवर्ड रीसेट करें — Louve",
+      metaDescription: "अपने Louve खाते के लिए नया पासवर्ड चुनें।",
+      comingSoonTitle: "पासवर्ड रीसेट करें",
+      comingSoonBody: "अपने खाते के लिए नया पासवर्ड सेट करें।",
     },
     account: {
       metaTitle: "खाता — Louve",

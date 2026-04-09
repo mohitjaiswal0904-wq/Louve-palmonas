@@ -10,6 +10,6 @@ export function getPublicSiteUrl(): string {
 export function getApiBaseUrl(): string {
   return (
     process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
-    "https://api-louve.palmonas.tech"
+    "http://localhost:8080"
   );
 }

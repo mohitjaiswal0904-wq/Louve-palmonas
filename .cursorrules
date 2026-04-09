@@ -1,0 +1,140 @@
+# Louve Frontend — Cursor agent rules
+
+These rules are binding for any feature, fix, or refactor in this repo. Longer explanations live in `docs/`
+(`FLOW.md`, `STRUCTURE.md`, `LOCALIZATION.md`, `NEW_FEATURE.md`, `README.md`). Prefer this file for **where code
+belongs** and **in what order** layers may depend on each other.
+
+## Project
+
+- **Product**: Louve — sub-brand *from the house of Palmonas*; contemporary fine jewellery e-commerce (in
+  progress).
+- **Stack**: Next.js App Router (React 19), Tailwind v4, shadcn/ui (Base UI), **pnpm**, TypeScript.
+- **Font**: Montserrat (see `src/app/layout.tsx`). UI tone: clean, spacious, subtle (reference:
+  aamoraharchitects.com-style restraint).
+- **Package manager**: Use **pnpm** only (`pnpm install`, `pnpm dlx shadcn@latest add <component>`).
+
+## Canonical architecture (strict layering)
+
+**Allowed dependency direction** (only call downward; never import “up”):
+
+```
+Pages (src/app)
+  → Components / Features (src/components, src/features)
+    → Hooks (src/hooks)
+      → State / Context (src/state, src/providers)
+        → Services (src/services)
+          → API clients (src/lib/client)
+            → Louve backend (NEXT_PUBLIC_API_URL)
+```
+
+### 1. `src/lib/client` — HTTP boundary
+
+- **`createSsrApiClient()`**: Server-only (`import "server-only"`). Use from Server Components, Route Handlers,
+  Server Actions.
+- **`createCsrApiClient()`**: `"use client"`. Use for browser-driven calls (e.g. after user action).
+- **Do not** call `fetch(process.env.NEXT_PUBLIC_API_URL/...)` ad hoc from pages or random components for Louve
+  APIs. Extend `createApiClient` / factories if headers or auth need to be centralized.
+- Base URL: `getApiBaseUrl()` in `src/lib/config/env.ts` (`NEXT_PUBLIC_API_URL`, default
+  `https://api-louve.palmonas.tech`).
+
+### 2. `src/services` — orchestration (no React)
+
+- Services **take an `ApiClient` (or narrow interface)** as a parameter, call `client.get` / future methods, parse
+  JSON, return typed data or throw.
+- **No** `react`, **no** hooks, **no** `"use client"` in service files.
+- Export from `src/services/index.ts` when the surface is stable.
+
+### 3. `src/state` — shared client state
+
+- Use React **Context** for cross-cutting client state (e.g. `LocaleProvider` in `locale-context.tsx`).
+- Do **not** put raw fetch logic here; call services from hooks or effects if needed later.
+- **`LocaleProvider`**: Holds `locale`, `messages` (`AppMessages`), `setLocale`. Parent **`AppProviders`** passes
+  **`key={initialLocale}`** so server refresh stays aligned with the cookie.
+
+### 4. `src/providers` — app shell wiring
+
+- **`AppProviders`**: Wraps **`LocaleProvider`** then **`LayoutProvider`** (sidebar/menu UI state).
+- Root layout (`src/app/layout.tsx`) reads **`getLocale()`** + **`getMessages(locale)`** and passes
+  **`initialLocale`** / **`initialMessages`** into `AppProviders`.
+
+### 5. `src/hooks` — thin facades
+
+- **`useMessages()`** / **`useLocale()`**: Read locale context; no direct API calls unless you add a dedicated
+  hook that internally uses a service + CSR client (document that pattern when you introduce it).
+- **`useMediaQuery`**: Layout breakpoints.
+- Prefer **one obvious hook** per concern; avoid duplicating context access patterns across many files.
+
+### 6. `src/components` / `src/features`
+
+- **`components/ui`**: shadcn-generated primitives only; add via CLI, don’t hand-roll duplicates.
+- **`components/layout`**: Header, Footer, Sidebar, SiteLayout, language switcher — use **`useMessages()`** where
+  copy is shown.
+- **`features/<area>`**: Feature-specific sections (e.g. home blocks). **Client** components use **`useMessages()`**
+  for all user-visible strings.
+- Components **must not** import `createSsrApiClient` (server-only). Client components that need data should
+  receive **serializable props** from a parent Server Component or use a **hook** that uses CSR client + service.
+
+### 7. `src/app` — routes, metadata, API routes
+
+- **`page.tsx`**: Compose components; for copy, **`const m = getMessages(await getLocale())`** on the server, or
+  delegate to client children with **`useMessages()`**.
+- **`generateMetadata`**: Use **`buildStaticPageMetadata`**, **`buildProductPageMetadata`**, or
+  **`buildSearchQueryMetadata`** from `src/lib/l10n/build-page-metadata.ts` so SEO respects locale.
+- **Locale API**: `POST /api/locale` body `{ "locale": "en" | "hi" | "fr" | "es" }` sets cookie **`LOUVE_LOCALE`**.
+- **Errors**: `error.tsx`, `not-found.tsx`, `global-error.tsx` must stay on-brand; use **`useMessages()`** or
+  English fallback where the root layout is unavailable (`global-error` uses **`getMessages(DEFAULT_LOCALE)`**).
+
+## Types (`src/types`)
+
+- **`src/types/config/messages.ts`**: **`AppMessages`**, navigation shapes, **`PageId`**, page copy blocks. Any new
+  UI string **type** or message subtree is defined here first.
+- **`src/types/config/locale.ts`**: **`AppLocale`**, **`APP_LOCALES`**, **`LOCALE_COOKIE`**, **`localeHtmlLang`**, etc.
+- **`src/types/commerce.ts`**: Domain types (e.g. `Product`, `Money`) for catalog/checkout work.
+- **`src/types/index.ts`**: Barrel exports for consumers.
+- **Rule**: Extend types **before** adding fields in locale files; keep `AppMessages` the single contract for
+  translated content shape.
+
+## Localization / i18n (mandatory for user-facing text)
+
+- **Source of truth**: `src/lib/l10n/{English,Hindi,French,Spanish}/messages.ts` — each exports `messages` that
+  **`satisfies AppMessages`**.
+- **Registry**: `src/lib/l10n/get-messages.ts` maps locale code → bundle.
+- **Server helpers**: `getLocale()`, `getMessagesForRequest()` in `src/lib/l10n/server.ts` (cookie-backed).
+- **Never** add marketing copy, nav labels, or error strings to **`src/lib/config`** except **`env.ts`** and
+  **`languages.ts`** (native labels for the header switcher).
+- **Adding a string**: (1) Update **`AppMessages`** in `src/types/config/messages.ts`. (2) Add the value to **all
+  four** locale files. (3) Use **`useMessages()`** (client) or **`getMessages(await getLocale())`** (server).
+- **Dynamic titles**: `src/utils/interpolate.ts` with placeholders like `{slug}`, `{query}`, `{siteName}`.
+- **New locale**: New folder + `get-messages.ts` + `locale.ts` + `LANGUAGE_OPTIONS` in `src/lib/config/languages.ts`
+  — follow `docs/LOCALIZATION.md`.
+
+## Configuration vs copy
+
+| Location | Contents |
+|----------|----------|
+| `src/lib/config/env.ts` | `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_API_URL` helpers |
+| `src/lib/config/languages.ts` | Header language dropdown options |
+| `src/lib/l10n/...` | Every translated / branded string |
+
+## UI / styling
+
+- Add components with **`pnpm dlx shadcn@latest add <name>`**; keep `components/ui` consistent with generated code.
+- Use **`cn()`** from `@/lib/utils` for class merging.
+- Respect existing Louve CSS variables in `src/app/globals.css` (brand palette).
+
+## Scope and style of changes
+
+- Implement **only** what the task requires; keep diffs small and readable.
+- Do **not** add unsolicited README/doc files unless the user asks (this `.cursorrules` and `docs/` are the
+  exception for project conventions).
+- After substantive edits, run **`pnpm lint`** and **`pnpm build`** and fix failures.
+
+## Quick feature checklist (must follow)
+
+1. Route + **`generateMetadata`** (l10n-aware builders).
+2. Extend **`AppMessages`** + **all four** locale `messages.ts` files for any new copy.
+3. Backend access only via **`src/lib/client`** + **`src/services`**.
+4. Shared client state → **`src/state`** + **`src/hooks`**.
+5. Verify locale switch in header + **`pnpm lint`** / **`pnpm build`**.
+
+When in doubt, open **`docs/FLOW.md`** and **`docs/NEW_FEATURE.md`** and align with them exactly.

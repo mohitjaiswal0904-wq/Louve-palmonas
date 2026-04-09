@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
 
 import { ComingSoon } from "@/components/common/coming-soon";
-import { createMetadata } from "@/components/seo/metadata";
-import { seoConfig } from "@/lib/config/seo";
+import { buildStaticPageMetadata } from "@/lib/l10n/build-page-metadata";
+import { getMessages } from "@/lib/l10n/get-messages";
+import { getLocale } from "@/lib/l10n/server";
 
-export const metadata: Metadata = createMetadata({
-  title: `Forgot password — ${seoConfig.siteName}`,
-  description: "Password reset — coming soon.",
-  canonicalUrl: seoConfig.siteUrl ? `${seoConfig.siteUrl}/auth/forgot-password` : undefined,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata("authForgotPassword", "/auth/forgot-password");
+}
 
-export default function ForgotPasswordPage() {
-  return <ComingSoon title="Forgot password" />;
+export default async function ForgotPasswordPage() {
+  const m = getMessages(await getLocale());
+  return (
+    <ComingSoon
+      title={m.pages.authForgotPassword.comingSoonTitle}
+      body={m.pages.authForgotPassword.comingSoonBody}
+    />
+  );
 }

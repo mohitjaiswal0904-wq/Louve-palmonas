@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
 
 import { ComingSoon } from "@/components/common/coming-soon";
-import { createMetadata } from "@/components/seo/metadata";
-import { seoConfig } from "@/lib/config/seo";
+import { buildStaticPageMetadata } from "@/lib/l10n/build-page-metadata";
+import { getMessages } from "@/lib/l10n/get-messages";
+import { getLocale } from "@/lib/l10n/server";
 
-export const metadata: Metadata = createMetadata({
-  title: `Wishlist — ${seoConfig.siteName}`,
-  description: "Wishlist — coming soon.",
-  canonicalUrl: seoConfig.siteUrl ? `${seoConfig.siteUrl}/wishlist` : undefined,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata("wishlist", "/wishlist");
+}
 
-export default function WishlistPage() {
-  return <ComingSoon title="Wishlist" />;
+export default async function WishlistPage() {
+  const m = getMessages(await getLocale());
+  return (
+    <ComingSoon
+      title={m.pages.wishlist.comingSoonTitle}
+      body={m.pages.wishlist.comingSoonBody}
+    />
+  );
 }

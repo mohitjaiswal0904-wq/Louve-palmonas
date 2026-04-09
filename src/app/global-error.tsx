@@ -1,10 +1,21 @@
 "use client";
 
 import { useEffect } from "react";
+import { Montserrat } from "next/font/google";
+
 import { SiteLayout } from "@/components/layout";
 import { AppProviders } from "@/providers/app-providers";
 import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/lib/config/site";
+import { DEFAULT_LOCALE, localeHtmlLang } from "@/types/config";
+import { getMessages } from "@/lib/l10n/get-messages";
+
+const montserrat = Montserrat({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const fallbackMessages = getMessages(DEFAULT_LOCALE);
 
 export default function GlobalError({
   error,
@@ -17,29 +28,36 @@ export default function GlobalError({
     console.error(error);
   }, [error]);
 
+  const m = fallbackMessages;
+
   return (
-    <html lang="en">
-      <body>
-        <AppProviders>
+    <html
+      lang={localeHtmlLang(DEFAULT_LOCALE)}
+      className={`${montserrat.variable} h-full antialiased`}
+    >
+      <body className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
+        <AppProviders
+          initialLocale={DEFAULT_LOCALE}
+          initialMessages={fallbackMessages}
+        >
           <SiteLayout>
             <div className="mx-auto flex w-full max-w-xl flex-1 flex-col items-start justify-center gap-4 p-6">
               <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
-                {siteConfig.name} · from the house of {siteConfig.parentBrand}
+                {m.errors.brandLine}
               </div>
-              <h1 className="text-2xl font-semibold tracking-tight">We hit an issue</h1>
-              <p className="text-sm text-muted-foreground">
-                {siteConfig.name} ran into an unexpected problem. Please refresh the
-                page. If it persists, try again later.
-              </p>
+              <h1 className="text-2xl font-semibold tracking-tight">
+                {m.errors.globalTitle}
+              </h1>
+              <p className="text-sm text-muted-foreground">{m.errors.globalBody}</p>
               <div className="flex gap-3">
-                <Button onClick={() => reset()}>Retry</Button>
+                <Button onClick={() => reset()}>{m.errors.retry}</Button>
                 <Button
                   variant="outline"
                   onClick={() => {
                     window.location.href = "/";
                   }}
                 >
-                  Go home
+                  {m.errors.goHome}
                 </Button>
               </div>
             </div>

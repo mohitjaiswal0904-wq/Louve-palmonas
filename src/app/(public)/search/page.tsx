@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
 
 import { ComingSoon } from "@/components/common/coming-soon";
-import { createMetadata } from "@/components/seo/metadata";
-import { seoConfig } from "@/lib/config/seo";
+import { buildStaticPageMetadata } from "@/lib/l10n/build-page-metadata";
+import { getMessages } from "@/lib/l10n/get-messages";
+import { getLocale } from "@/lib/l10n/server";
 
-export const metadata: Metadata = createMetadata({
-  title: `Search — ${seoConfig.siteName}`,
-  description: "Search Louve — coming soon.",
-  canonicalUrl: seoConfig.siteUrl ? `${seoConfig.siteUrl}/search` : undefined,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata("search", "/search");
+}
 
-export default function SearchPage() {
-  return <ComingSoon title="Search" />;
+export default async function SearchPage() {
+  const m = getMessages(await getLocale());
+  return (
+    <ComingSoon
+      title={m.pages.search.comingSoonTitle}
+      body={m.pages.search.comingSoonBody}
+    />
+  );
 }

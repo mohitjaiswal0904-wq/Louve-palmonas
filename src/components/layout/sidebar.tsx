@@ -7,10 +7,13 @@ import { useMemo, useRef, useState } from "react";
 
 import { useLayoutContext } from "@/providers/layout-context";
 import { cn } from "@/lib/utils";
-import { sidebarNav, type SidebarNavLink } from "@/lib/config/navigation";
 import { useMediaQuery } from "@/hooks";
+import { useMessages } from "@/hooks/use-messages";
+import type { SidebarNavMessage } from "@/types/config/messages";
 
 export function Sidebar() {
+  const m = useMessages();
+  const sidebarNav = m.navigation.sidebar;
   const { sidebarOpen, setSidebarOpen } = useLayoutContext();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   // activePath is a stack of keys, one per opened panel level.
@@ -18,7 +21,7 @@ export function Sidebar() {
   const closeTimer = useRef<number | null>(null);
 
   const panels = useMemo(() => {
-    const out: SidebarNavLink[][] = [sidebarNav];
+    const out: SidebarNavMessage[][] = [sidebarNav];
     let level = sidebarNav;
     for (const key of activePath) {
       const next = level.find((i) => i.key === key)?.children;
@@ -27,7 +30,7 @@ export function Sidebar() {
       level = next;
     }
     return out;
-  }, [activePath]);
+  }, [activePath, sidebarNav]);
 
   const mobilePanel = useMemo(() => {
     let level = sidebarNav;
@@ -37,7 +40,7 @@ export function Sidebar() {
       level = next;
     }
     return level;
-  }, [activePath]);
+  }, [activePath, sidebarNav]);
 
   const setHoverKey = (levelIndex: number, key: string) => {
     setActivePath((prev) => {
@@ -47,7 +50,7 @@ export function Sidebar() {
     });
   };
 
-  const openChildPanel = (levelIndex: number, item: SidebarNavLink) => {
+  const openChildPanel = (levelIndex: number, item: SidebarNavMessage) => {
     if (!item.children?.length) return;
     setActivePath((prev) => {
       const next = prev.slice(0, levelIndex);
@@ -75,7 +78,7 @@ export function Sidebar() {
     <>
       <button
         type="button"
-        aria-label="Close menu"
+        aria-label={m.common.closeMenu}
         className={cn(
           "fixed inset-0 z-20 bg-black/20 backdrop-blur-[1px] transition-opacity duration-200 ease-out motion-reduce:transition-none",
           sidebarOpen ? "opacity-100" : "pointer-events-none opacity-0",
@@ -104,16 +107,24 @@ export function Sidebar() {
                 "h-dvh border-r bg-background shadow-2xl",
                 idx === 0 ? "w-[300px]" : "w-[320px]",
               )}
-              aria-label={idx === 0 ? "Sidebar" : "Sidebar submenu"}
+              aria-label={idx === 0 ? m.common.sidebar : m.common.sidebarSub}
             >
               <div className="flex h-16 w-full items-center gap-3 border-b px-4">
                 {idx === 0 ? (
                   <>
-                    <Image src="/icon.png" alt="Louve" width={26} height={26} priority />
-                    <div className="text-sm font-light tracking-[0.22em]">LOUVE</div>
+                    <Image
+                      src="/icon.png"
+                      alt={m.common.brandAlt}
+                      width={26}
+                      height={26}
+                      priority
+                    />
+                    <div className="text-sm font-light tracking-[0.22em]">
+                      {m.site.name.toUpperCase()}
+                    </div>
                     <button
                       type="button"
-                      aria-label="Close sidebar"
+                      aria-label={m.common.closeSidebar}
                       className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
                       onClick={() => {
                         setSidebarOpen(false);
@@ -125,7 +136,7 @@ export function Sidebar() {
                   </>
                 ) : (
                   <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
-                    Browse
+                    {m.common.browse}
                   </div>
                 )}
               </div>
@@ -177,7 +188,7 @@ export function Sidebar() {
                 {idx === 0 ? (
                   <div className="mt-auto p-4 text-xs text-muted-foreground">
                     <div className="uppercase tracking-[0.22em]">
-                      From the house of Palmonas
+                      {m.common.footerFromHouse}
                     </div>
                   </div>
                 ) : null}
@@ -193,7 +204,7 @@ export function Sidebar() {
             "transition-transform duration-300 ease-out motion-reduce:transition-none",
             sidebarOpen ? "translate-x-0" : "-translate-x-full",
           )}
-          aria-label="Sidebar"
+          aria-label={m.common.sidebar}
         >
           <div className="flex h-16 w-full items-center gap-3 border-b px-4">
             {activePath.length > 0 ? (
@@ -201,20 +212,28 @@ export function Sidebar() {
                 type="button"
                 className="inline-flex items-center gap-2 text-sm text-muted-foreground"
                 onClick={() => setActivePath((p) => p.slice(0, -1))}
-                aria-label="Back"
+                aria-label={m.common.back}
               >
                 <ChevronLeft className="size-4" />
-                Back
+                {m.common.back}
               </button>
             ) : (
               <>
-                <Image src="/icon.png" alt="Louve" width={26} height={26} priority />
-                <div className="text-sm font-light tracking-[0.22em]">LOUVE</div>
+                <Image
+                  src="/icon.png"
+                  alt={m.common.brandAlt}
+                  width={26}
+                  height={26}
+                  priority
+                />
+                <div className="text-sm font-light tracking-[0.22em]">
+                  {m.site.name.toUpperCase()}
+                </div>
               </>
             )}
             <button
               type="button"
-              aria-label="Close sidebar"
+              aria-label={m.common.closeSidebar}
               className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
               onClick={() => {
                 setSidebarOpen(false);
@@ -259,7 +278,9 @@ export function Sidebar() {
             </nav>
 
             <div className="mt-auto p-4 text-xs text-muted-foreground">
-              <div className="uppercase tracking-[0.22em]">From the house of Palmonas</div>
+              <div className="uppercase tracking-[0.22em]">
+                {m.common.footerFromHouse}
+              </div>
             </div>
           </div>
         </aside>

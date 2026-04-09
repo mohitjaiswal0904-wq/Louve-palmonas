@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 
 import { ComingSoon } from "@/components/common/coming-soon";
-import { createMetadata } from "@/components/seo/metadata";
-import { seoConfig } from "@/lib/config/seo";
+import { buildSearchQueryMetadata } from "@/lib/l10n/build-page-metadata";
+import { getMessages } from "@/lib/l10n/get-messages";
+import { getLocale } from "@/lib/l10n/server";
 
-export const metadata: Metadata = createMetadata({
-  title: `Search results — ${seoConfig.siteName}`,
-  description: "Search results — coming soon.",
-  canonicalUrl: seoConfig.siteUrl ? `${seoConfig.siteUrl}/search` : undefined,
-});
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ query: string }>;
+}): Promise<Metadata> {
+  const { query } = await params;
+  return buildSearchQueryMetadata(query, `/search/${encodeURIComponent(query)}`);
+}
 
 export default async function SearchQueryPage({
   params,
@@ -16,10 +20,15 @@ export default async function SearchQueryPage({
   params: Promise<{ query: string }>;
 }) {
   const { query } = await params;
+  const m = getMessages(await getLocale());
   return (
-    <ComingSoon title="Search">
+    <ComingSoon
+      title={m.pages.searchResults.comingSoonTitle}
+      body={m.pages.searchResults.comingSoonBody}
+    >
       <div className="text-sm text-muted-foreground">
-        Query: <span className="text-foreground">{decodeURIComponent(query)}</span>
+        {m.pages.searchResults.queryLabel}:{" "}
+        <span className="text-foreground">{decodeURIComponent(query)}</span>
       </div>
     </ComingSoon>
   );

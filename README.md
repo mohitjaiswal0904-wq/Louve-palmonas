@@ -39,6 +39,10 @@ make start
 ## Project docs
 
 - `docs/README.md` — onboarding + architecture + brand notes
+- `docs/STRUCTURE.md` — folder map
+- `docs/FLOW.md` — client → service → state → hooks → components → pages
+- `docs/LOCALIZATION.md` — locales and message bundles
+- `docs/NEW_FEATURE.md` — feature checklist
 - `docs/DEVELOPMENT.md`
 - `docs/DEPLOYMENT.md`
 

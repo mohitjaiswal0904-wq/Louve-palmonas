@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
 
 import { ComingSoon } from "@/components/common/coming-soon";
-import { createMetadata } from "@/components/seo/metadata";
-import { seoConfig } from "@/lib/config/seo";
+import { buildStaticPageMetadata } from "@/lib/l10n/build-page-metadata";
+import { getMessages } from "@/lib/l10n/get-messages";
+import { getLocale } from "@/lib/l10n/server";
 
-export const metadata: Metadata = createMetadata({
-  title: `About — ${seoConfig.siteName}`,
-  description:
-    "Louve comes from the French word for she-wolf — instinct, independence, protection, and quiet leadership.",
-  canonicalUrl: seoConfig.siteUrl ? `${seoConfig.siteUrl}/about` : undefined,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata("about", "/about");
+}
 
-export default function AboutPage() {
-  return <ComingSoon title="About" />;
+export default async function AboutPage() {
+  const m = getMessages(await getLocale());
+  return (
+    <ComingSoon
+      title={m.pages.about.comingSoonTitle}
+      body={m.pages.about.comingSoonBody}
+    />
+  );
 }

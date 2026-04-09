@@ -1,25 +1,20 @@
 import type { Metadata } from "next";
 
-import Link from "next/link";
 import { ComingSoon } from "@/components/common/coming-soon";
-import { createMetadata } from "@/components/seo/metadata";
-import { seoConfig } from "@/lib/config/seo";
-import { Button } from "@/components/ui/button";
+import { buildStaticPageMetadata } from "@/lib/l10n/build-page-metadata";
+import { getMessages } from "@/lib/l10n/get-messages";
+import { getLocale } from "@/lib/l10n/server";
 
-export const metadata: Metadata = createMetadata({
-  title: `Products — ${seoConfig.siteName}`,
-  description: "Products — coming soon.",
-  canonicalUrl: seoConfig.siteUrl ? `${seoConfig.siteUrl}/products` : undefined,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata("products", "/products");
+}
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const m = getMessages(await getLocale());
   return (
-    <ComingSoon title="Products">
-      <div className="pt-2">
-        <Link href="/products/sample-product" className="inline-flex">
-          <Button variant="outline">Preview a sample product page</Button>
-        </Link>
-      </div>
-    </ComingSoon>
+    <ComingSoon
+      title={m.pages.products.comingSoonTitle}
+      body={m.pages.products.comingSoonBody}
+    />
   );
 }

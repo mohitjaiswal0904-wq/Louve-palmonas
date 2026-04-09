@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
 
 import { ComingSoon } from "@/components/common/coming-soon";
-import { createMetadata } from "@/components/seo/metadata";
-import { seoConfig } from "@/lib/config/seo";
+import { buildStaticPageMetadata } from "@/lib/l10n/build-page-metadata";
+import { getMessages } from "@/lib/l10n/get-messages";
+import { getLocale } from "@/lib/l10n/server";
 
-export const metadata: Metadata = createMetadata({
-  title: `Contact — ${seoConfig.siteName}`,
-  description: "Contact — coming soon.",
-  canonicalUrl: seoConfig.siteUrl ? `${seoConfig.siteUrl}/contact` : undefined,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata("contact", "/contact");
+}
 
-export default function ContactPage() {
-  return <ComingSoon title="Contact" />;
+export default async function ContactPage() {
+  const m = getMessages(await getLocale());
+  return (
+    <ComingSoon
+      title={m.pages.contact.comingSoonTitle}
+      body={m.pages.contact.comingSoonBody}
+    />
+  );
 }

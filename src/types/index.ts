@@ -1,20 +1,12 @@
-export type Currency = "INR";
+export type {
+  Collection,
+  Currency,
+  Money,
+  Product,
+} from "./commerce";
 
-export interface Money {
-  currency: Currency;
-  amount: number;
-}
-
-export interface Collection {
-  slug: string;
-  title: string;
-  description: string;
-}
-
-export interface Product {
-  slug: string;
-  title: string;
-  subtitle?: string;
-  price: Money;
-  imageUrl?: string;
-}
+export type {
+  AppLocale,
+  AppMessages,
+  PageId,
+} from "./config";

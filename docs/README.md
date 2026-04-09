@@ -76,6 +76,24 @@ make start
 make restart   # rebuild + pm2 reload (server/VM usage)
 ```
 
+## Architecture
+
+Data and copy flow through the stack in this order:
+
+**`lib/client` (SSR/CSR)** → **`services`** → **`state`** → **`hooks`** → **`components`** → **`pages`**.
+
+- Backend HTTP: `src/lib/client` (`createSsrApiClient`, `createCsrApiClient`).
+- Strings and navigation: `src/lib/l10n/{English,Hindi,French,Spanish}/messages.ts`, typed by `src/types/config/messages.ts`.
+- Non-translated URLs: `src/lib/config/env.ts` (`NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_API_URL`).
+- Language cookie: `LOUVE_LOCALE`, set via `POST /api/locale` from the header language menu.
+
+Detailed docs:
+
+- [STRUCTURE.md](./STRUCTURE.md) — directory reference
+- [FLOW.md](./FLOW.md) — layering rules
+- [LOCALIZATION.md](./LOCALIZATION.md) — i18n workflow
+- [NEW_FEATURE.md](./NEW_FEATURE.md) — checklist for new work
+
 ## Routing
 
 This project uses a route group for public pages:
@@ -128,4 +146,5 @@ Do not hand-roll replacements unless needed—prefer adding via the shadcn CLI.
 Create `.env.local` for local overrides.
 
 - `NEXT_PUBLIC_SITE_URL` — public website base URL (used for sitemap/canonicals)
+- `NEXT_PUBLIC_API_URL` — Louve API base (defaults to `https://api-louve.palmonas.tech`)
 

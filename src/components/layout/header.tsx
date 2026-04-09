@@ -1,17 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Menu,
-} from "lucide-react";
+import { Menu } from "lucide-react";
 
-import { siteConfig } from "@/lib/config/site";
-import { headerNav } from "@/lib/config/navigation";
 import { useLayoutContext } from "@/providers/layout-context";
 import { Button } from "@/components/ui/button";
+import { useMessages } from "@/hooks/use-messages";
+import { HEADER_ACTION_ICONS } from "./header-actions";
+import { LanguageSwitcher } from "./language-switcher";
 
 export function Header() {
   const { toggleSidebar } = useLayoutContext();
+  const m = useMessages();
 
   return (
     <header className="sticky top-0 z-30 w-full border-b bg-background">
@@ -20,7 +20,7 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            aria-label="Open menu"
+            aria-label={m.common.openMenu}
             onClick={toggleSidebar}
           >
             <Menu className="size-5" />
@@ -31,17 +31,24 @@ export function Header() {
           <Link
             href="/"
             className="text-base font-light tracking-[0.35em] text-foreground"
-            aria-label={`${siteConfig.name} home`}
+            aria-label={`${m.site.name} home`}
           >
-            {siteConfig.name.toUpperCase()}
+            {m.site.name.toUpperCase()}
           </Link>
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-0.5 sm:gap-1">
-          {headerNav.actions.map((a) => {
-            const Icon = a.icon;
+          <LanguageSwitcher />
+          {m.navigation.header.actions.map((a) => {
+            const Icon = HEADER_ACTION_ICONS[a.key];
+            if (!Icon) return null;
             return (
-              <Link key={a.key} href={a.href} aria-label={a.ariaLabel} className="inline-flex">
+              <Link
+                key={a.key}
+                href={a.href}
+                aria-label={a.ariaLabel}
+                className="inline-flex"
+              >
                 <Button variant="ghost" size="icon">
                   <Icon className="size-5" />
                 </Button>

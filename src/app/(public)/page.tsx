@@ -1,21 +1,19 @@
 import type { Metadata } from "next";
 
-import { createMetadata } from "@/components/seo/metadata";
-import { seoConfig } from "@/lib/config/seo";
+import { buildStaticPageMetadata } from "@/lib/l10n/build-page-metadata";
+import { getMessages } from "@/lib/l10n/get-messages";
+import { getLocale } from "@/lib/l10n/server";
 
-export const metadata: Metadata = createMetadata({
-  title: `${seoConfig.siteName} — ${seoConfig.brandLine}`,
-  description: seoConfig.defaultDescription,
-  canonicalUrl: seoConfig.siteUrl ? `${seoConfig.siteUrl}/` : undefined,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  return buildStaticPageMetadata("home", "/");
+}
 
-export default function Home() {
+export default async function Home() {
+  const m = getMessages(await getLocale());
   return (
     <div className="space-y-2">
-      <h1 className="text-xl font-light tracking-wide">Coming soon</h1>
-      <p className="text-sm text-muted-foreground">
-        This website is being crafted — check back soon.
-      </p>
+      <h1 className="text-xl font-light tracking-wide">{m.pages.home.heading}</h1>
+      <p className="text-sm text-muted-foreground">{m.pages.home.subheading}</p>
     </div>
   );
 }

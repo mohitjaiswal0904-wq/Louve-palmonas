@@ -1,6 +1,8 @@
-export type Currency = "INR" | "USD";
+/** ISO-style codes we expect from catalog/checkout APIs (extend as needed). */
+export type Currency = "INR" | "USD" | "EUR" | "GBP";
 
 export type Money = {
+  /** Decimal amount as string (API-safe); e.g. "1299.50" */
   amount: string;
   currency: Currency;
 };

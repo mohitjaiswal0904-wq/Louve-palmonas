@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-const links = [{ href: "/", label: "Home" }];
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/collections", label: "Collections" },
+  { href: "/about", label: "About" },
+];
 
 export function SidebarNav() {
   return (
@@ -9,7 +13,7 @@ export function SidebarNav() {
         <Link
           key={href}
           href={href}
-          className="rounded-md px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-200/80 dark:text-zinc-300 dark:hover:bg-zinc-800/80"
+          className="rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           {label}
         </Link>

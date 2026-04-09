@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutContext } from "@/providers/layout-context";
-import { siteConfig } from "@/config/site";
+import { siteConfig } from "@/lib/config/site";
 import { Button } from "@/components/ui/button";
 
 export function Header() {

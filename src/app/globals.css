@@ -49,6 +49,13 @@
 }
 
 :root {
+  /* Louve palette (from brand deck) */
+  --louve-primal-rouge: #77080e;
+  --louve-aurora-forest: #063f47;
+  --louve-soft-ivory: #f4f1ea;
+  --louve-graphite-black: #1f1f1f;
+  --louve-champagne-gold: #d6b97c;
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);

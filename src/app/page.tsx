@@ -1,19 +1,26 @@
+import type { Metadata } from "next";
+
 import { AppShell } from "@/components/layout/app-shell";
 import { SidebarNav } from "@/components/layout/sidebar-nav";
-import { ChatPanel } from "@/components/chat/chat-panel";
+import { createMetadata } from "@/components/seo/metadata";
+import { seoConfig } from "@/lib/config/seo";
+import { HomeHero } from "@/features/home/hero";
+import { HomeCollections } from "@/features/home/collections";
+import { HomeCTA } from "@/features/home/cta";
+
+export const metadata: Metadata = createMetadata({
+  title: `${seoConfig.siteName} — ${seoConfig.brandLine}`,
+  description: seoConfig.defaultDescription,
+  canonicalUrl: seoConfig.siteUrl ? `${seoConfig.siteUrl}/` : undefined,
+});
 
 export default function Home() {
   return (
     <AppShell sidebar={<SidebarNav />}>
-      <div className="mx-auto max-w-3xl space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Neutral chat</h1>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            LangChain on the server — optional OpenAI via{" "}
-            <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-800">OPENAI_API_KEY</code>.
-          </p>
-        </div>
-        <ChatPanel />
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-10">
+        <HomeHero />
+        <HomeCollections />
+        <HomeCTA />
       </div>
     </AppShell>
   );

@@ -5,6 +5,14 @@ jewellery website.
 
 This frontend is a **Next.js App Router** project with Tailwind v4 and **shadcn/ui** components.
 
+## UI reference
+
+We are taking inspiration from the simplicity and spacing of
+[`aamoraharchitects.com`](https://www.aamoraharchitects.com/) (clean layout, subtle grid lines, light
+typography).
+
+Font choice matched: **Montserrat**.
+
 ## Brand notes (from the Louve brand deck)
 
 Louve comes from the French word for **she-wolf**. Across cultures, the she-wolf represents:

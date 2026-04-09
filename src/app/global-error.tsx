@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
+import { SiteLayout } from "@/components/layout";
+import { AppProviders } from "@/providers/app-providers";
+import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/config/site";
 
 export default function GlobalError({
   error,
@@ -16,18 +20,31 @@ export default function GlobalError({
   return (
     <html lang="en">
       <body>
-        <div style={{ padding: 24, fontFamily: "system-ui" }}>
-          <h1 style={{ fontSize: 22, fontWeight: 600 }}>We hit an issue</h1>
-          <p style={{ marginTop: 8, opacity: 0.8 }}>
-            Please refresh the page. If it persists, try again later.
-          </p>
-          <button
-            onClick={() => reset()}
-            style={{ marginTop: 12, padding: "10px 14px", cursor: "pointer" }}
-          >
-            Retry
-          </button>
-        </div>
+        <AppProviders>
+          <SiteLayout>
+            <div className="mx-auto flex w-full max-w-xl flex-1 flex-col items-start justify-center gap-4 p-6">
+              <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                {siteConfig.name} · from the house of {siteConfig.parentBrand}
+              </div>
+              <h1 className="text-2xl font-semibold tracking-tight">We hit an issue</h1>
+              <p className="text-sm text-muted-foreground">
+                {siteConfig.name} ran into an unexpected problem. Please refresh the
+                page. If it persists, try again later.
+              </p>
+              <div className="flex gap-3">
+                <Button onClick={() => reset()}>Retry</Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    window.location.href = "/";
+                  }}
+                >
+                  Go home
+                </Button>
+              </div>
+            </div>
+          </SiteLayout>
+        </AppProviders>
       </body>
     </html>
   );

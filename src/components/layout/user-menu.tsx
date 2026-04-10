@@ -31,21 +31,24 @@ export function UserMenu() {
 
   if (!user) {
     return (
-      <div className="flex items-center gap-1">
-        <Link href="/auth/login">
-          <Button variant="ghost" size="sm" className="h-8 text-xs font-medium tracking-wide">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="hover:bg-transparent">
+            <User className="size-5 stroke-[1.5]" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-52">
+          <DropdownMenuItem className="cursor-pointer" onClick={() => go("/auth/login")}>
+            <User className="mr-2 size-4 shrink-0" />
             Sign in
-          </Button>
-        </Link>
-        <Link href="/auth/signup">
-          <Button
-            size="sm"
-            className="h-8 bg-zinc-900 text-xs font-medium tracking-wide text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
+          </DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer" onClick={() => go("/auth/signup")}>
+            {/* Using User icon for signup too or another relevant icon */}
+            <User className="mr-2 size-4 shrink-0" />
             Sign up
-          </Button>
-        </Link>
-      </div>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   }
 
@@ -64,14 +67,10 @@ export function UserMenu() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        type="button"
-        className="inline-flex items-center justify-center rounded-full p-1.5 hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        aria-label="Account menu"
-      >
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-semibold text-white dark:bg-zinc-100 dark:text-zinc-900">
-          {initials}
-        </span>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="hover:bg-transparent">
+          <User className="size-5 stroke-[1.5]" />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52">
         <div className="px-2 py-1.5">

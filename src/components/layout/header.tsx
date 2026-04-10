@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 
@@ -34,26 +35,36 @@ export function Header() {
   const { itemCount: cartItemCount } = useCart();
 
   return (
-    <header className="sticky top-0 z-30 w-full border-b bg-background">
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center px-3 sm:px-4">
-        <div className="flex flex-1 items-center">
+    <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur-md">
+      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center px-[46px]">
+        {/* Left: Menu */}
+        <div className="flex flex-1 items-center justify-start">
           <Button
             variant="ghost"
             size="icon"
+            className="hover:bg-transparent"
             aria-label={m.common.openMenu}
             onClick={toggleSidebar}
           >
-            <Menu className="size-5" />
+            <Menu className="size-5 stroke-[1.5]" />
           </Button>
         </div>
 
-        <div className="flex flex-1 items-center justify-center">
+        {/* Center: Logo */}
+        <div className="flex flex-none items-center justify-center">
           <Link
             href="/"
-            className="text-base font-light tracking-[0.35em] text-foreground"
+            className="flex items-center"
             aria-label={`${m.site.name} home`}
           >
-            {m.site.name.toUpperCase()}
+            <Image
+              src="/logo.png"
+              alt={m.site.name}
+              width={140}
+              height={40}
+              priority
+              className="h-8 w-auto object-contain dark:invert"
+            />
           </Link>
         </div>
 

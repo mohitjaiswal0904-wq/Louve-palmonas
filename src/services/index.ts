@@ -22,3 +22,35 @@ export {
   getRecentSearches,
   getSuggestions,
 } from "./search.service";
+
+export {
+  addToWishlist,
+  listWishlist,
+  getWishlistCount,
+  checkWishlist,
+  getWishlistProductIds,
+  updateWishlistItem,
+  removeWishlistItem,
+  removeWishlistByProduct,
+  moveWishlistToCart,
+} from "./wishlist.service";
+
+export {
+  addToCart,
+  getCartSummary,
+  getCartCount,
+  updateCartItem,
+  removeCartItem,
+  removeMultipleCartItems,
+  clearCart,
+} from "./cart.service";
+
+export {
+  createOrder,
+  listOrders,
+  getOrderCount,
+  getOrder,
+  getOrderByNumber,
+  simulateCheckout,
+  cancelOrder,
+} from "./order.service";

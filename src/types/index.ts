@@ -52,3 +52,38 @@ export type {
 } from "./catalog";
 
 export type { HealthLiveResult } from "./health";
+
+export type {
+  AddToWishlistRequest,
+  UpdateWishlistItemRequest,
+  MoveToCartRequest,
+  WishlistProductInfo,
+  WishlistItemDTO,
+  WishlistCountDTO,
+  WishlistProductIdsDTO,
+  WishlistCheckDTO,
+  WishlistListParams,
+} from "./wishlist";
+
+export type {
+  AddToCartRequest,
+  UpdateCartItemRequest,
+  RemoveMultipleRequest,
+  CartMoneyInfo,
+  CartProductInfo,
+  CartVariantInfo,
+  CartItemDTO,
+  CartSummaryDTO,
+  CartCountDTO,
+} from "./cart";
+
+export type {
+  CreateOrderRequest,
+  CheckoutSimulateRequest,
+  OrderMoneyInfo,
+  OrderItemDTO,
+  OrderDTO,
+  OrderSummaryDTO,
+  OrderCountDTO,
+  OrderListParams,
+} from "./order";

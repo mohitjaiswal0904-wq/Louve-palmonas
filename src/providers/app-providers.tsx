@@ -6,10 +6,13 @@ import type { AppLocale } from "@/types/config";
 import type { AppMessages } from "@/types/config/messages";
 import {
   AuthProvider,
+  CartProvider,
   CatalogProvider,
   HealthProvider,
   LocaleProvider,
+  OrderProvider,
   SearchProvider,
+  WishlistProvider,
 } from "@/state";
 
 import { LayoutProvider } from "./layout-context";
@@ -28,9 +31,15 @@ export function AppProviders({
       <LocaleProvider initialLocale={initialLocale} initialMessages={initialMessages}>
         <CatalogProvider>
           <SearchProvider>
-            <HealthProvider>
-              <LayoutProvider>{children}</LayoutProvider>
-            </HealthProvider>
+            <WishlistProvider>
+              <CartProvider>
+                <OrderProvider>
+                  <HealthProvider>
+                    <LayoutProvider>{children}</LayoutProvider>
+                  </HealthProvider>
+                </OrderProvider>
+              </CartProvider>
+            </WishlistProvider>
           </SearchProvider>
         </CatalogProvider>
       </LocaleProvider>

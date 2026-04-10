@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-import { useMessages } from "@/hooks";
+import { useAuth, useMessages, useWishlist } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { ProductDTO } from "@/types";
 
@@ -53,6 +54,21 @@ const priceSize: Record<CardSize, string> = {
 
 export function ProductCard({ product, size = "lg", inGrid = true }: ProductCardProps) {
   const m = useMessages();
+  const router = useRouter();
+  const { user } = useAuth();
+  const { wishlistedProductIds, toggleWishlist } = useWishlist();
+
+  const isWishlisted = wishlistedProductIds.has(product.id);
+
+  function handleWishlistClick(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    void toggleWishlist(product.id);
+  }
 
   const hasDiscount =
     product.compare_at_price &&
@@ -91,6 +107,49 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
             {m.catalog.sale}
           </span>
         )}
+        <button
+          type="button"
+          aria-pressed={isWishlisted}
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          onClick={handleWishlistClick}
+          className={cn(
+            "absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full",
+            "bg-white/90 shadow-sm backdrop-blur-sm transition-all duration-200 ease-out",
+            "hover:scale-110 hover:bg-white hover:shadow-md active:scale-95",
+            "dark:bg-zinc-900/85 dark:hover:bg-zinc-900",
+            "outline-none ring-zinc-400/40 focus-visible:ring-2",
+          )}
+        >
+          {isWishlisted ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              className="h-[18px] w-[18px] text-red-500 transition-colors duration-200"
+              aria-hidden
+            >
+              <path
+                fill="currentColor"
+                d="M11.645 20.177l-7.774-7.773a5.25 5.25 0 010-7.424 5.25 5.25 0 017.424 0L12 6.915l.705-.705a5.25 5.25 0 017.424 0 5.25 5.25 0 010 7.424l-7.774 7.773a.75.75 0 01-1.06 0z"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="h-[18px] w-[18px] text-zinc-600 transition-colors duration-200 dark:text-zinc-300"
+              aria-hidden
+            >
+              <path
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+              />
+            </svg>
+          )}
+        </button>
       </div>
 
       <div className={cn("flex flex-1 flex-col border-t border-zinc-200/90 bg-white dark:border-zinc-800 dark:bg-zinc-950", copyPadding[size])}>

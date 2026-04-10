@@ -57,6 +57,13 @@ export const messages = {
         { key: "account", ariaLabel: "アカウント", href: "/account" },
       ],
     },
+    userMenu: {
+      profile: "プロフィール",
+      orders: "ご注文",
+      cart: "カート",
+      wishlist: "ウィッシュリスト",
+      signOut: "ログアウト",
+    },
     footer: [
       {
         title: "会社情報",
@@ -322,6 +329,13 @@ export const messages = {
       comingSoonTitle: "ウィッシュリスト",
       comingSoonBody:
         "この機能は近日公開予定です。サイトは現在制作中です — またご覧ください。",
+    },
+    orders: {
+      metaTitle: "ご注文 — Louve",
+      metaDescription: "ご注文履歴 — 近日公開。",
+      comingSoonTitle: "ご注文",
+      comingSoonBody:
+        "ご注文履歴は近日公開予定です。サイトは現在制作中です — またご覧ください。",
     },
   },
   homeFeature: {

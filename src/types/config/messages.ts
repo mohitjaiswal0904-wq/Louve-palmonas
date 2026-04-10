@@ -86,6 +86,7 @@ export type PagesMessages = {
   account: BasePageMessages;
   cart: BasePageMessages;
   wishlist: BasePageMessages;
+  orders: BasePageMessages;
 };
 
 export type AppMessages = {
@@ -120,6 +121,13 @@ export type AppMessages = {
   navigation: {
     header: {
       actions: HeaderActionMessage[];
+    };
+    userMenu: {
+      profile: string;
+      orders: string;
+      cart: string;
+      wishlist: string;
+      signOut: string;
     };
     footer: FooterSectionMessage[];
     sidebar: SidebarNavMessage[];

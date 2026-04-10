@@ -57,6 +57,13 @@ export const messages = {
         { key: "account", ariaLabel: "계정", href: "/account" },
       ],
     },
+    userMenu: {
+      profile: "프로필",
+      orders: "주문",
+      cart: "장바구니",
+      wishlist: "위시리스트",
+      signOut: "로그아웃",
+    },
     footer: [
       {
         title: "회사",
@@ -322,6 +329,13 @@ export const messages = {
       comingSoonTitle: "위시리스트",
       comingSoonBody:
         "이 기능은 곧 제공됩니다. 웹사이트를 준비 중입니다 — 곧 다시 찾아주세요.",
+    },
+    orders: {
+      metaTitle: "주문 — Louve",
+      metaDescription: "주문 내역 — 곧 공개.",
+      comingSoonTitle: "주문",
+      comingSoonBody:
+        "주문 내역은 곧 제공됩니다. 웹사이트를 준비 중입니다 — 곧 다시 찾아주세요.",
     },
   },
   homeFeature: {

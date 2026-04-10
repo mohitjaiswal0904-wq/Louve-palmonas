@@ -23,7 +23,9 @@ export async function searchProducts(client: ApiClient, params: SearchProductsPa
 }
 
 export async function getTopSearches(client: ApiClient, limit = 10, days = 30) {
-  return client.get<ApiResponse<TopSearchDTO[]>>(`/api/v1/search/top?limit=${limit}&days=${days}`);
+  return client.get<ApiResponse<TopSearchDTO[]>>(
+    `/api/v1/search/top?limit=${limit}&days=${days}`,
+  );
 }
 
 export async function getRecentSearches(client: ApiClient, limit = 10) {
@@ -31,5 +33,7 @@ export async function getRecentSearches(client: ApiClient, limit = 10) {
 }
 
 export async function getSuggestions(client: ApiClient, q: string, limit = 8) {
-  return client.get<ApiResponse<SuggestionDTO[]>>(`/api/v1/search/suggest?q=${encodeURIComponent(q)}&limit=${limit}`);
+  return client.get<ApiResponse<SuggestionDTO[]>>(
+    `/api/v1/search/suggest?q=${encodeURIComponent(q)}&limit=${limit}`,
+  );
 }

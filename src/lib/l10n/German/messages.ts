@@ -57,6 +57,13 @@ export const messages = {
         { key: "account", ariaLabel: "Konto", href: "/account" },
       ],
     },
+    userMenu: {
+      profile: "Profil",
+      orders: "Bestellungen",
+      cart: "Warenkorb",
+      wishlist: "Wunschliste",
+      signOut: "Abmelden",
+    },
     footer: [
       {
         title: "Unternehmen",
@@ -322,6 +329,13 @@ export const messages = {
       comingSoonTitle: "Wunschliste",
       comingSoonBody:
         "Diese Funktion kommt bald. Die Website wird gerade gestaltet — schauen Sie bald wieder vorbei.",
+    },
+    orders: {
+      metaTitle: "Bestellungen — Louve",
+      metaDescription: "Ihre Bestellhistorie — demnächst.",
+      comingSoonTitle: "Bestellungen",
+      comingSoonBody:
+        "Die Bestellhistorie kommt bald. Die Website wird gerade gestaltet — schauen Sie bald wieder vorbei.",
     },
   },
   homeFeature: {

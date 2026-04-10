@@ -57,6 +57,13 @@ export const messages = {
         { key: "account", ariaLabel: "账户", href: "/account" },
       ],
     },
+    userMenu: {
+      profile: "个人资料",
+      orders: "订单",
+      cart: "购物车",
+      wishlist: "心愿单",
+      signOut: "退出登录",
+    },
     footer: [
       {
         title: "公司",
@@ -322,6 +329,13 @@ export const messages = {
       comingSoonTitle: "心愿单",
       comingSoonBody:
         "该功能即将上线。网站正在精心打造中 — 敬请期待。",
+    },
+    orders: {
+      metaTitle: "订单 — Louve",
+      metaDescription: "您的订单记录 — 即将上线。",
+      comingSoonTitle: "订单",
+      comingSoonBody:
+        "订单记录即将上线。网站正在精心打造中 — 敬请期待。",
     },
   },
   homeFeature: {

@@ -57,6 +57,13 @@ export const messages = {
         { key: "account", ariaLabel: "الحساب", href: "/account" },
       ],
     },
+    userMenu: {
+      profile: "الملف الشخصي",
+      orders: "الطلبات",
+      cart: "السلة",
+      wishlist: "قائمة الأمنيات",
+      signOut: "تسجيل الخروج",
+    },
     footer: [
       {
         title: "الشركة",
@@ -322,6 +329,13 @@ export const messages = {
       comingSoonTitle: "قائمة الأمنيات",
       comingSoonBody:
         "هذه الميزة قريباً. الموقع قيد الإعداد — عد قريباً.",
+    },
+    orders: {
+      metaTitle: "الطلبات — Louve",
+      metaDescription: "سجل طلباتك — قريباً.",
+      comingSoonTitle: "الطلبات",
+      comingSoonBody:
+        "سجل الطلبات قريباً. الموقع قيد الإعداد — عد قريباً.",
     },
   },
   homeFeature: {

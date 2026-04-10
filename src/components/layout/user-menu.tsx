@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { User, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Heart, LogOut, Package, ShoppingBag, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,14 +13,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks";
+import { useMessages } from "@/hooks/use-messages";
 
 export function UserMenu() {
   const { user, loading, logout } = useAuth();
+  const router = useRouter();
+  const m = useMessages();
+  const u = m.navigation.userMenu;
 
   if (loading) {
     return (
-      <Button variant="ghost" size="icon" disabled>
-        <User className="size-5" />
+      <Button variant="ghost" size="icon" disabled aria-busy>
+        <User className="size-5 opacity-50" />
       </Button>
     );
   }
@@ -53,17 +58,22 @@ export function UserMenu() {
         .slice(0, 2)
     : user.email[0].toUpperCase();
 
+  const go = (path: string) => {
+    router.push(path);
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="inline-flex items-center justify-center rounded-full p-1.5 hover:bg-accent focus:outline-none"
+        type="button"
+        className="inline-flex items-center justify-center rounded-full p-1.5 hover:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         aria-label="Account menu"
       >
         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-semibold text-white dark:bg-zinc-100 dark:text-zinc-900">
           {initials}
         </span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="w-52">
         <div className="px-2 py-1.5">
           <p className="truncate text-sm font-medium">
             {user.profile?.display_name ?? "Louve member"}
@@ -71,17 +81,34 @@ export function UserMenu() {
           <p className="truncate text-xs text-muted-foreground">{user.email}</p>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => window.location.assign("/account/profile")}>
-          <User className="mr-2 size-4" />
-          Profile
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => go("/account/profile")}
+        >
+          <User className="mr-2 size-4 shrink-0" />
+          {u.profile}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => go("/account/orders")}>
+          <Package className="mr-2 size-4 shrink-0" />
+          {u.orders}
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="cursor-pointer" onClick={() => go("/cart")}>
+          <ShoppingBag className="mr-2 size-4 shrink-0" />
+          {u.cart}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => go("/wishlist")}>
+          <Heart className="mr-2 size-4 shrink-0" />
+          {u.wishlist}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          variant="destructive"
+          className="cursor-pointer"
           onClick={() => void logout()}
-          className="text-red-600 focus:text-red-600 dark:text-red-400 dark:focus:text-red-400"
         >
-          <LogOut className="mr-2 size-4" />
-          Sign out
+          <LogOut className="mr-2 size-4 shrink-0" />
+          {u.signOut}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

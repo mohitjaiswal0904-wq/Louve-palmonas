@@ -19,14 +19,10 @@ export function AppProviders({
   initialMessages: AppMessages;
 }) {
   return (
-    <LocaleProvider
-      key={initialLocale}
-      initialLocale={initialLocale}
-      initialMessages={initialMessages}
-    >
-      <AuthProvider>
+    <AuthProvider>
+      <LocaleProvider initialLocale={initialLocale} initialMessages={initialMessages}>
         <LayoutProvider>{children}</LayoutProvider>
-      </AuthProvider>
-    </LocaleProvider>
+      </LocaleProvider>
+    </AuthProvider>
   );
 }

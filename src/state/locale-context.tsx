@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -34,6 +35,11 @@ export function LocaleProvider({
   const router = useRouter();
   const [locale, setLocaleState] = useState<AppLocale>(initialLocale);
   const [messages, setMessagesState] = useState<AppMessages>(initialMessages);
+
+  useEffect(() => {
+    setLocaleState(initialLocale);
+    setMessagesState(getMessages(initialLocale));
+  }, [initialLocale]);
 
   const setLocale = useCallback(async (next: AppLocale) => {
     await fetch("/api/locale", {

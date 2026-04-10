@@ -57,6 +57,13 @@ export const messages = {
         { key: "account", ariaLabel: "Cuenta", href: "/account" },
       ],
     },
+    userMenu: {
+      profile: "Perfil",
+      orders: "Pedidos",
+      cart: "Carrito",
+      wishlist: "Lista de deseos",
+      signOut: "Cerrar sesión",
+    },
     footer: [
       {
         title: "Empresa",
@@ -326,6 +333,13 @@ export const messages = {
       comingSoonTitle: "Lista de deseos",
       comingSoonBody:
         "Esta función llegará pronto. El sitio está en preparación — vuelve pronto.",
+    },
+    orders: {
+      metaTitle: "Pedidos — Louve",
+      metaDescription: "Tu historial de pedidos — próximamente.",
+      comingSoonTitle: "Pedidos",
+      comingSoonBody:
+        "El historial de pedidos llegará pronto. El sitio está en preparación — vuelve pronto.",
     },
   },
   homeFeature: {

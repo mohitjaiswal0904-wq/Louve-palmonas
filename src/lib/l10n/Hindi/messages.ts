@@ -57,6 +57,13 @@ export const messages = {
         { key: "account", ariaLabel: "खाता", href: "/account" },
       ],
     },
+    userMenu: {
+      profile: "प्रोफ़ाइल",
+      orders: "ऑर्डर",
+      cart: "कार्ट",
+      wishlist: "इच्छा-सूची",
+      signOut: "साइन आउट",
+    },
     footer: [
       {
         title: "कंपनी",
@@ -326,6 +333,13 @@ export const messages = {
       comingSoonTitle: "इच्छा-सूची",
       comingSoonBody:
         "यह सुविधा जल्द आ रही है। वेबसाइट तैयार की जा रही है — जल्द फिर देखें।",
+    },
+    orders: {
+      metaTitle: "ऑर्डर — Louve",
+      metaDescription: "आपका ऑर्डर इतिहास — जल्द आ रहा है।",
+      comingSoonTitle: "ऑर्डर",
+      comingSoonBody:
+        "ऑर्डर इतिहास जल्द आ रहा है। वेबसाइट तैयार की जा रही है — जल्द फिर देखें।",
     },
   },
   homeFeature: {

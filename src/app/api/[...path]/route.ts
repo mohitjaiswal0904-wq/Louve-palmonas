@@ -23,6 +23,29 @@ const LOGOUT_PATHS = new Set([
 
 const isSecure = process.env.NODE_ENV === "production";
 
+function upstreamUnavailableResponse() {
+  return NextResponse.json(
+    {
+      success: false,
+      error: {
+        code: "UPSTREAM_UNAVAILABLE",
+        message:
+          "Could not reach the Louve API. Start the backend (e.g. make run-api) or set NEXT_PUBLIC_API_URL.",
+      },
+      timestamp: new Date().toISOString(),
+    },
+    { status: 503, headers: { "Content-Type": "application/json" } },
+  );
+}
+
+async function fetchBackend(url: string, init: RequestInit): Promise<Response | null> {
+  try {
+    return await fetch(url, { ...init, cache: "no-store" });
+  } catch {
+    return null;
+  }
+}
+
 async function proxy(req: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
   const { path } = await params;
   const backendPath = `/api/${path.join("/")}`;
@@ -50,20 +73,25 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
     ? await req.text()
     : undefined;
 
-  let res = await fetch(backendUrl, {
+  let res = await fetchBackend(backendUrl, {
     method: req.method,
     headers,
     body,
-    cache: "no-store",
   });
+  if (!res) {
+    return upstreamUnavailableResponse();
+  }
 
   if (res.status === 401 && refreshToken && !backendPath.includes("/auth/refresh")) {
-    const refreshRes = await fetch(`${getApiBaseUrl()}/api/v1/auth/refresh`, {
+    const refreshRes = await fetchBackend(`${getApiBaseUrl()}/api/v1/auth/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({ refresh_token: refreshToken }),
-      cache: "no-store",
     });
+
+    if (!refreshRes) {
+      return upstreamUnavailableResponse();
+    }
 
     if (refreshRes.ok) {
       const refreshJson: ApiResponse<AuthResponse> = await refreshRes.json();
@@ -76,7 +104,11 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
         });
 
         headers["Authorization"] = `Bearer ${refreshJson.data.access_token}`;
-        res = await fetch(backendUrl, { method: req.method, headers, body, cache: "no-store" });
+        const retry = await fetchBackend(backendUrl, { method: req.method, headers, body });
+        if (!retry) {
+          return upstreamUnavailableResponse();
+        }
+        res = retry;
       }
     } else {
       store.delete(ACCESS_TOKEN_COOKIE);

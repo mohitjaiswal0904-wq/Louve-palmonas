@@ -13,6 +13,12 @@ export {
   listProducts,
   getProductByHandle,
   getProductById,
-  searchProducts,
   getFilters,
 } from "./catalog.service";
+
+export {
+  searchProducts,
+  getTopSearches,
+  getRecentSearches,
+  getSuggestions,
+} from "./search.service";

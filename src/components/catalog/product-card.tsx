@@ -7,13 +7,51 @@ import { useMessages } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { ProductDTO } from "@/types";
 
+export type CardSize = "sm" | "md" | "lg";
+
 type ProductCardProps = {
   product: ProductDTO;
-  /** When true, card sits in a grid with shared outer borders (see ProductGrid). */
+  size?: CardSize;
   inGrid?: boolean;
 };
 
-export function ProductCard({ product, inGrid = true }: ProductCardProps) {
+const imagePadding: Record<CardSize, string> = {
+  sm: "p-4 sm:p-5",
+  md: "p-6 sm:p-8 md:p-10",
+  lg: "p-8 sm:p-10 md:p-12 lg:p-14",
+};
+
+const imageSizes: Record<CardSize, string> = {
+  sm: "(max-width: 640px) 50vw, 25vw",
+  md: "(max-width: 640px) 50vw, 33vw",
+  lg: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
+};
+
+const copyPadding: Record<CardSize, string> = {
+  sm: "px-3 py-2.5 sm:px-3.5 sm:py-3",
+  md: "px-4 py-3 sm:px-5 sm:py-3.5",
+  lg: "px-5 py-4 sm:px-6 sm:py-4 md:px-8 md:py-5",
+};
+
+const vendorSize: Record<CardSize, string> = {
+  sm: "text-[9px]",
+  md: "text-[10px]",
+  lg: "text-[10px] sm:text-[11px]",
+};
+
+const titleSize: Record<CardSize, string> = {
+  sm: "text-xs",
+  md: "text-[13px]",
+  lg: "text-sm sm:text-[15px]",
+};
+
+const priceSize: Record<CardSize, string> = {
+  sm: "text-xs",
+  md: "text-sm",
+  lg: "text-base sm:text-[17px]",
+};
+
+export function ProductCard({ product, size = "lg", inGrid = true }: ProductCardProps) {
   const m = useMessages();
 
   const hasDiscount =
@@ -29,11 +67,10 @@ export function ProductCard({ product, inGrid = true }: ProductCardProps) {
         inGrid ? "h-full" : "overflow-hidden rounded-md border border-zinc-200/80 dark:border-zinc-800",
       )}
     >
-      {/* Image well — soft grey, generous padding, product “floats” like the reference */}
       <div
         className={cn(
           "relative aspect-square bg-[#f9f9f9] dark:bg-zinc-900/35",
-          "p-6 sm:p-8 md:p-10",
+          imagePadding[size],
         )}
       >
         {product.image ? (
@@ -41,7 +78,7 @@ export function ProductCard({ product, inGrid = true }: ProductCardProps) {
             src={product.image.src}
             alt={product.image.alt || product.title}
             fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes={imageSizes[size]}
             className="object-contain object-center drop-shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-transform duration-500 ease-out group-hover:scale-[1.03] dark:drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
           />
         ) : (
@@ -50,26 +87,25 @@ export function ProductCard({ product, inGrid = true }: ProductCardProps) {
           </div>
         )}
         {hasDiscount && (
-          <span className="absolute left-3 top-3 bg-[var(--louve-primal-rouge)] px-2 py-0.5 text-[10px] font-medium tracking-[0.12em] text-white">
+          <span className="absolute left-2 top-2 bg-[var(--louve-primal-rouge)] px-1.5 py-0.5 text-[9px] font-medium tracking-[0.12em] text-white">
             {m.catalog.sale}
           </span>
         )}
       </div>
 
-      {/* Hairline separator + white copy block */}
-      <div className="flex flex-1 flex-col border-t border-zinc-200/90 bg-white px-4 py-3 sm:px-5 sm:py-3.5 dark:border-zinc-800 dark:bg-zinc-950">
-        <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500">
+      <div className={cn("flex flex-1 flex-col border-t border-zinc-200/90 bg-white dark:border-zinc-800 dark:bg-zinc-950", copyPadding[size])}>
+        <p className={cn("mb-1 font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500", vendorSize[size])}>
           {product.vendor}
         </p>
-        <h3 className="line-clamp-1 text-[13px] font-normal leading-snug tracking-tight text-zinc-800 dark:text-zinc-100">
+        <h3 className={cn("line-clamp-1 font-normal leading-snug tracking-tight text-zinc-800 dark:text-zinc-100", titleSize[size])}>
           {product.title}
         </h3>
-        <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-          <span className="text-sm font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50">
+        <div className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+          <span className={cn("font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50", priceSize[size])}>
             {formatMoney(product.price.amount, product.price.currency)}
           </span>
           {hasDiscount && (
-            <span className="text-xs font-normal tabular-nums text-zinc-500 line-through dark:text-zinc-500">
+            <span className="text-[10px] font-normal tabular-nums text-zinc-500 line-through dark:text-zinc-500">
               {formatMoney(product.compare_at_price!.amount, product.compare_at_price!.currency)}
             </span>
           )}

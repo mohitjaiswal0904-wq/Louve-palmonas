@@ -32,6 +32,13 @@ export type {
 } from "./auth";
 
 export type {
+  RecentSearchDTO,
+  SearchProductsParams,
+  SuggestionDTO,
+  TopSearchDTO,
+} from "./search";
+
+export type {
   FiltersDTO,
   ImageDTO,
   MoneyDTO,
@@ -40,7 +47,6 @@ export type {
   ProductDetailDTO,
   ProductListParams,
   ProductTypeDTO,
-  SearchParams,
   VariantDTO,
   VendorDTO,
 } from "./catalog";

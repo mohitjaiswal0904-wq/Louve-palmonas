@@ -6,7 +6,6 @@ import type {
   ProductDetailDTO,
   FiltersDTO,
   ProductListParams,
-  SearchParams,
 } from "@/types";
 
 function toQueryString(params: Record<string, unknown>): string {
@@ -28,11 +27,6 @@ export async function getProductByHandle(client: ApiClient, handle: string) {
 
 export async function getProductById(client: ApiClient, id: number) {
   return client.get<ApiResponse<ProductDetailDTO>>(`/api/v1/catalog/products/id/${id}`);
-}
-
-export async function searchProducts(client: ApiClient, params: SearchParams) {
-  const qs = toQueryString(params);
-  return client.get<PaginatedResponse<ProductDTO[]>>(`/api/v1/catalog/search${qs}`);
 }
 
 export async function getFilters(client: ApiClient) {

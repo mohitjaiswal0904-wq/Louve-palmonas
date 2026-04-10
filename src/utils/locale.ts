@@ -9,6 +9,12 @@ export const APP_LOCALE_TO_BCP47: Record<AppLocale, string> = {
   hi: "hi-IN",
   fr: "fr-FR",
   es: "es-ES",
+  de: "de-DE",
+  pt: "pt-BR",
+  zh: "zh-CN",
+  ar: "ar",
+  ja: "ja-JP",
+  ko: "ko-KR",
 };
 
 export function appLocaleToBcp47(locale: AppLocale): string {
@@ -19,7 +25,18 @@ export function appLocaleToBcp47(locale: AppLocale): string {
  * Resolves a locale passed from UI (`AppLocale`) or an explicit BCP 47 string for `Intl`.
  */
 export function resolveIntlLocale(locale: AppLocale | string): string {
-  if (locale === "en" || locale === "hi" || locale === "fr" || locale === "es") {
+  if (
+    locale === "en" ||
+    locale === "hi" ||
+    locale === "fr" ||
+    locale === "es" ||
+    locale === "de" ||
+    locale === "pt" ||
+    locale === "zh" ||
+    locale === "ar" ||
+    locale === "ja" ||
+    locale === "ko"
+  ) {
     return APP_LOCALE_TO_BCP47[locale];
   }
   return locale;

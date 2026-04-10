@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { createCsrApiClient } from "@/lib/client";
-import * as catalogService from "@/services/catalog.service";
+import * as searchService from "@/services/search.service";
 import { ProductGrid, PaginationBar } from "@/components/catalog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ export default function SearchResultsClient({ query }: { query: string }) {
   const fetchResults = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await catalogService.searchProducts(client, {
+      const res = await searchService.searchProducts(client, {
         q: query,
         page,
         limit: 24,
@@ -68,7 +68,6 @@ export default function SearchResultsClient({ query }: { query: string }) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-xl font-light tracking-wide">
           {m.catalog.searchResultsFor} &ldquo;{query}&rdquo;
@@ -80,7 +79,6 @@ export default function SearchResultsClient({ query }: { query: string }) {
         )}
       </div>
 
-      {/* Search again */}
       <form onSubmit={handleSearch} className="flex gap-2">
         <Input
           type="search"
@@ -94,7 +92,6 @@ export default function SearchResultsClient({ query }: { query: string }) {
         </Button>
       </form>
 
-      {/* Sort */}
       <div className="flex gap-2 border-b pb-4">
         <select
           value={`${sortBy}:${sortOrder}`}
@@ -111,7 +108,6 @@ export default function SearchResultsClient({ query }: { query: string }) {
         </select>
       </div>
 
-      {/* Results */}
       {loading ? (
         <div className="flex min-h-[40vh] items-center justify-center">
           <p className="text-sm text-muted-foreground">{m.catalog.searching}</p>

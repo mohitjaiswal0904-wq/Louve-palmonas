@@ -13,7 +13,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     <div className="flex min-h-dvh flex-col">
       <Header />
       <Sidebar />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">{children}</main>
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6">{children}</main>
       <Footer />
     </div>
   );

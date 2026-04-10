@@ -92,7 +92,3 @@ export type ProductListParams = {
   sort_order?: string;
   currency?: string;
 };
-
-export type SearchParams = ProductListParams & {
-  q: string;
-};

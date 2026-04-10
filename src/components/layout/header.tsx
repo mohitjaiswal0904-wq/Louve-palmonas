@@ -5,7 +5,7 @@ import { Menu } from "lucide-react";
 
 import { useLayoutContext } from "@/providers/layout-context";
 import { Button } from "@/components/ui/button";
-import { useMessages } from "@/hooks/use-messages";
+import { useMessages } from "@/hooks";
 import { HEADER_ACTION_ICONS } from "./header-actions";
 import { LanguageSwitcher } from "./language-switcher";
 import { UserMenu } from "./user-menu";

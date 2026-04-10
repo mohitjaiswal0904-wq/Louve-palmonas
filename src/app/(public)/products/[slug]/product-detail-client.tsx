@@ -1,20 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { createCsrApiClient } from "@/lib/client";
-import * as catalogService from "@/services/catalog.service";
 import { ProductGrid } from "@/components/catalog";
 import { Badge } from "@/components/ui/badge";
-import { useMessages } from "@/hooks";
+import { useCatalog, useMessages } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { ProductDetailDTO, ProductDTO } from "@/types";
 
 export default function ProductDetailClient({ handle }: { handle: string }) {
   const m = useMessages();
-  const client = useMemo(() => createCsrApiClient(), []);
+  const catalog = useCatalog();
   const [product, setProduct] = useState<ProductDetailDTO | null>(null);
   const [similar, setSimilar] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,10 +25,10 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
     if (didFetch.current) return;
     didFetch.current = true;
 
-    catalogService.getProductByHandle(client, handle).then((res) => {
+    catalog.getProductByHandle(handle).then((res) => {
       if (res.data) {
         setProduct(res.data);
-        catalogService.listProducts(client, {
+        catalog.listProducts({
           vendor: res.data.vendor,
           limit: 5,
         }).then((sr) => {
@@ -39,7 +37,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
         }).catch(() => {});
       }
     }).catch(() => {}).finally(() => setLoading(false));
-  }, [client, handle]);
+  }, [catalog, handle]);
 
   if (loading) {
     return (

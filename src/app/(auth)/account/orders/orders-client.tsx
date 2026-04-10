@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/hooks";
-import { useMessages } from "@/hooks/use-messages";
+import { useMessages } from "@/hooks";
 
 export default function OrdersClient() {
   const { user, loading } = useAuth();

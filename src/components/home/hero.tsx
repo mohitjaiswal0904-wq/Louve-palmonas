@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useMessages } from "@/hooks/use-messages";
+import { useMessages } from "@/hooks";
 
 export function HomeHero() {
   const m = useMessages();

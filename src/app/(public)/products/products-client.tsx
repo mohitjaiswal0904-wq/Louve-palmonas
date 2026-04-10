@@ -1,20 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-import { createCsrApiClient } from "@/lib/client";
-import * as catalogService from "@/services/catalog.service";
 import { ProductGrid, PaginationBar } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
-import { useMessages } from "@/hooks";
+import { useCatalog, useMessages } from "@/hooks";
 import type { ProductDTO, Pagination, FiltersDTO } from "@/types";
 
 export default function ProductsClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const m = useMessages();
-  const client = useMemo(() => createCsrApiClient(), []);
+  const catalog = useCatalog();
 
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
@@ -31,7 +29,7 @@ export default function ProductsClient() {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await catalogService.listProducts(client, {
+      const res = await catalog.listProducts({
         page,
         limit: 24,
         vendor: vendor || undefined,
@@ -46,7 +44,7 @@ export default function ProductsClient() {
     } finally {
       setLoading(false);
     }
-  }, [client, page, vendor, productType, sortBy, sortOrder]);
+  }, [catalog, page, vendor, productType, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchProducts();
@@ -55,10 +53,10 @@ export default function ProductsClient() {
   useEffect(() => {
     if (didInit.current) return;
     didInit.current = true;
-    catalogService.getFilters(client).then((res) => {
+    catalog.getFilters().then((res) => {
       if (res.data) setFilters(res.data);
     }).catch(() => {});
-  }, [client]);
+  }, [catalog]);
 
   function updateParams(updates: Record<string, string>) {
     const params = new URLSearchParams(searchParams.toString());

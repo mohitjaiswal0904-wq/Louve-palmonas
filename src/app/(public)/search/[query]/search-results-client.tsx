@@ -1,21 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { createCsrApiClient } from "@/lib/client";
-import * as searchService from "@/services/search.service";
 import { ProductGrid, PaginationBar } from "@/components/catalog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useMessages } from "@/hooks";
+import { useMessages, useSearch } from "@/hooks";
 import type { ProductDTO, Pagination } from "@/types";
 
 export default function SearchResultsClient({ query }: { query: string }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const m = useMessages();
-  const client = useMemo(() => createCsrApiClient(), []);
+  const search = useSearch();
 
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
@@ -29,7 +27,7 @@ export default function SearchResultsClient({ query }: { query: string }) {
   const fetchResults = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await searchService.searchProducts(client, {
+      const res = await search.searchProducts({
         q: query,
         page,
         limit: 24,
@@ -43,7 +41,7 @@ export default function SearchResultsClient({ query }: { query: string }) {
     } finally {
       setLoading(false);
     }
-  }, [client, query, page, sortBy, sortOrder]);
+  }, [search, query, page, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchResults();

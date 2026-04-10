@@ -4,8 +4,13 @@ import type { ReactNode } from "react";
 
 import type { AppLocale } from "@/types/config";
 import type { AppMessages } from "@/types/config/messages";
-import { LocaleProvider } from "@/state/locale-context";
-import { AuthProvider } from "@/state/auth-context";
+import {
+  AuthProvider,
+  CatalogProvider,
+  HealthProvider,
+  LocaleProvider,
+  SearchProvider,
+} from "@/state";
 
 import { LayoutProvider } from "./layout-context";
 
@@ -21,7 +26,13 @@ export function AppProviders({
   return (
     <AuthProvider>
       <LocaleProvider initialLocale={initialLocale} initialMessages={initialMessages}>
-        <LayoutProvider>{children}</LayoutProvider>
+        <CatalogProvider>
+          <SearchProvider>
+            <HealthProvider>
+              <LayoutProvider>{children}</LayoutProvider>
+            </HealthProvider>
+          </SearchProvider>
+        </CatalogProvider>
       </LocaleProvider>
     </AuthProvider>
   );

@@ -15,13 +15,13 @@ import type { AppLocale } from "@/types/config";
 import type { AppMessages } from "@/types/config/messages";
 import { getMessages } from "@/lib/l10n/get-messages";
 
-type LocaleContextValue = {
+type LocaleStateValue = {
   locale: AppLocale;
   messages: AppMessages;
   setLocale: (locale: AppLocale) => Promise<void>;
 };
 
-const LocaleContext = createContext<LocaleContextValue | null>(null);
+const LocaleStateContext = createContext<LocaleStateValue | null>(null);
 
 export function LocaleProvider({
   children,
@@ -58,14 +58,14 @@ export function LocaleProvider({
   );
 
   return (
-    <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
+    <LocaleStateContext.Provider value={value}>{children}</LocaleStateContext.Provider>
   );
 }
 
-export function useLocaleContext(): LocaleContextValue {
-  const ctx = useContext(LocaleContext);
+export function useLocaleState(): LocaleStateValue {
+  const ctx = useContext(LocaleStateContext);
   if (!ctx) {
-    throw new Error("useLocaleContext must be used within LocaleProvider");
+    throw new Error("useLocaleState must be used within LocaleProvider");
   }
   return ctx;
 }

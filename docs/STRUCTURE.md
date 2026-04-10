@@ -11,9 +11,9 @@ described in [FLOW.md](./FLOW.md).
 | `src/components/` | Reusable UI: `ui/` (shadcn), `layout/`, `home/`, `catalog/`, `common/`, `seo/` |
 | `src/lib/` | Shared code: `client/`, `config/`, `l10n/`, `live/` — see `src/lib/README.md` |
 | `src/services/` | Service layer: orchestrates API calls via `lib/client` |
-| `src/state/` | React context and client state consumed by hooks |
-| `src/hooks/` | Thin hooks for locale, messages, media queries, etc. |
-| `src/types/` | TypeScript types; `types/config/` holds **l10n and message shapes** |
+| `src/state/` | Domain **`*.state.tsx`** providers; call **`services`** + CSR client (auth, catalog, search, health, locale) |
+| `src/hooks/` | Domain folders + **`useMediaQuery`** — UI imports **`@/hooks` only** |
+| `src/types/` | TypeScript types: **`types/config/`** (l10n), **`types/auth|catalog|search|common|health/`** |
 | `src/providers/` | App-level providers (`AppProviders`, layout UI state) |
 | `src/utils/` | Pure helpers: format, money, motion, debounce — see `src/utils/README.md` |
 | `deployment/` | Docker, PM2 |
@@ -33,7 +33,9 @@ Do not add marketing copy under `lib/config`; add it to every locale file under 
 
 ## Types
 
-- **`src/types/commerce.ts`** — Product and money types for future catalog work.
+- **`src/types/catalog/commerce.ts`** — `Product`, `Money`, `Currency`, `Collection` (re-exported from **`@/types`**).
+- **`src/types/catalog/index.ts`** — Catalog API DTOs (`ProductDTO`, `FiltersDTO`, …).
+- **`src/types/auth/`**, **`src/types/search/`**, **`src/types/common/api.ts`** — Matching backend modules.
 - **`src/types/config/`** — `locale.ts`, `messages.ts` (`AppMessages`, `PageId`, navigation shapes).
 
 ## API route

@@ -1,7 +1,7 @@
-# Application flow (client → service → state → hooks → components → pages)
+# Application flow (pages → components → hooks → state → services → client)
 
-This is the **canonical layering** for Louve frontend. New work should follow it so behaviour stays predictable
-and testable.
+This is the **canonical layering** for Louve frontend. Dependency direction is **downward** only (UI never
+imports **`src/services`** directly; it uses **`@/hooks`**).
 
 ## 1. Client layer (`src/lib/client`)
 
@@ -30,29 +30,33 @@ inject mocks.
 
 ## 3. State (`src/state`)
 
-Client-side state that multiple components need (e.g. locale + resolved `AppMessages`) lives in context:
+**`*.state.tsx`** providers hold React Context and call **`src/services`** with a memoized **`createCsrApiClient()`**
+(except **`LocaleProvider`**, which only manages locale + **`AppMessages`** + cookie/`router.refresh()`).
 
-- `LocaleProvider` / `useLocaleContext` — current locale, messages, `setLocale`.
+- **`AuthProvider`** — session, login/signup/logout, forgot/reset password.
+- **`CatalogProvider`** — `listProducts`, `getProductByHandle`, `getFilters`, …
+- **`SearchProvider`** — `searchProducts`, `getSuggestions`, …
+- **`HealthProvider`** — `checkLive`.
+- **`LocaleProvider`** — `locale`, `messages`, `setLocale`.
 
-Server-rendered pages pass **initial** `locale` and `messages` from `getLocale()` + `getMessages()` in the root
-layout. The provider uses a `key={initialLocale}` so a full navigation refresh reconciles cleanly with the
-cookie.
+Root layout passes **`initialLocale`** / **`initialMessages`** into **`AppProviders`**. See **`src/state/README.md`**.
 
 ## 4. Hooks (`src/hooks`)
 
-Hooks **consume state and services** and expose ergonomic APIs:
+Hooks **consume state only** (not services directly):
 
-- `useMessages()` — UI copy for the active locale.
-- `useLocale()` — `{ locale, setLocale }`.
+- `useAuth()`, `useCatalog()`, `useSearch()`, `useHealth()` — typed facades over matching providers.
+- `useMessages()` / `useLocale()` — from **`LocaleProvider`**.
 - `useMediaQuery()` — layout breakpoints.
 
-**Rule:** Prefer `useMessages()` in components instead of prop-drilling thousands of strings. Server Components
-should call `getMessages(await getLocale())` when they render static copy without a client boundary.
+**Rule:** UI imports `@/hooks`. Prefer `useMessages()` in client components; Server Components use
+`getMessages(await getLocale())` for static copy.
 
 ## 5. Components (`src/components`)
 
-Components **use hooks** (if client) or receive props from parent Server Components. They should not talk to the
-backend unless through a hook that uses a service (future pattern). Group route-specific blocks under subfolders
+Components **use hooks** (if client) or receive props from parent Server Components. They should not import
+**`services`** or **`createCsrApiClient`** for Louve APIs — use **`useCatalog`**, **`useSearch`**, **`useAuth`**, etc.
+Group route-specific blocks under subfolders
 such as **`home/`** or **`catalog/`**.
 
 Layout pieces (`Header`, `Footer`, `Sidebar`) are client components where they need `useMessages()` or layout

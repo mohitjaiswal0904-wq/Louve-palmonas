@@ -1,18 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
-import { createCsrApiClient } from "@/lib/client";
-import * as searchService from "@/services/search.service";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useMessages } from "@/hooks";
+import { useMessages, useSearch } from "@/hooks";
 import type { TopSearchDTO, RecentSearchDTO, SuggestionDTO } from "@/types";
 
 export default function SearchClient() {
   const m = useMessages();
-  const client = useMemo(() => createCsrApiClient(), []);
+  const search = useSearch();
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [topSearches, setTopSearches] = useState<TopSearchDTO[]>([]);
@@ -25,20 +23,20 @@ export default function SearchClient() {
   useEffect(() => {
     if (didInit.current) return;
     didInit.current = true;
-    searchService.getTopSearches(client, 8).then((r) => {
+    search.getTopSearches(8).then((r) => {
       if (r.data) setTopSearches(r.data);
     }).catch(() => {});
-    searchService.getRecentSearches(client, 6).then((r) => {
+    search.getRecentSearches(6).then((r) => {
       if (r.data) setRecentSearches(r.data);
     }).catch(() => {});
-  }, [client]);
+  }, [search]);
 
   function handleQueryChange(val: string) {
     setQuery(val);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (val.trim().length >= 2) {
       debounceRef.current = setTimeout(() => {
-        searchService.getSuggestions(client, val.trim(), 6).then((r) => {
+        search.getSuggestions(val.trim(), 6).then((r) => {
           if (r.data) {
             setSuggestions(r.data);
             setShowSuggestions(true);

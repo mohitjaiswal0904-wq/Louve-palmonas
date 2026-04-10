@@ -16,7 +16,7 @@ alwaysApply: true
 
 3. **i18n**: User-visible strings live in **`AppMessages`** (`src/types/config/messages.ts`) and in **all four** bundles: `src/lib/l10n/English|Hindi|French|Spanish/messages.ts`. Non-translated env only: `src/lib/config/env.ts`, `languages.ts`.
 
-4. **Types**: Extend `src/types/config` (and commerce types in `src/types/commerce.ts`) before adding new message fields or API shapes.
+4. **Types**: Extend `src/types/config` and domain folders (`types/auth`, `types/catalog`, `types/search`, …) before new API shapes.
 
 5. **Providers**: `AppProviders` = `AuthProvider` → `LocaleProvider` (locale + messages + `setLocale`) → `LayoutProvider`. Root layout passes `initialLocale` / `initialMessages` from `getLocale()` + `getMessages()`.
 

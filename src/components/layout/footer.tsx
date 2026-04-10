@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { useMessages } from "@/hooks/use-messages";
+import { useMessages } from "@/hooks";
 
 export function Footer() {
   const m = useMessages();

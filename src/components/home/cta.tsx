@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useMessages } from "@/hooks/use-messages";
+import { useMessages } from "@/hooks";
 
 export function HomeCTA() {
   const m = useMessages();

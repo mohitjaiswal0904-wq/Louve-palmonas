@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import { SiteLayout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
-import { useMessages } from "@/hooks/use-messages";
+import { useMessages } from "@/hooks";
 
 export default function Error({
   error,

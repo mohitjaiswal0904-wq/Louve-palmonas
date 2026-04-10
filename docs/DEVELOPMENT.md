@@ -10,8 +10,8 @@
 - `src/lib/l10n/` — **all copy**: `English`, `Hindi`, `French`, `Spanish` message bundles
 - `src/lib/client/` — SSR vs CSR API clients for the Louve backend
 - `src/services/` — service layer (uses clients)
-- `src/state/` — React context (e.g. locale)
-- `src/hooks/` — `useMessages`, `useLocale`, etc.
+- `src/state/` — `*.state.tsx` providers (call `services` + CSR client)
+- `src/hooks/` — `auth/`, `catalog/`, `search/`, `locale/`, `use-media-query.ts` → barrel `@/hooks`
 - `src/types/config/` — `AppMessages`, locale types
 - `src/utils/` — **pure helpers**: `formatMoney`, `formatRelativeTime`, `convertMoney`, `interpolate`, `visibleRatio`, debounce/throttle, motion — see **`src/utils/README.md`** and **`src/utils/index.ts`**
 

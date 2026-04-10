@@ -3,7 +3,7 @@ export type {
   Currency,
   Money,
   Product,
-} from "./commerce";
+} from "./catalog";
 
 export type {
   AppLocale,
@@ -16,7 +16,7 @@ export type {
   ApiError,
   PaginatedResponse,
   Pagination,
-} from "./api";
+} from "./common/api";
 
 export type {
   AuthResponse,
@@ -50,3 +50,5 @@ export type {
   VariantDTO,
   VendorDTO,
 } from "./catalog";
+
+export type { HealthLiveResult } from "./health";

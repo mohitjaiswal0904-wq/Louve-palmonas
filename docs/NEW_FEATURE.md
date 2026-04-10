@@ -13,14 +13,15 @@ Use this checklist so new work fits the documented **flow** and **localization**
 ## 2. Copy and types
 
 - [ ] Add or extend **`AppMessages`** keys in `src/types/config/messages.ts`.
-- [ ] Translate strings in **`English`**, **`Hindi`**, **`French`**, and **`Spanish`** under `src/lib/l10n/`.
+- [ ] Translate strings in **every** locale under `src/lib/l10n/*/messages.ts` (see `LANGUAGE_OPTIONS`).
 - [ ] Avoid hardcoded UI strings in components; use **`useMessages()`** or server-side **`getMessages()`**.
 
 ## 3. Data and API
 
-- [ ] Add backend calls only through **`createSsrApiClient`** or **`createCsrApiClient`**.
-- [ ] Implement orchestration in **`src/services`** (pure TS, no React).
-- [ ] Optionally add a small hook that calls the service for client-driven flows.
+- [ ] Implement HTTP orchestration in **`src/services`** (pure TS; takes **`ApiClient`**).
+- [ ] **Server** data: **`createSsrApiClient()`** from RSC / route handlers when needed.
+- [ ] **Client** data: add or extend **`src/state/<domain>.state.tsx`** (CSR client + service), then
+      **`src/hooks/<domain>/use-<domain>.ts`** — UI imports **`@/hooks`** only.
 
 ## 4. UI
 
@@ -28,10 +29,10 @@ Use this checklist so new work fits the documented **flow** and **localization**
 - [ ] Put cross-route layout in **`src/components/layout`**; route-specific sections under **`src/components/<area>`**
       (e.g. **`home/`**, **`catalog/`**) as the project grows.
 
-## 5. State
+## 5. State and hooks
 
-- [ ] If multiple components need shared client state, add or extend context under **`src/state`** and expose
-      **`src/hooks`**.
+- [ ] Add or extend **`src/state/<domain>.state.tsx`** and **`src/hooks/<domain>/use-<domain>.ts`**, export from
+      **`src/hooks/index.ts`**, register the provider in **`AppProviders`** if it must be app-wide.
 
 ## 6. Verification
 

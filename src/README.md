@@ -13,7 +13,7 @@ All application source for Louve frontend. **Next.js** resolves **`src/app`** as
 | **`providers/`** | `AppProviders`, layout UI context. |
 | **`services/`** | Calls backend via **`lib/client`** — no React. |
 | **`state/`** | React context (e.g. locale + messages). |
-| **`types/`** | TypeScript types — **`config/`** for `AppMessages`, **`commerce.ts`** for catalog types. |
+| **`types/`** | TypeScript types — **`config/`**, **`auth/`**, **`catalog/`** (+ commerce), **`search/`**, **`common/api`**. |
 | **`utils/`** | Pure helpers: `cn`, `interpolate`, `format`, `currency`, `visibility`, … |
 
 ## Conventions

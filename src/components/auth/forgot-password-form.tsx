@@ -5,12 +5,12 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { createCsrApiClient } from "@/lib/client";
-import * as authService from "@/services/auth.service";
+import { useAuth } from "@/hooks";
 
 import { AuthCard } from "./auth-card";
 
 export function ForgotPasswordForm() {
+  const { forgotPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
@@ -21,8 +21,7 @@ export function ForgotPasswordForm() {
     setError("");
     setSubmitting(true);
     try {
-      const client = createCsrApiClient();
-      await authService.forgotPassword(client, { email });
+      await forgotPassword({ email });
       setSent(true);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");

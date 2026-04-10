@@ -12,5 +12,5 @@ Types for **internationalization** and **locale** — the contract for everythin
 
 ## Rules
 
-1. Change **`messages.ts`** **before** adding keys to locale bundles.
+1. Change **`messages.ts`** **before** adding keys to locale bundles. Domain DTOs live under **`types/auth`**, **`types/catalog`**, **`types/search`**, etc.
 2. Keep **URLs and secrets** out of these types — use **`src/lib/config/env.ts`**.

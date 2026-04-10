@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks";
-import { useMessages } from "@/hooks/use-messages";
+import { useMessages } from "@/hooks";
 
 export function UserMenu() {
   const { user, loading, logout } = useAuth();

@@ -1,4 +1,4 @@
-import type { Currency, Money } from "@/types/commerce";
+import type { Currency, Money } from "@/types";
 
 import { moneyFromNumber, parseMoneyAmount, roundToCurrencyDecimals } from "./money-core";
 

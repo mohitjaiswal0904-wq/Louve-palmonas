@@ -1,5 +1,5 @@
 import type { AppLocale } from "@/types/config";
-import type { Money } from "@/types/commerce";
+import type { Money } from "@/types";
 
 import { CURRENCY_DECIMALS, parseMoneyAmount } from "./money-core";
 import { resolveIntlLocale } from "./locale";

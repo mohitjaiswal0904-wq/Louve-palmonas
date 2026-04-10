@@ -15,21 +15,25 @@ import { useRouter } from "next/navigation";
 import { createCsrApiClient } from "@/lib/client";
 import * as authService from "@/services/auth.service";
 import type {
+  ForgotPasswordRequest,
   LoginRequest,
+  ResetPasswordRequest,
   SignupRequest,
   UserResponse,
 } from "@/types";
 
-type AuthState = {
+export type AuthStateValue = {
   user: UserResponse | null;
   loading: boolean;
   login: (data: LoginRequest) => Promise<void>;
   signup: (data: SignupRequest) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  forgotPassword: (data: ForgotPasswordRequest) => Promise<void>;
+  resetPassword: (data: ResetPasswordRequest) => Promise<void>;
 };
 
-const AuthContext = createContext<AuthState | null>(null);
+const AuthStateContext = createContext<AuthStateValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserResponse | null>(null);
@@ -99,16 +103,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.refresh();
   }, [client, router]);
 
-  const value = useMemo(
-    () => ({ user, loading, login, signup, logout: logoutFn, refreshUser }),
-    [user, loading, login, signup, logoutFn, refreshUser],
+  const forgotPassword = useCallback(
+    async (data: ForgotPasswordRequest) => {
+      await authService.forgotPassword(client, data);
+    },
+    [client],
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const resetPassword = useCallback(
+    async (data: ResetPasswordRequest) => {
+      await authService.resetPassword(client, data);
+    },
+    [client],
+  );
+
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      login,
+      signup,
+      logout: logoutFn,
+      refreshUser,
+      forgotPassword,
+      resetPassword,
+    }),
+    [user, loading, login, signup, logoutFn, refreshUser, forgotPassword, resetPassword],
+  );
+
+  return (
+    <AuthStateContext.Provider value={value}>{children}</AuthStateContext.Provider>
+  );
 }
 
-export function useAuthContext(): AuthState {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuthContext must be used inside <AuthProvider>");
+export function useAuthState(): AuthStateValue {
+  const ctx = useContext(AuthStateContext);
+  if (!ctx) throw new Error("useAuthState must be used inside <AuthProvider>");
   return ctx;
 }

@@ -1,4 +1,4 @@
-import type { Currency, Money } from "@/types/commerce";
+import type { Currency, Money } from "@/types";
 
 /** ISO 4217 minor units (fraction digits) for formatting and rounding. */
 export const CURRENCY_DECIMALS: Record<Currency, number> = {

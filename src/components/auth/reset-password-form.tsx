@@ -6,12 +6,12 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { createCsrApiClient } from "@/lib/client";
-import * as authService from "@/services/auth.service";
+import { useAuth } from "@/hooks";
 
 import { AuthCard } from "./auth-card";
 
 export function ResetPasswordForm() {
+  const { resetPassword } = useAuth();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
 
@@ -37,8 +37,7 @@ export function ResetPasswordForm() {
 
     setSubmitting(true);
     try {
-      const client = createCsrApiClient();
-      await authService.resetPassword(client, { token, new_password: password });
+      await resetPassword({ token, new_password: password });
       setDone(true);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");

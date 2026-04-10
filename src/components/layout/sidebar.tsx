@@ -8,7 +8,7 @@ import { useMemo, useRef, useState } from "react";
 import { useLayoutContext } from "@/providers/layout-context";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks";
-import { useMessages } from "@/hooks/use-messages";
+import { useMessages } from "@/hooks";
 import type { SidebarNavMessage } from "@/types/config/messages";
 
 export function Sidebar() {

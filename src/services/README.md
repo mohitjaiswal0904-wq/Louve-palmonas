@@ -1,6 +1,6 @@
 # `src/services/`
 
-**Service layer** — orchestrates calls to Louve backend via **`src/lib/client`**. **No React**, no `"use client"`.
+**Service layer** — orchestrates calls to the Louve API via **`src/lib/client`**. **No React**, no `"use client"`.
 
 ## Pattern
 
@@ -15,13 +15,15 @@ export async function fetchSomething(client: ApiClient) {
 
 Handlers accept **`ApiClient`** for testability (inject mock).
 
-## Current
+## Who calls services
 
-- **`health.service.ts`** — example **`fetchHealthLiveJson`**.
+- **`src/state/*.state.tsx`** — browser flows: one **`createCsrApiClient()`** per provider, methods delegate here.
+- **Server Components / route handlers** — **`createSsrApiClient()`** when fetching on the server.
 
-## When adding APIs
+Client **pages and components** should use **`@/hooks`** (`useCatalog`, `useSearch`, …), not import this folder directly.
 
-1. Extend **`createApiClient`** only if every call needs new headers.
-2. Add functions here; call from **Server Components** (`createSsrApiClient`) or **client hooks** (`createCsrApiClient`).
+## Current modules
 
-See **`docs/FLOW.md`**.
+- **`auth.service.ts`**, **`catalog.service.ts`**, **`search.service.ts`**, **`health.service.ts`**
+
+See **`docs/FLOW.md`** and **`src/state/README.md`**.

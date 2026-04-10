@@ -10,8 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useLocale } from "@/hooks/use-locale";
-import { useMessages } from "@/hooks/use-messages";
+import { useLocale, useMessages } from "@/hooks";
 import { LANGUAGE_OPTIONS } from "@/lib/config/languages";
 
 export function LanguageSwitcher() {

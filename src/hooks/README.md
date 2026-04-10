@@ -1,21 +1,22 @@
 # `src/hooks/`
 
-React **hooks** — thin facades over context, browser APIs, or (future) service calls.
+Public hooks for **pages and components**. They read **`src/state`** (never **`src/services`** directly).
 
-## Current exports (`index.ts`)
+## Layout
 
-| Hook | Role |
-|------|------|
-| **`useMessages()`** | Full **`AppMessages`** for active locale (from **`LocaleProvider`**). |
-| **`useLocale()`** | `{ locale, setLocale }` — `setLocale` hits **`POST /api/locale`** + **`router.refresh()`**. |
-| **`useMediaQuery(query)`** | Sync external store for matchMedia (sidebar desktop vs mobile). |
+| Path | Export | Backed by |
+|------|--------|-----------|
+| **`auth/use-auth.ts`** | **`useAuth`** | **`auth.state`** |
+| **`catalog/use-catalog.ts`** | **`useCatalog`** | **`catalog.state`** |
+| **`search/use-search.ts`** | **`useSearch`** | **`search.state`** |
+| **`health/use-health.ts`** | **`useHealth`** | **`health.state`** |
+| **`locale/use-locale.ts`** | **`useLocale`** | **`locale.state`** |
+| **`locale/use-messages.ts`** | **`useMessages`** | **`locale.state`** |
+| **`use-media-query.ts`** | **`useMediaQuery`** | Browser `matchMedia` |
+
+**`index.ts`** re-exports everything for **`import { … } from "@/hooks"`**.
 
 ## Conventions
 
-- Prefer **one hook per concern**; avoid duplicating **`useContext`** patterns.
-- Hooks that call the backend should use **`createCsrApiClient`** + **`services/`** — document new patterns in **`docs/FLOW.md`** when added.
-
-## Adding a hook
-
-1. Implement in **`use-<name>.ts`**.
-2. Export from **`index.ts`** if it’s stable public API for components.
+- One folder per domain where it helps navigation; **`useMediaQuery`** stays at the root as a generic utility.
+- Do not call **`createCsrApiClient`** from new feature hooks — extend the right **`.state.tsx`** and expose methods there.

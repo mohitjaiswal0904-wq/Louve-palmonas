@@ -7,8 +7,7 @@ All application source for Louve frontend. **Next.js** resolves **`src/app`** as
 | Folder | Role |
 |--------|------|
 | **`app/`** | Routes, layouts, `generateMetadata`, route handlers (`api/*`). |
-| **`components/`** | Shared UI: **`ui/`** (shadcn), **`layout/`**, **`common/`**, **`seo/`**. |
-| **`features/`** | Cohesive feature sections (e.g. **`home/`**, **`catalog/`**). |
+| **`components/`** | Shared UI: **`ui/`**, **`layout/`**, **`home/`**, **`catalog/`**, **`common/`**, **`seo/`**. |
 | **`hooks/`** | React hooks (`useMessages`, `useLocale`, `useMediaQuery`, …). |
 | **`lib/`** | **`client/`** (SSR/CSR API), **`config/`** (env, language list), **`l10n/`** (messages per locale), **`live/`** (realtime scaffold), **`utils.ts`**. |
 | **`providers/`** | `AppProviders`, layout UI context. |

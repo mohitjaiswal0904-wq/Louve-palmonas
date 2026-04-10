@@ -9,4 +9,4 @@ Small **cross-route** UI pieces that are not full layout chrome.
 ## When to add here
 
 - Shared cards, empty states, or banners used on many marketing pages.
-- If a block is **one feature only**, prefer **`src/features/<name>/`**.
+- If a block is tied to **one route or product area**, put it under **`src/components/<area>/`** (e.g. **`home/`**).

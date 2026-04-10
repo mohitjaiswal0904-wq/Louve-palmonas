@@ -10,7 +10,7 @@ alwaysApply: true
 ## Non-negotiables (summary)
 
 1. **Layering** (only depend downward):  
-   `src/app` pages → `components` / `features` → `hooks` → `state` & `providers` → `services` → `src/lib/client` → backend (`NEXT_PUBLIC_API_URL`).
+   `src/app` pages → `components` → `hooks` → `state` & `providers` → `services` → `src/lib/client` → backend (`NEXT_PUBLIC_API_URL`).
 
 2. **API access**: No ad-hoc `fetch` to the Louve API from pages/components. Use `createSsrApiClient` (server) or `createCsrApiClient` (client) and put orchestration in `src/services` (no React in services).
 
@@ -18,7 +18,7 @@ alwaysApply: true
 
 4. **Types**: Extend `src/types/config` (and commerce types in `src/types/commerce.ts`) before adding new message fields or API shapes.
 
-5. **Providers**: `AppProviders` = `LocaleProvider` (locale + messages + `setLocale`, `key={initialLocale}`) + `LayoutProvider`. Root layout passes `initialLocale` / `initialMessages` from `getLocale()` + `getMessages()`.
+5. **Providers**: `AppProviders` = `AuthProvider` → `LocaleProvider` (locale + messages + `setLocale`) → `LayoutProvider`. Root layout passes `initialLocale` / `initialMessages` from `getLocale()` + `getMessages()`.
 
 6. **SEO**: Route `generateMetadata` via `src/lib/l10n/build-page-metadata.ts` helpers so locale cookie is respected.
 

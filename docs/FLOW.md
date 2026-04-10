@@ -49,10 +49,11 @@ Hooks **consume state and services** and expose ergonomic APIs:
 **Rule:** Prefer `useMessages()` in components instead of prop-drilling thousands of strings. Server Components
 should call `getMessages(await getLocale())` when they render static copy without a client boundary.
 
-## 5. Components (`src/components`, `src/features`)
+## 5. Components (`src/components`)
 
 Components **use hooks** (if client) or receive props from parent Server Components. They should not talk to the
-backend unless through a hook that uses a service (future pattern).
+backend unless through a hook that uses a service (future pattern). Group route-specific blocks under subfolders
+such as **`home/`** or **`catalog/`**.
 
 Layout pieces (`Header`, `Footer`, `Sidebar`) are client components where they need `useMessages()` or layout
 context.

@@ -8,8 +8,7 @@ described in [FLOW.md](./FLOW.md).
 | Path | Role |
 |------|------|
 | `src/app/` | Next.js App Router: routes, layouts, `generateMetadata`, API route handlers |
-| `src/components/` | Reusable UI: `ui/` (shadcn), `layout/`, `common/`, `seo/` |
-| `src/features/` | Optional feature bundles (e.g. home sections) composed of components + hooks |
+| `src/components/` | Reusable UI: `ui/` (shadcn), `layout/`, `home/`, `catalog/`, `common/`, `seo/` |
 | `src/lib/` | Shared code: `client/`, `config/`, `l10n/`, `live/` — see `src/lib/README.md` |
 | `src/services/` | Service layer: orchestrates API calls via `lib/client` |
 | `src/state/` | React context and client state consumed by hooks |

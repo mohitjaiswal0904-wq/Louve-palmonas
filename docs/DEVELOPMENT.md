@@ -3,8 +3,7 @@
 ## Project structure (high level)
 
 - `src/app/` — Next.js routes, layouts, `generateMetadata`, `/api/locale`
-- `src/features/` — feature-focused UI blocks (e.g. home sections)
-- `src/components/` — shared components
+- `src/components/` — shared UI: `ui/`, `layout/`, `home/`, `catalog/`, `common/`, `seo/`
 - `src/components/ui/` — shadcn/ui generated components
 - `src/components/seo/` — minimal SEO helpers
 - `src/lib/config/` — **non-translated** env helpers (`env.ts`, `languages.ts`)

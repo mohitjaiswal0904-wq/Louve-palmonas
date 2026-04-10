@@ -19,7 +19,7 @@ belongs** and **in what order** layers may depend on each other.
 
 ```
 Pages (src/app)
-  → Components / Features (src/components, src/features)
+  → Components (src/components)
     → Hooks (src/hooks)
       → State / Context (src/state, src/providers)
         → Services (src/services)
@@ -48,12 +48,13 @@ Pages (src/app)
 
 - Use React **Context** for cross-cutting client state (e.g. `LocaleProvider` in `locale-context.tsx`).
 - Do **not** put raw fetch logic here; call services from hooks or effects if needed later.
-- **`LocaleProvider`**: Holds `locale`, `messages` (`AppMessages`), `setLocale`. Parent **`AppProviders`** passes
-  **`key={initialLocale}`** so server refresh stays aligned with the cookie.
+- **`LocaleProvider`**: Holds `locale`, `messages` (`AppMessages`), `setLocale`. Syncs when **`initialLocale`**
+  changes after **`router.refresh()`**. **`AppProviders`** wraps **`AuthProvider`** outside **`LocaleProvider`**
+  so changing language does not reset auth state.
 
 ### 4. `src/providers` — app shell wiring
 
-- **`AppProviders`**: Wraps **`LocaleProvider`** then **`LayoutProvider`** (sidebar/menu UI state).
+- **`AppProviders`**: Wraps **`AuthProvider`** → **`LocaleProvider`** → **`LayoutProvider`** (sidebar/menu UI state).
 - Root layout (`src/app/layout.tsx`) reads **`getLocale()`** + **`getMessages(locale)`** and passes
   **`initialLocale`** / **`initialMessages`** into `AppProviders`.
 
@@ -64,13 +65,13 @@ Pages (src/app)
 - **`useMediaQuery`**: Layout breakpoints.
 - Prefer **one obvious hook** per concern; avoid duplicating context access patterns across many files.
 
-### 6. `src/components` / `src/features`
+### 6. `src/components`
 
 - **`components/ui`**: shadcn-generated primitives only; add via CLI, don’t hand-roll duplicates.
 - **`components/layout`**: Header, Footer, Sidebar, SiteLayout, language switcher — use **`useMessages()`** where
   copy is shown.
-- **`features/<area>`**: Feature-specific sections (e.g. home blocks). **Client** components use **`useMessages()`**
-  for all user-visible strings.
+- **`components/<area>`** (e.g. **`home/`**, **`catalog/`**): Route- or domain-specific sections. **Client**
+  components use **`useMessages()`** for all user-visible strings.
 - Components **must not** import `createSsrApiClient` (server-only). Client components that need data should
   receive **serializable props** from a parent Server Component or use a **hook** that uses CSR client + service.
 

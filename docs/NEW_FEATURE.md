@@ -25,8 +25,8 @@ Use this checklist so new work fits the documented **flow** and **localization**
 ## 4. UI
 
 - [ ] Prefer **`src/components/ui`** (shadcn) for primitives.
-- [ ] Put cross-route layout in **`src/components/layout`**; feature-specific UI under **`src/features/<name>`**
-      or **`src/components/feature`** as the project grows.
+- [ ] Put cross-route layout in **`src/components/layout`**; route-specific sections under **`src/components/<area>`**
+      (e.g. **`home/`**, **`catalog/`**) as the project grows.
 
 ## 5. State
 

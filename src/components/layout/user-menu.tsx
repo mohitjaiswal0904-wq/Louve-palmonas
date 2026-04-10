@@ -32,10 +32,11 @@ export function UserMenu() {
   if (!user) {
     return (
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="hover:bg-transparent">
-            <User className="size-5 stroke-[1.5]" />
-          </Button>
+        <DropdownMenuTrigger
+          className="inline-flex size-8 items-center justify-center rounded-lg hover:bg-muted/50 transition-colors"
+          aria-label="User menu"
+        >
+          <User className="size-5 stroke-[1.5]" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-52">
           <DropdownMenuItem className="cursor-pointer" onClick={() => go("/auth/login")}>
@@ -67,10 +68,11 @@ export function UserMenu() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="hover:bg-transparent">
-          <User className="size-5 stroke-[1.5]" />
-        </Button>
+      <DropdownMenuTrigger 
+        className="inline-flex size-8 items-center justify-center rounded-lg hover:bg-muted/50 transition-colors"
+        aria-label="User menu"
+      >
+        <User className="size-5 stroke-[1.5]" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52">
         <div className="px-2 py-1.5">

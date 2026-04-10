@@ -36,7 +36,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur-md">
-      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center px-[46px]">
+      <div className="flex h-16 w-full items-center px-[46px]">
         {/* Left: Menu */}
         <div className="flex flex-1 items-center justify-start">
           <Button

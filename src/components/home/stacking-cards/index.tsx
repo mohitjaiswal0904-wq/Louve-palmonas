@@ -3,86 +3,82 @@
 import { useMessages } from "@/hooks";
 import { HomeCollections } from "../collections";
 import { HomeCTA } from "../cta";
-import { HomeHero } from "../hero";
+import { CardOne } from "./cards/card-one";
+import { CardTwo } from "./cards/card-two";
+import { CardThree } from "./cards/card-three";
+import { CardFour } from "./cards/card-four";
+import { CardFive } from "./cards/card-five";
+import { CardSix } from "./cards/card-six";
+import { CardSeven } from "./cards/card-seven";
 import { CardItem } from "./card-item";
-import { ValueCard } from "./cards/value-card";
 import { CardData } from "./types";
+
+import { useStackScroll } from "./use-stack-scroll";
 
 export function HomeStackingCards() {
   const m = useMessages();
+  const { currentIndex } = useStackScroll(9); // Updated to 9 cards
 
   const CARDS: CardData[] = [
     {
       id: "hero",
-      component: <HomeHero />,
-      bgColor: "bg-[var(--louve-soft-ivory)]",
+      component: <CardOne />,
+      bgColor: "bg-black",
+      textColor: "text-white",
+    },
+    {
+      id: "collection-wolves",
+      component: <CardTwo />,
+      bgColor: "bg-[#E5E7EB]",
       textColor: "text-zinc-900",
     },
     {
-      id: "instinct",
-      component: (
-        <ValueCard 
-          label={m.seo.brandLine}
-          title={m.homeFeature.instinctTitle}
-          description={m.homeFeature.instinctBody}
-          buttonText={m.homeFeature.exploreBrand}
-          isDark={true}
-        />
-      ),
-      bgColor: "bg-[var(--louve-aurora-forest)]",
-      textColor: "text-[var(--louve-soft-ivory)]",
+      id: "collection-rings",
+      component: <CardThree />,
+      bgColor: "bg-white",
+      textColor: "text-zinc-900",
     },
     {
-      id: "independence",
-      component: (
-        <ValueCard 
-          label="Intrinsic Values"
-          title={m.homeFeature.independenceTitle}
-          description={m.homeFeature.independenceBody}
-          buttonText="View Pieces"
-          isDark={true}
-        />
-      ),
-      bgColor: "bg-[var(--louve-graphite-black)]",
-      textColor: "text-[var(--louve-soft-ivory)]",
+      id: "feature-side-by-side",
+      component: <CardFour />,
+      bgColor: "bg-white",
+      textColor: "text-zinc-900",
     },
     {
-      id: "territory",
-      component: (
-        <ValueCard 
-          label="Mark your Presence."
-          title={m.homeFeature.territoryTitle}
-          description={m.homeFeature.territoryBody}
-          buttonText="Signature Pieces"
-          isDark={true}
-        />
-      ),
-      bgColor: "bg-[var(--louve-primal-rouge)]",
-      textColor: "text-[var(--louve-soft-ivory)]",
+      id: "feature-cinematic-triptych",
+      component: <CardFive />,
+      bgColor: "bg-white",
+      textColor: "text-zinc-900",
     },
     {
-      id: "quiet-power",
-      component: (
-        <ValueCard 
-          label="Refined globally."
-          title={m.homeFeature.quietPowerTitle}
-          description={m.homeFeature.quietPowerBody}
-          buttonText="Explore Quiet Power"
-          isDark={false}
-        />
-      ),
-      bgColor: "bg-[var(--louve-champagne-gold)]",
+      id: "feature-quad-gallery",
+      component: <CardSix />,
+      bgColor: "bg-zinc-900",
+      textColor: "text-white",
+    },
+    {
+      id: "feature-dual-symmetric",
+      component: <CardSeven />,
+      bgColor: "bg-white",
       textColor: "text-zinc-900",
     },
     {
       id: "collections",
-      component: <HomeCollections />,
+      component: (
+        <div className="h-full w-full px-[46px] flex flex-col justify-center">
+          <HomeCollections />
+        </div>
+      ),
       bgColor: "bg-white",
       textColor: "text-zinc-900",
     },
     {
       id: "cta",
-      component: <HomeCTA />,
+      component: (
+        <div className="h-full w-full px-[46px] flex flex-col justify-center">
+          <HomeCTA />
+        </div>
+      ),
       bgColor: "bg-zinc-50",
       textColor: "text-zinc-900",
     },
@@ -95,6 +91,7 @@ export function HomeStackingCards() {
           key={card.id}
           id={card.id}
           index={index}
+          isActive={index === currentIndex}
           bgColor={card.bgColor}
           textColor={card.textColor}
         >

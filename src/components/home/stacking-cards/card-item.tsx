@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 interface CardItemProps {
   id: string;
   index: number;
+  isActive: boolean;
   bgColor: string;
   textColor: string;
   children: ReactNode;
@@ -13,6 +14,7 @@ interface CardItemProps {
 export function CardItem({
   id,
   index,
+  isActive,
   bgColor,
   textColor,
   children,
@@ -25,7 +27,11 @@ export function CardItem({
         zIndex: index + 1,
       }}
     >
-      <div className="mx-auto h-full w-full max-w-[1440px] px-[46px] py-24 flex flex-col justify-center">
+      <div 
+        className={`h-full w-full transition-all duration-1000 ease-out ${
+          isActive ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"
+        }`}
+      >
         {children}
       </div>
     </section>

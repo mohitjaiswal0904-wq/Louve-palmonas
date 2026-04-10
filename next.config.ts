@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
         hostname: "cdn.shopify.com",
         pathname: "/s/files/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "d2ppgkj0vs05g5.cloudfront.net",
+      },
     ],
   },
 };

@@ -30,3 +30,17 @@ export type {
   SignupRequest,
   UserResponse,
 } from "./auth";
+
+export type {
+  FiltersDTO,
+  ImageDTO,
+  MoneyDTO,
+  OptionDTO,
+  ProductDTO,
+  ProductDetailDTO,
+  ProductListParams,
+  ProductTypeDTO,
+  SearchParams,
+  VariantDTO,
+  VendorDTO,
+} from "./catalog";

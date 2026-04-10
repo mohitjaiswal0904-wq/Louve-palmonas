@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
-import { ComingSoon } from "@/components/common/coming-soon";
 import { buildSearchQueryMetadata } from "@/lib/l10n/build-page-metadata";
-import { getMessages } from "@/lib/l10n/get-messages";
-import { getLocale } from "@/lib/l10n/server";
+
+import SearchResultsClient from "./search-results-client";
 
 export async function generateMetadata({
   params,
@@ -20,16 +20,9 @@ export default async function SearchQueryPage({
   params: Promise<{ query: string }>;
 }) {
   const { query } = await params;
-  const m = getMessages(await getLocale());
   return (
-    <ComingSoon
-      title={m.pages.searchResults.comingSoonTitle}
-      body={m.pages.searchResults.comingSoonBody}
-    >
-      <div className="text-sm text-muted-foreground">
-        {m.pages.searchResults.queryLabel}:{" "}
-        <span className="text-foreground">{decodeURIComponent(query)}</span>
-      </div>
-    </ComingSoon>
+    <Suspense fallback={<div className="flex min-h-[40vh] items-center justify-center"><p className="text-sm text-muted-foreground">Searching…</p></div>}>
+      <SearchResultsClient query={decodeURIComponent(query)} />
+    </Suspense>
   );
 }

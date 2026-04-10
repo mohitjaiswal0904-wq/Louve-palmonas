@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
-import { ComingSoon } from "@/components/common/coming-soon";
 import { buildStaticPageMetadata } from "@/lib/l10n/build-page-metadata";
-import { getMessages } from "@/lib/l10n/get-messages";
-import { getLocale } from "@/lib/l10n/server";
+
+import ProductsClient from "./products-client";
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildStaticPageMetadata("products", "/products");
 }
 
-export default async function ProductsPage() {
-  const m = getMessages(await getLocale());
+export default function ProductsPage() {
   return (
-    <ComingSoon
-      title={m.pages.products.comingSoonTitle}
-      body={m.pages.products.comingSoonBody}
-    />
+    <Suspense fallback={<div className="flex min-h-[40vh] items-center justify-center"><p className="text-sm text-muted-foreground">Loading…</p></div>}>
+      <ProductsClient />
+    </Suspense>
   );
 }

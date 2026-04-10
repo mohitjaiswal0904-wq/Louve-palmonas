@@ -26,7 +26,9 @@ const isSecure = process.env.NODE_ENV === "production";
 async function proxy(req: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
   const { path } = await params;
   const backendPath = `/api/${path.join("/")}`;
-  const backendUrl = `${getApiBaseUrl()}${backendPath}`;
+  // Forward ?query=params — required for catalog filters, search `q`, pagination, etc.
+  const search = req.nextUrl.search;
+  const backendUrl = `${getApiBaseUrl()}${backendPath}${search}`;
   const store = await cookies();
   const accessToken = store.get(ACCESS_TOKEN_COOKIE)?.value;
   const refreshToken = store.get(REFRESH_TOKEN_COOKIE)?.value;

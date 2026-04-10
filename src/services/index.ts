@@ -8,3 +8,11 @@ export {
   resetPassword,
   getMe,
 } from "./auth.service";
+
+export {
+  listProducts,
+  getProductByHandle,
+  getProductById,
+  searchProducts,
+  getFilters,
+} from "./catalog.service";

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, LogOut, Package, ShoppingBag, User } from "lucide-react";
+import { LogOut, Package, ShoppingBag, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -93,10 +93,12 @@ export function UserMenu() {
           <ShoppingBag className="mr-2 size-4 shrink-0" />
           {u.cart}
         </DropdownMenuItem>
+        {/* Wishlist hidden — /wishlist redirects to /cart
         <DropdownMenuItem className="cursor-pointer" onClick={() => go("/wishlist")}>
           <Heart className="mr-2 size-4 shrink-0" />
           {u.wishlist}
         </DropdownMenuItem>
+        */}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           variant="destructive"

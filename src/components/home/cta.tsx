@@ -16,9 +16,11 @@ export function HomeCTA() {
         </div>
         <div className="flex gap-3">
           <Button className="h-10 px-5">{m.homeFeature.browseNew}</Button>
+          {/* Stores / retail presence paused — /stores redirects to /cart
           <Button variant="outline" className="h-10 px-5">
             {m.homeFeature.visitStores}
           </Button>
+          */}
         </div>
       </div>
       <Separator className="my-6" />

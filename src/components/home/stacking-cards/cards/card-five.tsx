@@ -20,7 +20,7 @@ export function CardFive({
   rightImageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-eighth-image-89e96d50.jpg",
 }: CardFiveProps) {
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden bg-white md:flex-row">
+    <div className="relative flex h-full min-h-full w-full flex-col overflow-hidden bg-white md:flex-row">
       {/* Left Column: Two Stacked Detail Images */}
       <div className="flex flex-1 flex-col">
         <div className="relative h-1/2 w-full overflow-hidden">

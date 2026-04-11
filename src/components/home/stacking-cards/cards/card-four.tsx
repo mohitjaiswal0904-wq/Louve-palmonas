@@ -20,7 +20,7 @@ export function CardFour({
   imageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fifth-image-29768f9a.jpg",
 }: CardFourProps) {
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden bg-white md:flex-row">
+    <div className="relative flex h-full min-h-full w-full flex-col overflow-hidden bg-white md:flex-row">
       {/* Left side: Feature Image with Massive Peach Star */}
       <div className="relative z-10 flex flex-1 items-center justify-center p-8 md:p-16 lg:p-24">
         <div className="relative aspect-square w-full max-w-md shadow-2xl">

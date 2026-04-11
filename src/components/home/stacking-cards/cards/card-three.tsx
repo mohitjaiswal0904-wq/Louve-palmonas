@@ -22,7 +22,7 @@ export function CardThree({
   rightImageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png",
 }: CardThreeProps) {
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden bg-white md:flex-row">
+    <div className="relative flex h-full min-h-full w-full flex-col overflow-hidden bg-white md:flex-row">
       {/* Left Column: Focused Content */}
       <div className="flex flex-[1.2] flex-col items-center justify-center p-10 md:p-20">
         <div className="flex flex-col space-y-10 max-w-lg w-full">

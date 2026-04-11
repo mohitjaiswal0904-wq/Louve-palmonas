@@ -19,7 +19,7 @@ export function CardSix({
   buttonLink = "/products",
 }: CardSixProps) {
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden bg-white md:flex-row">
+    <div className="relative flex h-full min-h-full w-full flex-col overflow-hidden bg-white md:flex-row">
       {images.map((img, idx) => (
         <div 
           key={idx} 

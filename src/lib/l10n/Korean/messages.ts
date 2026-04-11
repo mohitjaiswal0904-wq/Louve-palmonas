@@ -82,70 +82,26 @@ export const messages = {
         ],
       },
     ],
-    sidebar: [
-      { key: "home", label: "홈", href: "/" },
-      {
-        key: "collections",
-        label: "컬렉션",
-        children: [
-          { key: "collections-all", label: "전체 컬렉션", href: "/collections" },
-          {
-            key: "collections-core",
-            label: "코어 골드 에센셜",
-            href: "/collections#core-gold-essentials",
-          },
-          {
-            key: "collections-diamond",
-            label: "다이아몬드 스테이플",
-            href: "/collections#diamond-staples",
-          },
-          {
-            key: "collections-occasion",
-            label: "오케이전 피스",
-            href: "/collections#occasion-pieces",
-          },
-          {
-            key: "collections-signature",
-            label: "시그니처 루브 디자인",
-            href: "/collections#signature-louve-designs",
-          },
-        ],
-      },
-      {
-        key: "products",
-        label: "제품",
-        children: [
-          { key: "products-all", label: "전체 제품", href: "/products" },
-          {
-            key: "products-category",
-            label: "카테고리",
-            children: [
-              { key: "products-rings", label: "링", href: "/products?category=rings" },
-              { key: "products-earrings", label: "이어링", href: "/products?category=earrings" },
-              {
-                key: "products-necklaces",
-                label: "네크리스",
-                href: "/products?category=necklaces",
-              },
-            ],
-          },
-          {
-            key: "products-sample",
-            label: "샘플 제품(플레이스홀더)",
-            href: "/products/sample-product",
-          },
-        ],
-      },
-      { key: "about", label: "소개", href: "/about" },
-      { key: "stores", label: "매장", href: "/stores" },
-      { key: "contact", label: "문의", href: "/contact" },
-      { key: "shipping", label: "배송", href: "/shipping" },
-    ],
+    megaMenu: {
+      categories: [
+        { label: "반지", href: "/products?category=rings" },
+        { label: "귀걸이", href: "/products?category=earrings" },
+        { label: "펜던트", href: "/products?category=pendants" },
+        { label: "팔찌", href: "/products?category=bracelets" },
+        { label: "약혼 반지", href: "/products?category=engagement-rings" },
+        { label: "원석", href: "/products?category=gemstones" },
+      ],
+      gallery: [
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "컬렉션 뷰 1" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-third-image-f00e6cb4.png", alt: "컬렉션 뷰 2" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-eighth-image-89e96d50.jpg", alt: "컬렉션 뷰 3" },
+      ],
+      cta: { label: "더 보기", href: "/products" },
+    },
   },
   common: {
     openMenu: "메뉴 열기",
     closeMenu: "메뉴 닫기",
-    closeSidebar: "사이드바 닫기",
     back: "뒤로",
     browse: "둘러보기",
     notes: "메모",
@@ -154,8 +110,6 @@ export const messages = {
     language: "언어",
     brandAlt: "Louve",
     loading: "로딩 중",
-    sidebar: "사이드바",
-    sidebarSub: "사이드바 하위 메뉴",
   },
   catalog: {
     products: "제품",

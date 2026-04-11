@@ -82,70 +82,26 @@ export const messages = {
         ],
       },
     ],
-    sidebar: [
-      { key: "home", label: "Accueil", href: "/" },
-      {
-        key: "collections",
-        label: "Collections",
-        children: [
-          { key: "collections-all", label: "Toutes les collections", href: "/collections" },
-          {
-            key: "collections-core",
-            label: "Essentiels or cœur",
-            href: "/collections#core-gold-essentials",
-          },
-          {
-            key: "collections-diamond",
-            label: "Incontournables diamant",
-            href: "/collections#diamond-staples",
-          },
-          {
-            key: "collections-occasion",
-            label: "Pièces d’occasion",
-            href: "/collections#occasion-pieces",
-          },
-          {
-            key: "collections-signature",
-            label: "Créations signature Louve",
-            href: "/collections#signature-louve-designs",
-          },
-        ],
-      },
-      {
-        key: "products",
-        label: "Produits",
-        children: [
-          { key: "products-all", label: "Tous les produits", href: "/products" },
-          {
-            key: "products-category",
-            label: "Catégories",
-            children: [
-              { key: "products-rings", label: "Bagues", href: "/products?category=rings" },
-              { key: "products-earrings", label: "Boucles d’oreilles", href: "/products?category=earrings" },
-              {
-                key: "products-necklaces",
-                label: "Colliers",
-                href: "/products?category=necklaces",
-              },
-            ],
-          },
-          {
-            key: "products-sample",
-            label: "Produit exemple (espace réservé)",
-            href: "/products/sample-product",
-          },
-        ],
-      },
-      { key: "about", label: "À propos", href: "/about" },
-      { key: "stores", label: "Boutiques", href: "/stores" },
-      { key: "contact", label: "Contact", href: "/contact" },
-      { key: "shipping", label: "Livraison", href: "/shipping" },
-    ],
+    megaMenu: {
+      categories: [
+        { label: "Bagues", href: "/products?category=rings" },
+        { label: "Boucles d'oreilles", href: "/products?category=earrings" },
+        { label: "Pendentifs", href: "/products?category=pendants" },
+        { label: "Bracelets", href: "/products?category=bracelets" },
+        { label: "Bagues de fiançailles", href: "/products?category=engagement-rings" },
+        { label: "Pierres précieuses", href: "/products?category=gemstones" },
+      ],
+      gallery: [
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "Vue de collection 1" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-third-image-f00e6cb4.png", alt: "Vue de collection 2" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-eighth-image-89e96d50.jpg", alt: "Vue de collection 3" },
+      ],
+      cta: { label: "Explorer plus", href: "/products" },
+    },
   },
   common: {
     openMenu: "Ouvrir le menu",
     closeMenu: "Fermer le menu",
-    closeSidebar: "Fermer la barre latérale",
     back: "Retour",
     browse: "Parcourir",
     notes: "Notes",
@@ -154,8 +110,6 @@ export const messages = {
     language: "Langue",
     brandAlt: "Louve",
     loading: "Chargement",
-    sidebar: "Barre latérale",
-    sidebarSub: "Sous-menu de la barre latérale",
   },
   catalog: {
     products: "Produits",

@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 interface CardTwoProps {
   title?: string;
   tagline?: string;
   buttonText?: string;
+  buttonLink?: string;
   imageUrl?: string;
 }
 
@@ -14,6 +16,7 @@ export function CardTwo({
   title = "Collection Name",
   tagline = "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit",
   buttonText = "Explore More",
+  buttonLink = "/products",
   imageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-second-image-661d3664.png",
 }: CardTwoProps) {
   return (
@@ -41,12 +44,14 @@ export function CardTwo({
           </div>
           
           <div className="pt-6">
-            <Button
-              size="lg"
-              className="h-10 rounded-none bg-[#77080E] px-10 text-[10px] font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-lg"
-            >
-              {buttonText}
-            </Button>
+            <Link href={buttonLink}>
+              <Button
+                size="lg"
+                className="h-10 rounded-none bg-[#77080E] px-10 text-[10px] font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-lg"
+              >
+                {buttonText}
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

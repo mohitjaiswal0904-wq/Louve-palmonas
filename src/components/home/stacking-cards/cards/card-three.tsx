@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 interface CardThreeProps {
   title?: string;
   tagline?: string;
   buttonText?: string;
+  buttonLink?: string;
   leftImageUrl?: string;
   rightImageUrl?: string;
 }
@@ -15,6 +17,7 @@ export function CardThree({
   title = "Collection Name",
   tagline = "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit",
   buttonText = "Explore More",
+  buttonLink = "/products",
   leftImageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-third-image-f00e6cb4.png",
   rightImageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png",
 }: CardThreeProps) {
@@ -43,12 +46,14 @@ export function CardThree({
               {tagline}
             </p>
             <div className="pt-4">
-              <Button
-                size="lg"
-                className="h-11 rounded-none bg-[#77080E] px-10 text-[11px] font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-md"
-              >
-                {buttonText}
-              </Button>
+              <Link href={buttonLink}>
+                <Button
+                  size="lg"
+                  className="h-11 rounded-none bg-[#77080E] px-10 text-[11px] font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-md"
+                >
+                  {buttonText}
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

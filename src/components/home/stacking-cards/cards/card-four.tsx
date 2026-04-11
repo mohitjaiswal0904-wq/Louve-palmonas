@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 interface CardFourProps {
   title?: string;
   body?: string;
   buttonText?: string;
+  buttonLink?: string;
   imageUrl?: string;
 }
 
@@ -14,6 +16,7 @@ export function CardFour({
   title = "Lorem Ipsum Dolor Sit Amet",
   body = "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit.",
   buttonText = "Explore More",
+  buttonLink = "/products",
   imageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fifth-image-29768f9a.jpg",
 }: CardFourProps) {
   return (
@@ -77,12 +80,14 @@ export function CardFour({
           </p>
           
           <div className="pt-6">
-            <Button
-              size="lg"
-              className="h-11 rounded-none bg-[#77080E] px-12 text-[11px] font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-lg"
-            >
-              {buttonText}
-            </Button>
+            <Link href={buttonLink}>
+              <Button
+                size="lg"
+                className="h-11 rounded-none bg-[#77080E] px-12 text-[11px] font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-lg"
+              >
+                {buttonText}
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

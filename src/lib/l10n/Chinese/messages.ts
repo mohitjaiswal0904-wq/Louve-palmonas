@@ -82,70 +82,26 @@ export const messages = {
         ],
       },
     ],
-    sidebar: [
-      { key: "home", label: "首页", href: "/" },
-      {
-        key: "collections",
-        label: "系列",
-        children: [
-          { key: "collections-all", label: "全部系列", href: "/collections" },
-          {
-            key: "collections-core",
-            label: "黄金核心系列",
-            href: "/collections#core-gold-essentials",
-          },
-          {
-            key: "collections-diamond",
-            label: "钻石经典款",
-            href: "/collections#diamond-staples",
-          },
-          {
-            key: "collections-occasion",
-            label: "场合臻选",
-            href: "/collections#occasion-pieces",
-          },
-          {
-            key: "collections-signature",
-            label: "Louve 标志性设计",
-            href: "/collections#signature-louve-designs",
-          },
-        ],
-      },
-      {
-        key: "products",
-        label: "产品",
-        children: [
-          { key: "products-all", label: "全部产品", href: "/products" },
-          {
-            key: "products-category",
-            label: "分类",
-            children: [
-              { key: "products-rings", label: "戒指", href: "/products?category=rings" },
-              { key: "products-earrings", label: "耳环", href: "/products?category=earrings" },
-              {
-                key: "products-necklaces",
-                label: "项链",
-                href: "/products?category=necklaces",
-              },
-            ],
-          },
-          {
-            key: "products-sample",
-            label: "示例产品（占位）",
-            href: "/products/sample-product",
-          },
-        ],
-      },
-      { key: "about", label: "关于我们", href: "/about" },
-      { key: "stores", label: "门店", href: "/stores" },
-      { key: "contact", label: "联系我们", href: "/contact" },
-      { key: "shipping", label: "配送", href: "/shipping" },
-    ],
+    megaMenu: {
+      categories: [
+        { label: "戒指", href: "/products?category=rings" },
+        { label: "耳环", href: "/products?category=earrings" },
+        { label: "吊坠", href: "/products?category=pendants" },
+        { label: "手链", href: "/products?category=bracelets" },
+        { label: "订婚戒指", href: "/products?category=engagement-rings" },
+        { label: "宝石", href: "/products?category=gemstones" },
+      ],
+      gallery: [
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "系列展示 1" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-third-image-f00e6cb4.png", alt: "系列展示 2" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-eighth-image-89e96d50.jpg", alt: "系列展示 3" },
+      ],
+      cta: { label: "探索更多", href: "/products" },
+    },
   },
   common: {
     openMenu: "打开菜单",
     closeMenu: "关闭菜单",
-    closeSidebar: "关闭侧边栏",
     back: "返回",
     browse: "浏览",
     notes: "备注",
@@ -154,8 +110,6 @@ export const messages = {
     language: "语言",
     brandAlt: "Louve",
     loading: "加载中",
-    sidebar: "侧边栏",
-    sidebarSub: "侧边栏子菜单",
   },
   catalog: {
     products: "产品",

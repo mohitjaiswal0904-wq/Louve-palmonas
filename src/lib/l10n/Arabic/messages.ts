@@ -82,70 +82,26 @@ export const messages = {
         ],
       },
     ],
-    sidebar: [
-      { key: "home", label: "الرئيسية", href: "/" },
-      {
-        key: "collections",
-        label: "المجموعات",
-        children: [
-          { key: "collections-all", label: "جميع المجموعات", href: "/collections" },
-          {
-            key: "collections-core",
-            label: "أساسيات الذهب",
-            href: "/collections#core-gold-essentials",
-          },
-          {
-            key: "collections-diamond",
-            label: "قطع الألماس الأساسية",
-            href: "/collections#diamond-staples",
-          },
-          {
-            key: "collections-occasion",
-            label: "قطع المناسبات",
-            href: "/collections#occasion-pieces",
-          },
-          {
-            key: "collections-signature",
-            label: "تصاميم Louve المميزة",
-            href: "/collections#signature-louve-designs",
-          },
-        ],
-      },
-      {
-        key: "products",
-        label: "المنتجات",
-        children: [
-          { key: "products-all", label: "جميع المنتجات", href: "/products" },
-          {
-            key: "products-category",
-            label: "الفئات",
-            children: [
-              { key: "products-rings", label: "الخواتم", href: "/products?category=rings" },
-              { key: "products-earrings", label: "الأقراط", href: "/products?category=earrings" },
-              {
-                key: "products-necklaces",
-                label: "القلادات",
-                href: "/products?category=necklaces",
-              },
-            ],
-          },
-          {
-            key: "products-sample",
-            label: "منتج تجريبي (عنصر نائب)",
-            href: "/products/sample-product",
-          },
-        ],
-      },
-      { key: "about", label: "من نحن", href: "/about" },
-      { key: "stores", label: "المتاجر", href: "/stores" },
-      { key: "contact", label: "اتصل بنا", href: "/contact" },
-      { key: "shipping", label: "الشحن", href: "/shipping" },
-    ],
+    megaMenu: {
+      categories: [
+        { label: "الخواتم", href: "/products?category=rings" },
+        { label: "الأقراط", href: "/products?category=earrings" },
+        { label: "الدلايات", href: "/products?category=pendants" },
+        { label: "الأساور", href: "/products?category=bracelets" },
+        { label: "خواتم الخطوبة", href: "/products?category=engagement-rings" },
+        { label: "الأحجار الكريمة", href: "/products?category=gemstones" },
+      ],
+      gallery: [
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "عرض المجموعة 1" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-third-image-f00e6cb4.png", alt: "عرض المجموعة 2" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-eighth-image-89e96d50.jpg", alt: "عرض المجموعة 3" },
+      ],
+      cta: { label: "استكشف المزيد", href: "/products" },
+    },
   },
   common: {
     openMenu: "فتح القائمة",
     closeMenu: "إغلاق القائمة",
-    closeSidebar: "إغلاق الشريط الجانبي",
     back: "رجوع",
     browse: "تصفح",
     notes: "ملاحظات",
@@ -154,8 +110,6 @@ export const messages = {
     language: "اللغة",
     brandAlt: "Louve",
     loading: "جاري التحميل",
-    sidebar: "الشريط الجانبي",
-    sidebarSub: "قائمة فرعية للشريط الجانبي",
   },
   catalog: {
     products: "المنتجات",

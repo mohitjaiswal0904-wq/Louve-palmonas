@@ -1,14 +1,17 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 interface CardSevenProps {
   imageUrl?: string;
+  buttonLink?: string;
 }
 
 export function CardSeven({
   imageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-seventh-image-db258ca5.jpg",
+  buttonLink = "/products",
 }: CardSevenProps) {
   const columns = [1, 2];
 
@@ -40,12 +43,14 @@ export function CardSeven({
                 Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit
               </p>
               <div className="pt-4">
-                <Button
-                  size="lg"
-                  className="h-10 rounded-none bg-[#77080E] px-10 text-[10px] font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-md"
-                >
-                  Explore More
-                </Button>
+                <Link href={buttonLink}>
+                  <Button
+                    size="lg"
+                    className="h-10 rounded-none bg-[#77080E] px-10 text-[10px] font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-md"
+                  >
+                    Explore More
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

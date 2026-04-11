@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Montserrat } from "next/font/google";
+import { Inter } from "next/font/google";
 
 import { SiteLayout } from "@/components/layout";
 import { AppProviders } from "@/providers/app-providers";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { DEFAULT_LOCALE, localeHtmlLang } from "@/types/config";
 import { getMessages } from "@/lib/l10n/get-messages";
 
-const montserrat = Montserrat({
+const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
@@ -33,7 +33,7 @@ export default function GlobalError({
   return (
     <html
       lang={localeHtmlLang(DEFAULT_LOCALE)}
-      className={`${montserrat.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
         <AppProviders

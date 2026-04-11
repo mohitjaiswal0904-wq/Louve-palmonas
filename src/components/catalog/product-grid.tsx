@@ -30,11 +30,11 @@ export function ProductGrid({ products, size = "lg", columns }: Props) {
   }
 
   return (
-    <div className={cn("grid border-l border-t border-zinc-200/90 dark:border-zinc-800", columns ?? defaultCols[size])}>
+    <div className={cn("grid border-l border-t border-[#F6F1E9] dark:border-zinc-800", columns ?? defaultCols[size])}>
       {products.map((p) => (
         <div
           key={p.id}
-          className="border-r border-b border-zinc-200/90 dark:border-zinc-800"
+          className="border-r border-b border-[#F6F1E9] dark:border-zinc-800"
         >
           <ProductCard product={p} size={size} inGrid />
         </div>

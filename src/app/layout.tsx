@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Inter } from "next/font/google";
 
 import { WebSiteJsonLd } from "@/components/seo/structured-data";
 import { createMetadata } from "@/components/seo/metadata";
@@ -10,7 +10,7 @@ import { getLocale } from "@/lib/l10n/server";
 import { localeHtmlLang } from "@/types/config";
 import "./globals.css";
 
-const montserrat = Montserrat({
+const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
@@ -39,7 +39,7 @@ export default async function RootLayout({
   return (
     <html
       lang={localeHtmlLang(locale)}
-      className={`${montserrat.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
         {siteUrl ? (

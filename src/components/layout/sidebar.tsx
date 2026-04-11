@@ -117,6 +117,7 @@ export function Sidebar() {
                       alt={m.common.brandAlt}
                       width={26}
                       height={26}
+                      style={{ height: "auto" }}
                       priority
                     />
                     <div className="text-sm font-light tracking-[0.22em]">
@@ -224,6 +225,7 @@ export function Sidebar() {
                   alt={m.common.brandAlt}
                   width={26}
                   height={26}
+                  style={{ height: "auto" }}
                   priority
                 />
                 <div className="text-sm font-light tracking-[0.22em]">

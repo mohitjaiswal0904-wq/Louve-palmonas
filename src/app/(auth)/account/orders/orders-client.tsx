@@ -152,7 +152,7 @@ export default function OrdersClient() {
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
       <header className="mb-10 border-b border-zinc-200/80 pb-8 dark:border-zinc-800">
         <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-zinc-500">Account</p>
-        <h1 className="mt-2 font-serif text-3xl font-light tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h1 className="mt-2 text-3xl font-light tracking-tight text-zinc-900 dark:text-zinc-50">
           Your orders
         </h1>
         <p className="mt-3 max-w-lg text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
@@ -211,7 +211,7 @@ export default function OrdersClient() {
             <path d="M16 12V8h16v4" />
             <path d="M8 22h32" strokeLinecap="round" />
           </svg>
-          <p className="font-serif text-lg font-light text-zinc-800 dark:text-zinc-200">No orders yet</p>
+          <p className="text-lg font-light text-zinc-800 dark:text-zinc-200">No orders yet</p>
           <p className="mt-2 max-w-sm text-sm text-zinc-500">
             When you place an order, it will appear here with status and tracking details.
           </p>

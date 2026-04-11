@@ -87,3 +87,17 @@ export type {
   OrderCountDTO,
   OrderListParams,
 } from "./order";
+
+export type {
+  CreateAddressRequest,
+  UpdateAddressRequest,
+  AddressDTO,
+} from "./address";
+
+export type {
+  PaymentDTO,
+  RefundDTO,
+  PayOrderResponse,
+  VerifyPaymentRequest,
+  RefundRequest,
+} from "./payment";

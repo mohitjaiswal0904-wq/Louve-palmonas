@@ -8,3 +8,5 @@ export { useMediaQuery } from "./use-media-query";
 export { useWishlist } from "./wishlist/use-wishlist";
 export { useCart } from "./cart/use-cart";
 export { useOrder } from "./order/use-order";
+export { useAddress } from "./address/use-address";
+export { usePayment } from "./payment/use-payment";

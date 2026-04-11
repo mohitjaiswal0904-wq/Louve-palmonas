@@ -35,7 +35,14 @@ export function useStackScroll(cardCount: number) {
         return;
       }
 
-      const threshold = 20; // Sensitivity threshold
+      const threshold = 20; // Sensitivity threshold (vertical)
+
+      // When the gesture is mostly horizontal, stop the browser from panning the page sideways
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 1) {
+        e.preventDefault();
+        return;
+      }
+
       if (Math.abs(e.deltaY) > threshold) {
         e.preventDefault();
         const direction = e.deltaY > 0 ? 1 : -1;

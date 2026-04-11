@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function Home() {
   return (
-    <div className="w-full">
+    <div className="-mt-16 min-h-0 w-full min-w-0 max-w-full overflow-x-hidden">
       <HomeStackingCards />
     </div>
   );

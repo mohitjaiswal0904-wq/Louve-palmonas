@@ -16,14 +16,13 @@ export function CardSeven({
   const columns = [1, 2];
 
   return (
-    <div className="relative flex h-full min-h-full w-full flex-col overflow-hidden bg-white md:flex-row">
+    <div className="relative flex h-full max-h-full min-h-0 w-full min-w-0 max-w-full flex-col overflow-x-hidden overflow-y-hidden bg-white md:flex-row">
       {columns.map((_, idx) => (
-        <div 
-          key={idx} 
-          className="relative flex flex-1 flex-col border-b border-zinc-100 md:border-b-0 md:border-r last:border-none"
+        <div
+          key={idx}
+          className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-zinc-100 last:border-b-0 md:h-full md:max-h-full md:border-b-0 md:border-r md:last:border-r-0"
         >
-          {/* Top Image Section */}
-          <div className="relative h-[65%] w-full overflow-hidden">
+          <div className="relative h-[55vh] min-h-0 w-full shrink-0 overflow-hidden md:h-[58%] md:max-h-[58%]">
             <Image
               src={imageUrl}
               alt={`Collection Item ${idx + 1}`}
@@ -33,10 +32,9 @@ export function CardSeven({
             />
           </div>
 
-          {/* Bottom Content Area */}
-          <div className="flex flex-1 flex-col justify-center bg-white p-8 md:p-12 lg:p-16">
-            <div className="space-y-4">
-               <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 md:text-3xl">
+          <div className="flex min-h-0 flex-1 flex-col justify-center overflow-y-auto overflow-x-hidden overscroll-contain bg-white p-8 md:p-12 lg:p-16">
+            <div className="min-w-0 space-y-4">
+              <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 md:text-3xl">
                 Collection Name
               </h2>
               <p className="max-w-xs text-sm font-normal leading-relaxed text-zinc-500">
@@ -46,7 +44,7 @@ export function CardSeven({
                 <Link href={buttonLink}>
                   <Button
                     size="lg"
-                    className="h-10 rounded-none bg-[#77080E] px-10 text-[10px] font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-md"
+                    className="h-10 rounded-none bg-[#77080E] px-10 text-[10px] font-semibold uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#5A060A] active:scale-95"
                   >
                     Explore More
                   </Button>

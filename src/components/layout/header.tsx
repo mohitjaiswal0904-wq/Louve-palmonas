@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useCart, useMessages, useWishlist } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { HEADER_ACTION_ICONS } from "./header-actions";
+import { HeaderSearch } from "./header-search";
 import { LanguageSwitcher } from "./language-switcher";
 import { UserMenu } from "./user-menu";
 
@@ -72,6 +73,11 @@ export function Header() {
           <LanguageSwitcher />
           {m.navigation.header.actions.map((a) => {
             if (a.key === "account") return null;
+
+            if (a.key === "search") {
+              return <HeaderSearch key={a.key} ariaLabel={a.ariaLabel} />;
+            }
+
             const Icon = HEADER_ACTION_ICONS[a.key];
             if (!Icon) return null;
 

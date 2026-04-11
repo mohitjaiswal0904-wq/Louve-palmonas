@@ -3,17 +3,17 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
+import { PopularSearches } from "@/components/common";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useMessages, useSearch } from "@/hooks";
-import type { TopSearchDTO, RecentSearchDTO, SuggestionDTO } from "@/types";
+import type { RecentSearchDTO, SuggestionDTO } from "@/types";
 
 export default function SearchClient() {
   const m = useMessages();
   const search = useSearch();
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const [topSearches, setTopSearches] = useState<TopSearchDTO[]>([]);
   const [recentSearches, setRecentSearches] = useState<RecentSearchDTO[]>([]);
   const [suggestions, setSuggestions] = useState<SuggestionDTO[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -23,9 +23,6 @@ export default function SearchClient() {
   useEffect(() => {
     if (didInit.current) return;
     didInit.current = true;
-    search.getTopSearches(8).then((r) => {
-      if (r.data) setTopSearches(r.data);
-    }).catch(() => {});
     search.getRecentSearches(6).then((r) => {
       if (r.data) setRecentSearches(r.data);
     }).catch(() => {});
@@ -130,26 +127,7 @@ export default function SearchClient() {
         </section>
       )}
 
-      {/* Top searches */}
-      {topSearches.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-xs font-medium uppercase tracking-wider text-zinc-500">
-            Popular searches
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {topSearches.map((t, i) => (
-              <button
-                key={`${t.query}-${i}`}
-                type="button"
-                onClick={() => navigateToSearch(t.query)}
-                className="rounded-full border border-zinc-200 px-4 py-1.5 text-xs text-zinc-700 transition hover:border-zinc-400 dark:border-zinc-700 dark:text-zinc-300"
-              >
-                {t.query}
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
+      <PopularSearches variant="compact" limit={8} title="Popular searches" />
     </div>
   );
 }

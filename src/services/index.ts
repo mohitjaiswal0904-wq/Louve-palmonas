@@ -21,6 +21,7 @@ export {
   getTopSearches,
   getRecentSearches,
   getSuggestions,
+  getAutocomplete,
 } from "./search.service";
 
 export {

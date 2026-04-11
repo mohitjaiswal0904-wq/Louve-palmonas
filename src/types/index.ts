@@ -32,6 +32,7 @@ export type {
 } from "./auth";
 
 export type {
+  AutocompleteItemDTO,
   RecentSearchDTO,
   SearchProductsParams,
   SuggestionDTO,

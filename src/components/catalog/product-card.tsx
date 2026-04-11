@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { useAuth, useMessages, useWishlist } from "@/hooks";
 import { cn } from "@/lib/utils";
@@ -55,7 +55,8 @@ const priceSize: Record<CardSize, string> = {
 export function ProductCard({ product, size = "lg", inGrid = true }: ProductCardProps) {
   const m = useMessages();
   const router = useRouter();
-  const { user } = useAuth();
+  const pathname = usePathname();
+  const { user, loading: authLoading } = useAuth();
   const { wishlistedProductIds, toggleWishlist } = useWishlist();
 
   const isWishlisted = wishlistedProductIds.has(product.id);
@@ -63,8 +64,10 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
   function handleWishlistClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     e.stopPropagation();
+    if (authLoading) return;
     if (!user) {
-      router.push("/login");
+      const callback = `${pathname}${window.location.search}`;
+      router.push(`/auth/login?callbackUrl=${encodeURIComponent(callback)}`);
       return;
     }
     void toggleWishlist(product.id);

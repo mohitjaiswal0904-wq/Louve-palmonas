@@ -28,3 +28,10 @@ export type SuggestionDTO = {
   query: string;
   type: "popular" | "vendor" | "product_type" | "history";
 };
+
+/** GET /api/v1/search/autocomplete — products + collections */
+export type AutocompleteItemDTO = {
+  label: string;
+  type: "product" | "collection";
+  href: string;
+};

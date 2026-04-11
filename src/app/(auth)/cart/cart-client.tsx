@@ -27,6 +27,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+import { PopularSearches } from "@/components/common";
 import {
   useAuth,
   useCart,
@@ -255,8 +256,16 @@ export default function CartClient() {
         setCheckoutError("Payment failed. Please try again.");
       });
       rzp.open();
-    } catch {
-      setCheckoutError("Something went wrong. Please try again.");
+    } catch (err) {
+      const msg =
+        err instanceof Error && err.message
+          ? err.message
+          : "Something went wrong. Please try again.";
+      setCheckoutError(
+        /cart is empty/i.test(msg)
+          ? "Your cart is empty. Add items before checkout."
+          : msg,
+      );
       setActionLoading(false);
     }
   }, [
@@ -566,53 +575,7 @@ export default function CartClient() {
           </div>
         )}
 
-        {/* SEO Footer */}
-        <div className="mt-40 space-y-12">
-          <div className="flex h-12 w-12 items-center justify-center">
-            <Image
-              src="/logo.svg"
-              alt="Louve"
-              width={48}
-              height={20}
-              className="opacity-40"
-            />
-          </div>
-          <div className="space-y-8">
-            <h3 className="text-lg font-light tracking-wide text-zinc-900">
-              Popular Searches
-            </h3>
-            <div className="space-y-6">
-              <SEOSection
-                label="For Women"
-                links="Demi-Fine Jewellery | Rings For Women | Earrings For Women | Bracelet For Women | Pendants For Women | Necklaces For Women"
-              />
-              <SEOSection
-                label="For Men"
-                links="Rings For Men | Pendant For Men | Chain For Men"
-              />
-              <SEOSection
-                label="Mangalsutra"
-                links="Gold Mangalsutra | Diamond Mangalsutra | Infinity Mangalsutra"
-              />
-              <SEOSection
-                label="Pendants"
-                links="Gold Pendants | Diamond Pendants | Solitaire Pendants | Evil Eye Pendants"
-              />
-              <SEOSection
-                label="Bracelets"
-                links="Gold Bracelets | Diamond Bracelets | Pearl Bracelets | Evil Eye Bracelets | Chain Bracelets | Stone Bracelets | Cuff Bracelets"
-              />
-              <SEOSection
-                label="Necklace"
-                links="Gold Necklace | Diamond Necklace | Pearl Necklace | Necklaces For Women | Evil Eye Necklace | Name Necklace | Emerald Necklace"
-              />
-              <SEOSection
-                label="Rings"
-                links="Diamond Rings | Gold Rings | Silver Rings | Solitaire Rings | Gemstone Rings | Mens Rings | Engagement Ring | Couple Ring | Wedding Ring | Statement Ring | Emerald Ring"
-              />
-            </div>
-          </div>
-        </div>
+        <PopularSearches variant="footer" showLogo limit={12} title="Popular Searches" />
       </div>
     </div>
   );
@@ -1135,17 +1098,6 @@ function TrustBadge({
     <div className="flex items-center gap-3">
       <Icon className="h-4 w-4 text-zinc-400" strokeWidth={1.5} />
       <span className="text-sm font-normal text-zinc-500">{text}</span>
-    </div>
-  );
-}
-
-function SEOSection({ label, links }: { label: string; links: string }) {
-  return (
-    <div className="space-y-1">
-      <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">
-        {label}
-      </p>
-      <p className="text-[10px] leading-relaxed text-zinc-400/80">{links}</p>
     </div>
   );
 }

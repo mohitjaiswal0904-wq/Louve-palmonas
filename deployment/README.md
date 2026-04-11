@@ -15,6 +15,8 @@
 
 Docker build should run from **repository root** (see **`Makefile`** **`ROOT`**), not only inside `deployment/`, so `COPY` sees `package.json` and `src/`.
 
+**`NEXT_PUBLIC_*`:** Inlined at **`pnpm build`**. The **`Dockerfile`** sets defaults for production (`louve.palmonas.tech` / `api-louve.palmonas.tech`). Override via **`docker-compose.yaml`** build `args` (Compose reads repo-root **`.env`** for substitution) or `docker build --build-arg ...`.
+
 ## Related
 
 - Root **`Makefile`** — Docker: `make up`, `make down`, `make rebuild`; host PM2: `make pm2-reload`; local: `make build`, `make start`.

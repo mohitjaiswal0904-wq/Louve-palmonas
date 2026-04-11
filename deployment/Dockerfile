@@ -15,6 +15,13 @@ FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+# Baked at build time — override via compose build.args or: docker build --build-arg NEXT_PUBLIC_API_URL=...
+ARG NEXT_PUBLIC_SITE_URL=https://louve.palmonas.tech
+ARG NEXT_PUBLIC_API_URL=https://api-louve.palmonas.tech
+ARG NEXT_PUBLIC_RAZORPAY_KEY_ID=
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_RAZORPAY_KEY_ID=$NEXT_PUBLIC_RAZORPAY_KEY_ID
 RUN pnpm build
 
 FROM base AS runner

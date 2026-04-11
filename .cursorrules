@@ -34,8 +34,7 @@ Pages (src/app)
 - **`createCsrApiClient()`**: `"use client"`. Use for browser-driven calls (e.g. after user action).
 - **Do not** call `fetch(process.env.NEXT_PUBLIC_API_URL/...)` ad hoc from pages or random components for Louve
   APIs. Extend `createApiClient` / factories if headers or auth need to be centralized.
-- Base URL: `getApiBaseUrl()` in `src/lib/config/env.ts` (`NEXT_PUBLIC_API_URL`, default
-  `https://api-louve.palmonas.tech`).
+- Base URL: `getApiBaseUrl()` in `src/lib/config/env.ts` (`NEXT_PUBLIC_API_URL`; local default `http://localhost:8080`, Docker build defaults in `deployment/Dockerfile`).
 
 ### 2. `src/services` — orchestration (no React)
 

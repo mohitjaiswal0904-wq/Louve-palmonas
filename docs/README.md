@@ -160,4 +160,4 @@ Do not hand-roll replacements unless needed—prefer adding via the shadcn CLI.
 Create `.env.local` for local overrides.
 
 - `NEXT_PUBLIC_SITE_URL` — public website base URL (used for sitemap/canonicals)
-- `NEXT_PUBLIC_API_URL` — Louve API base (defaults to `https://api-louve.palmonas.tech`)
+- `NEXT_PUBLIC_API_URL` — Louve API base (local default in code: `http://localhost:8080`; Docker build defaults to `https://api-louve.palmonas.tech` via `deployment/Dockerfile` args)

@@ -1,3 +1,4 @@
+# Set NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_API_URL, NEXT_PUBLIC_RAZORPAY_KEY_ID in the Amplify console (Environment variables).
 version: 1
 frontend:
   phases:

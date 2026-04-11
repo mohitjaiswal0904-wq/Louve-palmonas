@@ -1,6 +1,6 @@
 # Louve Frontend
 
-Customer-facing website for **Louve** — a contemporary fine-jewellery house **from the house of Palmonas**. This app is the public storefront and account experience; it talks to **Louve backend** (`NEXT_PUBLIC_API_URL`, default `https://api-louve.palmonas.tech`) via a typed client and service layer.
+Customer-facing website for **Louve** — a contemporary fine-jewellery house **from the house of Palmonas**. This app is the public storefront and account experience; it talks to **Louve backend** via `NEXT_PUBLIC_API_URL` (see `.env.example` and `src/lib/config/env.ts`).
 
 ## Stack
 

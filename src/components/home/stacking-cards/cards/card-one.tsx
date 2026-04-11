@@ -20,9 +20,9 @@ export function CardOne({
   imageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-first-image-322f7522.png",
 }: CardOneProps) {
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden bg-white md:flex-row">
+    <div className="relative flex h-full min-h-full w-full flex-col overflow-hidden bg-white md:flex-row">
       {/* Background Star Shape (Decorative) */}
-      <div className="absolute -left-[15%] top-1/2 -z-0 h-[80%] w-[60%] -translate-y-1/2 opacity-60 pointer-events-none select-none">
+      <div className="absolute -left-[5%] top-1/2 -z-0 h-[80%] w-[60%] -translate-y-1/2 opacity-80 pointer-events-none select-none md:h-[90%]">
         <svg
           viewBox="0 0 200 200"
           fill="none"
@@ -34,19 +34,19 @@ export function CardOne({
       </div>
 
       {/* Left Side: Content */}
-      <div className="relative z-10 flex flex-1 flex-col justify-center px-10 md:px-20 lg:px-32">
-        <div className="max-w-xl space-y-6">
-          <h1 className="text-4xl font-semibold leading-[1.1] tracking-tight text-zinc-900 md:text-5xl lg:text-6xl">
+      <div className="relative z-10 flex w-full flex-col items-center justify-center px-10 py-20 text-center md:w-[65%] md:px-14 lg:px-32">
+        <div className="flex max-w-lg flex-col items-center space-y-4">
+          <h1 className="text-[28px] font-bold leading-tight tracking-tight text-zinc-900 sm:text-3xl md:text-[32px] lg:text-[42px]">
             {title}
           </h1>
-          <p className="max-w-md text-sm font-normal leading-relaxed text-zinc-500 md:text-base">
+          <p className="max-w-sm text-sm font-normal leading-relaxed text-zinc-500 md:text-base">
             {tagline}
           </p>
-          <div className="pt-6">
+          <div className="pt-4">
             <Link href={buttonLink}>
               <Button
                 size="lg"
-                className="h-12 rounded-none bg-[#77080E] px-10 text-xs font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] hover:shadow-lg active:scale-95"
+                className="h-11 rounded-none bg-[#77080E] px-8 text-[11px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-[#5A060A] hover:shadow-xl active:scale-95"
               >
                 {buttonText}
               </Button>
@@ -56,19 +56,19 @@ export function CardOne({
       </div>
 
       {/* Right Side: Image */}
-      <div className="relative h-[45vh] flex-1 overflow-hidden md:h-full">
+      <div className="relative h-[50vh] w-full overflow-hidden md:h-full md:w-[35%]">
         <Image
           src={imageUrl}
           alt="Louve Collection"
           fill
           priority
           className="object-cover"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 35vw, 35vw"
         />
       </div>
 
       {/* Corner Details (Optional branding) */}
-      <div className="absolute bottom-10 left-10 text-[10px] font-medium uppercase tracking-[0.3em] text-zinc-300 md:left-20 lg:left-32">
+      <div className="absolute bottom-6 left-10 text-[9px] font-semibold uppercase tracking-[0.4em] text-zinc-300 md:left-20 lg:left-32">
         High Jewelry Collection
       </div>
     </div>

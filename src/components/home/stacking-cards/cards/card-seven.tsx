@@ -16,7 +16,7 @@ export function CardSeven({
   const columns = [1, 2];
 
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden bg-white md:flex-row">
+    <div className="relative flex h-full min-h-full w-full flex-col overflow-hidden bg-white md:flex-row">
       {columns.map((_, idx) => (
         <div 
           key={idx} 

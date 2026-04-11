@@ -7,6 +7,7 @@ export function getPublicSiteUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "";
 }
 
+/** Backend API base. Set `NEXT_PUBLIC_API_URL` in production (see `.env.example`). */
 export function getApiBaseUrl(): string {
   return (
     process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??

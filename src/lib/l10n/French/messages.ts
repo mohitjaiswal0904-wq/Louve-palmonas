@@ -69,7 +69,7 @@ export const messages = {
         title: "Entreprise",
         links: [
           { key: "about", label: "À propos", href: "/about" },
-          { key: "stores", label: "Boutiques", href: "/stores" },
+          { key: "collections", label: "Collections", href: "/collections" },
           { key: "products", label: "Produits", href: "/products" },
         ],
       },
@@ -84,12 +84,12 @@ export const messages = {
     ],
     megaMenu: {
       categories: [
-        { label: "Bagues", href: "/products?category=rings" },
-        { label: "Boucles d'oreilles", href: "/products?category=earrings" },
-        { label: "Pendentifs", href: "/products?category=pendants" },
-        { label: "Bracelets", href: "/products?category=bracelets" },
-        { label: "Bagues de fiançailles", href: "/products?category=engagement-rings" },
-        { label: "Pierres précieuses", href: "/products?category=gemstones" },
+        { label: "Bagues", href: "/collections/rings" },
+        { label: "Boucles d'oreilles", href: "/collections/earrings" },
+        { label: "Pendentifs", href: "/collections/pendants" },
+        { label: "Bracelets", href: "/collections/bracelets" },
+        { label: "Colliers", href: "/collections/necklaces" },
+        { label: "Toutes les collections", href: "/collections/all" },
       ],
       gallery: [
         { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "Vue de collection 1" },

@@ -66,7 +66,7 @@ function labelize(s: string) {
 
 function LineItem({ item, skuLabel }: { item: OrderItemDTO; skuLabel: string }) {
   return (
-    <div className="flex gap-5 border-b border-zinc-100 py-6 last:border-0 dark:border-zinc-800/80">
+    <div className="flex gap-4 border-b border-zinc-100 py-6 last:border-0 sm:gap-5 dark:border-zinc-800/80">
       <div className="relative h-24 w-20 shrink-0 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900">
         {item.image_url ? (
           <Image
@@ -213,7 +213,7 @@ export default function OrderDetailClient({ paramsPromise }: Props) {
     (order.status.toLowerCase() === "pending" || order.status.toLowerCase() === "confirmed");
 
   return (
-    <div className="relative mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <div className="relative mx-auto max-w-3xl px-3 py-8 pb-[max(2rem,env(safe-area-inset-bottom,0px))] sm:px-4 sm:py-10 md:px-6 md:py-12">
       <Link
         href="/account/orders"
         className="mb-10 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-zinc-500 transition hover:text-zinc-900 dark:hover:text-zinc-200"
@@ -277,13 +277,13 @@ export default function OrderDetailClient({ paramsPromise }: Props) {
               </span>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               {showPayNow && (
                 <Button
                   type="button"
                   size="sm"
                   onClick={() => setCheckoutOpen(true)}
-                  className="h-9 rounded-full bg-zinc-900 px-6 text-xs uppercase tracking-[0.15em] text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                  className="h-11 min-h-[44px] w-full rounded-full bg-zinc-900 px-6 text-xs uppercase tracking-[0.15em] text-white hover:bg-zinc-800 sm:h-9 sm:min-h-0 sm:w-auto dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 touch-manipulation"
                 >
                   Pay now
                 </Button>
@@ -295,7 +295,7 @@ export default function OrderDetailClient({ paramsPromise }: Props) {
                   size="sm"
                   disabled={cancelBusy}
                   onClick={() => void onCancelOrder()}
-                  className="h-9 rounded-full border-zinc-300 px-6 text-xs uppercase tracking-[0.15em] text-zinc-700 dark:border-zinc-600 dark:text-zinc-300"
+                  className="h-11 min-h-[44px] w-full rounded-full border-zinc-300 px-6 text-xs uppercase tracking-[0.15em] text-zinc-700 sm:h-9 sm:min-h-0 sm:w-auto dark:border-zinc-600 dark:text-zinc-300 touch-manipulation"
                 >
                   {cancelBusy ? "Cancelling…" : "Cancel order"}
                 </Button>
@@ -314,7 +314,7 @@ export default function OrderDetailClient({ paramsPromise }: Props) {
             </div>
           </section>
 
-          <section className="mb-10 rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-6 dark:border-zinc-800 dark:bg-zinc-950/40">
+          <section className="mb-10 rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-4 sm:p-6 dark:border-zinc-800 dark:bg-zinc-950/40">
             <h2 className="text-lg font-light tracking-tight text-zinc-900 dark:text-zinc-50">
               Summary
             </h2>
@@ -355,12 +355,12 @@ export default function OrderDetailClient({ paramsPromise }: Props) {
 
       {checkoutOpen && order && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 p-4 backdrop-blur-[2px]"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-zinc-950/60 p-0 backdrop-blur-[2px] sm:items-center sm:p-4"
           role="dialog"
           aria-modal="true"
           aria-labelledby="checkout-title"
         >
-          <div className="w-full max-w-md rounded-2xl border border-zinc-200/90 bg-white p-8 shadow-2xl dark:border-zinc-700 dark:bg-zinc-950">
+          <div className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-t-2xl border border-zinc-200/90 bg-white p-6 shadow-2xl sm:rounded-2xl sm:p-8 dark:border-zinc-700 dark:bg-zinc-950">
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
                 <h2

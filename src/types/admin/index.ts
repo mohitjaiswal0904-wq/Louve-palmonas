@@ -78,3 +78,63 @@ export type AdminProductListResponse = {
   page: number;
   total_pages: number;
 };
+
+// Analytics
+
+export type RevenueDataPoint = {
+  date: string;
+  revenue: number;
+  order_count: number;
+};
+
+export type OrderStatusCount = {
+  status: string;
+  count: number;
+};
+
+export type UserGrowthPoint = {
+  date: string;
+  count: number;
+};
+
+export type TopProductRow = {
+  product_id: number;
+  product_title: string;
+  image_url?: string;
+  total_qty: number;
+  order_count: number;
+  revenue: number;
+};
+
+export type CartInsightRow = {
+  product_id: number;
+  title: string;
+  image_url?: string;
+  cart_count: number;
+  total_qty: number;
+};
+
+export type CartStatsResponse = {
+  unique_users: number;
+  total_items: number;
+  total_quantity: number;
+};
+
+export type AnalyticsOverviewResponse = {
+  revenue: RevenueDataPoint[];
+  orders_by_status: OrderStatusCount[];
+  user_growth: UserGrowthPoint[];
+  top_products: TopProductRow[];
+  recent_orders: AdminOrderResponse[];
+};
+
+export type CartInsightsResponse = {
+  stats: CartStatsResponse;
+  top_products: CartInsightRow[];
+};
+
+export type SQLQueryResponse = {
+  columns: string[];
+  rows: Record<string, unknown>[];
+  count: number;
+};

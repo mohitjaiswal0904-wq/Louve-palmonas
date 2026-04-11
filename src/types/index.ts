@@ -39,6 +39,8 @@ export type {
 } from "./search";
 
 export type {
+  CollectionDTO,
+  CollectionDetailDTO,
   FiltersDTO,
   ImageDTO,
   MoneyDTO,
@@ -111,4 +113,13 @@ export type {
   AdminProductListResponse,
   AdminOrderItemResp,
   AdminShippingResponse,
+  RevenueDataPoint,
+  OrderStatusCount,
+  UserGrowthPoint,
+  TopProductRow,
+  CartInsightRow,
+  CartStatsResponse,
+  AnalyticsOverviewResponse,
+  CartInsightsResponse,
+  SQLQueryResponse,
 } from "./admin";

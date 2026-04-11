@@ -36,14 +36,14 @@ export function Header() {
   const { itemCount: cartItemCount } = useCart();
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 w-full border-b bg-background/95 backdrop-blur-md transition-none">
-      <div className="flex h-16 w-full items-center px-[46px]">
+    <header className="fixed inset-x-0 top-0 z-40 w-full border-b bg-background/95 pt-[env(safe-area-inset-top,0px)] backdrop-blur-md transition-none">
+      <div className="flex h-16 w-full min-w-0 items-center px-3 sm:px-4 md:px-6 lg:px-10 xl:px-[46px]">
         {/* Left: Menu */}
-        <div className="flex flex-1 items-center justify-start">
+        <div className="flex min-w-0 flex-1 items-center justify-start">
           <Button
             variant="ghost"
             size="icon"
-            className="hover:bg-transparent"
+            className="size-10 shrink-0 touch-manipulation hover:bg-transparent sm:size-9"
             aria-label={m.common.openMenu}
             onClick={toggleSidebar}
           >
@@ -52,10 +52,10 @@ export function Header() {
         </div>
 
         {/* Center: Logo */}
-        <div className="flex flex-none items-center justify-center">
+        <div className="flex min-w-0 flex-none items-center justify-center px-1">
           <Link
             href="/"
-            className="flex items-center"
+            className="flex max-w-[min(100%,9rem)] items-center sm:max-w-[10rem] md:max-w-none"
             aria-label={`${m.site.name} home`}
           >
             <Image
@@ -64,12 +64,12 @@ export function Header() {
               width={140}
               height={40}
               priority
-              className="h-8 w-auto object-contain dark:invert"
+              className="h-7 w-auto object-contain dark:invert sm:h-8"
             />
           </Link>
         </div>
 
-        <div className="flex flex-1 items-center justify-end gap-0.5 sm:gap-1">
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-0.5 sm:gap-1 md:gap-1.5">
           <LanguageSwitcher />
           {m.navigation.header.actions.map((a) => {
             if (a.key === "account") return null;
@@ -94,7 +94,7 @@ export function Header() {
                 aria-label={ariaLabel}
                 className="relative inline-flex"
               >
-                <Button variant="ghost" size="icon" className="relative">
+                <Button variant="ghost" size="icon" className="relative size-10 touch-manipulation sm:size-9">
                   <Icon className="size-5" />
                   {a.key === "cart" && (
                     <HeaderCountBadge count={badgeCount} />

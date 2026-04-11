@@ -111,7 +111,7 @@ export function HeaderSearch({ ariaLabel }: HeaderSearchProps) {
         type="button"
         variant="ghost"
         size="icon"
-        className="relative"
+        className="relative size-10 touch-manipulation sm:size-9"
         aria-label={ariaLabel}
         aria-expanded={false}
         onClick={() => setExpanded(true)}
@@ -122,10 +122,13 @@ export function HeaderSearch({ ariaLabel }: HeaderSearchProps) {
   }
 
   return (
-    <div ref={wrapRef} className="relative z-50 flex items-center">
+    <div
+      ref={wrapRef}
+      className="relative z-50 flex max-w-[100vw] items-center sm:max-w-none"
+    >
       <div
         className={cn(
-          "flex items-center gap-1 rounded-md border border-zinc-200 bg-background pl-2 pr-1 shadow-sm",
+          "flex max-w-[calc(100vw-7rem)] items-center gap-1 rounded-md border border-zinc-200 bg-background pl-2 pr-1 shadow-sm sm:max-w-none",
           "dark:border-zinc-700",
         )}
       >
@@ -140,7 +143,9 @@ export function HeaderSearch({ ariaLabel }: HeaderSearchProps) {
           }}
           onKeyDown={handleKeyDown}
           placeholder={m.catalog.searchPlaceholder}
-          className="h-9 w-[min(52vw,14rem)] sm:w-56 bg-transparent text-sm outline-none placeholder:text-zinc-400"
+          className="h-10 min-h-[44px] w-[min(55vw,12rem)] min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-zinc-400 sm:h-9 sm:min-h-0 sm:w-56 sm:text-sm"
+          inputMode="search"
+          enterKeyHint="search"
           aria-label={m.catalog.searchTitle}
           aria-autocomplete="list"
           aria-controls="header-search-suggestions"
@@ -150,7 +155,7 @@ export function HeaderSearch({ ariaLabel }: HeaderSearchProps) {
           type="button"
           size="sm"
           variant="secondary"
-          className="h-8 shrink-0 px-3 text-xs"
+          className="h-9 min-h-[44px] shrink-0 touch-manipulation px-2 text-xs sm:h-8 sm:min-h-0 sm:px-3"
           onClick={() => runSearch(query)}
         >
           {m.catalog.searchButton}
@@ -159,7 +164,7 @@ export function HeaderSearch({ ariaLabel }: HeaderSearchProps) {
           type="button"
           variant="ghost"
           size="icon"
-          className="size-8 shrink-0"
+          className="size-10 shrink-0 touch-manipulation sm:size-8"
           aria-label={m.common.closeMenu}
           onClick={() => {
             setExpanded(false);
@@ -176,7 +181,7 @@ export function HeaderSearch({ ariaLabel }: HeaderSearchProps) {
           id="header-search-suggestions"
           role="listbox"
           className={cn(
-            "absolute right-0 top-full z-50 mt-1 max-h-[min(60vh,320px)] w-[min(calc(100vw-2rem),20rem)] overflow-auto rounded-md border border-zinc-200 bg-popover py-1 text-popover-foreground shadow-md",
+            "absolute right-0 top-full z-50 mt-1 max-h-[min(50dvh,320px)] w-[min(calc(100vw-1.5rem),20rem)] overflow-auto rounded-md border border-zinc-200 bg-popover py-1 text-popover-foreground shadow-md sm:max-h-[min(60vh,320px)]",
             "dark:border-zinc-700 dark:bg-zinc-950",
           )}
         >

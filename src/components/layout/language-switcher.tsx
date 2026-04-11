@@ -21,11 +21,18 @@ export function LanguageSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger
         aria-label={m.common.language}
-        className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "shrink-0")}
+        className={cn(
+          buttonVariants({ variant: "ghost", size: "icon" }),
+          "size-10 shrink-0 touch-manipulation sm:size-9",
+        )}
       >
         <Languages className="size-5" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[10rem]">
+      <DropdownMenuContent
+        align="end"
+        sideOffset={8}
+        className="max-h-[min(70dvh,24rem)] min-w-[10rem] overflow-y-auto"
+      >
         {LANGUAGE_OPTIONS.map((opt) => (
           <DropdownMenuItem
             key={opt.locale}

@@ -13,3 +13,8 @@ export function getApiBaseUrl(): string {
     "http://localhost:8080"
   );
 }
+
+
+export function getRazorpayKeyId(): string {
+  return process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? "";
+}

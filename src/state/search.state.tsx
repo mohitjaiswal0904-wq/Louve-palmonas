@@ -11,6 +11,7 @@ import { createCsrApiClient } from "@/lib/client";
 import * as searchService from "@/services/search.service";
 import type {
   ApiResponse,
+  AutocompleteItemDTO,
   PaginatedResponse,
   ProductDTO,
   RecentSearchDTO,
@@ -26,6 +27,7 @@ export type SearchStateValue = {
   getTopSearches: (limit?: number, days?: number) => Promise<ApiResponse<TopSearchDTO[]>>;
   getRecentSearches: (limit?: number) => Promise<ApiResponse<RecentSearchDTO[]>>;
   getSuggestions: (q: string, limit?: number) => Promise<ApiResponse<SuggestionDTO[]>>;
+  getAutocomplete: (q: string, limit?: number) => Promise<ApiResponse<AutocompleteItemDTO[]>>;
 };
 
 const SearchStateContext = createContext<SearchStateValue | null>(null);
@@ -39,6 +41,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       getTopSearches: (limit, days) => searchService.getTopSearches(client, limit, days),
       getRecentSearches: (limit) => searchService.getRecentSearches(client, limit),
       getSuggestions: (q, limit) => searchService.getSuggestions(client, q, limit),
+      getAutocomplete: (q, limit) => searchService.getAutocomplete(client, q, limit),
     }),
     [client],
   );

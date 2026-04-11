@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import type { AppLocale } from "@/types/config";
 import type { AppMessages } from "@/types/config/messages";
 import {
+  AddressProvider,
   AuthProvider,
   CartProvider,
   CatalogProvider,
@@ -32,13 +33,15 @@ export function AppProviders({
         <CatalogProvider>
           <SearchProvider>
             <WishlistProvider>
-              <CartProvider>
-                <OrderProvider>
-                  <HealthProvider>
-                    <LayoutProvider>{children}</LayoutProvider>
-                  </HealthProvider>
-                </OrderProvider>
-              </CartProvider>
+              <AddressProvider>
+                <CartProvider>
+                  <OrderProvider>
+                    <HealthProvider>
+                      <LayoutProvider>{children}</LayoutProvider>
+                    </HealthProvider>
+                  </OrderProvider>
+                </CartProvider>
+              </AddressProvider>
             </WishlistProvider>
           </SearchProvider>
         </CatalogProvider>

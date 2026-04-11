@@ -13,3 +13,5 @@ export { CartProvider, useCartState } from "./cart.state";
 export type { CartStateValue } from "./cart.state";
 export { OrderProvider, useOrderState } from "./order.state";
 export type { OrderStateValue } from "./order.state";
+export { AddressProvider, useAddressState } from "./address.state";
+export type { AddressStateValue } from "./address.state";

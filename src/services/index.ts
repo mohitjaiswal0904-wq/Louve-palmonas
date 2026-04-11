@@ -21,6 +21,7 @@ export {
   getTopSearches,
   getRecentSearches,
   getSuggestions,
+  getAutocomplete,
 } from "./search.service";
 
 export {
@@ -54,3 +55,21 @@ export {
   simulateCheckout,
   cancelOrder,
 } from "./order.service";
+
+export {
+  createAddress,
+  listAddresses,
+  getAddress,
+  getDefaultAddress,
+  updateAddress,
+  setDefaultAddress,
+  deleteAddress,
+} from "./address.service";
+
+export {
+  payOrder,
+  verifyRazorpayPayment,
+  getPaymentByOrder,
+  listPayments,
+  requestRefund,
+} from "./payment.service";

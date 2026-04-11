@@ -111,4 +111,13 @@ export type {
   AdminProductListResponse,
   AdminOrderItemResp,
   AdminShippingResponse,
+  RevenueDataPoint,
+  OrderStatusCount,
+  UserGrowthPoint,
+  TopProductRow,
+  CartInsightRow,
+  CartStatsResponse,
+  AnalyticsOverviewResponse,
+  CartInsightsResponse,
+  SQLQueryResponse,
 } from "./admin";

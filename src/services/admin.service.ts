@@ -6,6 +6,9 @@ import type {
   AdminOrderListResponse,
   AdminOrderResponse,
   AdminProductListResponse,
+  AnalyticsOverviewResponse,
+  CartInsightsResponse,
+  SQLQueryResponse,
 } from "@/types";
 
 export async function getDashboardStats(client: ApiClient) {
@@ -48,4 +51,16 @@ export async function listProducts(client: ApiClient, params: { page?: number; l
   if (params.limit) qs.set("limit", String(params.limit));
   const q = qs.toString();
   return client.get<ApiResponse<AdminProductListResponse>>(`/api/v1/admin/products${q ? `?${q}` : ""}`);
+}
+
+export async function getAnalyticsOverview(client: ApiClient, days = 30) {
+  return client.get<ApiResponse<AnalyticsOverviewResponse>>(`/api/v1/admin/analytics?days=${days}`);
+}
+
+export async function getCartInsights(client: ApiClient) {
+  return client.get<ApiResponse<CartInsightsResponse>>("/api/v1/admin/analytics/cart");
+}
+
+export async function executeQuery(client: ApiClient, query: string) {
+  return client.post<ApiResponse<SQLQueryResponse>>("/api/v1/admin/query", { query });
 }

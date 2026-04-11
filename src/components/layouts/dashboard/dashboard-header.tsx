@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Menu } from "lucide-react";
+import { ExternalLink, LogOut, Menu } from "lucide-react";
 
 import { useAuth } from "@/hooks";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 import { getDashboardSectionTitle } from "./dashboard-nav";
 
@@ -39,8 +41,19 @@ export function DashboardHeader({ onOpenMobileNav }: DashboardHeaderProps) {
         <p className="truncate text-xs text-muted-foreground sm:hidden">{displayName}</p>
       </div>
 
-      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        <span className="hidden max-w-[12rem] truncate text-xs text-muted-foreground sm:inline">
+      <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+        <Link
+          href="/"
+          target="_blank"
+          className={cn(
+            buttonVariants({ variant: "ghost", size: "sm" }),
+            "hidden gap-1.5 text-xs text-muted-foreground sm:inline-flex",
+          )}
+        >
+          Visit store
+          <ExternalLink className="size-3" />
+        </Link>
+        <span className="hidden max-w-[12rem] truncate text-xs text-muted-foreground lg:inline">
           {displayName}
         </span>
         <Button

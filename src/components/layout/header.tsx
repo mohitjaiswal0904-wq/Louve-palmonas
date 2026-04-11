@@ -36,7 +36,7 @@ export function Header() {
   const { itemCount: cartItemCount } = useCart();
 
   return (
-    <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-40 w-full border-b bg-background/95 backdrop-blur-md transition-none">
       <div className="flex h-16 w-full items-center px-[46px]">
         {/* Left: Menu */}
         <div className="flex flex-1 items-center justify-start">

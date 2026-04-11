@@ -85,7 +85,7 @@ export function HomeStackingCards() {
   ];
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full min-w-0 max-w-full touch-pan-y overflow-x-hidden [overscroll-behavior-x:none]">
       {CARDS.map((card, index) => (
         <CardItem
           key={card.id}

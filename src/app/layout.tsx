@@ -39,9 +39,9 @@ export default async function RootLayout({
   return (
     <html
       lang={localeHtmlLang(locale)}
-      className={`${inter.variable} h-full antialiased`}
+      className={`${inter.variable} h-full overflow-x-hidden antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
+      <body className="flex min-h-full min-w-0 flex-col overflow-x-hidden bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
         {siteUrl ? (
           <WebSiteJsonLd
             name={messages.seo.siteName}

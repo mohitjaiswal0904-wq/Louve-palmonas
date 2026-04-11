@@ -22,13 +22,13 @@ export function CardItem({
   return (
     <section
       key={id}
-      className={`sticky top-0 h-dvh w-full overflow-hidden ${bgColor} ${textColor} transition-all duration-700 ease-in-out`}
+      className={`sticky top-16 h-dvh w-full max-w-full overflow-x-hidden overflow-y-hidden ${bgColor} ${textColor}`}
       style={{ 
         zIndex: index + 1,
       }}
     >
       <div 
-        className={`relative h-full w-full transition-all duration-1000 ease-out ${
+        className={`relative h-full min-h-0 w-full min-w-0 max-w-full overflow-x-hidden overflow-y-hidden transition-[opacity,transform] duration-1000 ease-out ${
           isActive ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"
         }`}
       >

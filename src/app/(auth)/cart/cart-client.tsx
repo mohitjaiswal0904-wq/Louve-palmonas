@@ -4,58 +4,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, type SVGProps } from "react";
+import {
+  Lock,
+  Trash2,
+  Plus,
+  Minus,
+  X,
+  ArrowLeft,
+  ShieldCheck,
+  RotateCcw,
+  CheckCircle2
+} from "lucide-react";
 
 import { useAuth, useCart, useMessages, useOrder } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { CartItemDTO, OrderDTO } from "@/types";
 
-function formatMoney(amount: string, currency: string): string {
-  const num = parseFloat(amount);
-  try {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    }).format(num);
-  } catch {
-    return `${currency} ${num.toFixed(2)}`;
-  }
-}
-
-function IconPlus(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden {...props}>
-      <path
-        d="M12 5v14M5 12h14"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function IconMinus(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden {...props}>
-      <path d="M5 12h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconClose(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden {...props}>
-      <path
-        d="M6 6l12 12M18 6L6 18"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+// Removed deprecated SVG Icon components as we now use Lucide-react.
 
 type CheckoutPhase = "idle" | "pay" | "success";
 
@@ -171,34 +136,38 @@ export default function CartClient() {
   const isEmpty = items.length === 0;
 
   return (
-    <div className="min-h-[60vh] bg-zinc-50/50 pb-24 pt-12 dark:bg-zinc-950">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <header className="mb-12 flex flex-col gap-6 border-b border-zinc-200/80 pb-8 dark:border-zinc-800/80 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-zinc-500">Shopping bag</p>
-            <h1 className="mt-2 font-serif text-3xl font-light tracking-tight text-zinc-900 dark:text-zinc-50 md:text-4xl">
-              Your cart
-            </h1>
-          </div>
-          <button
-            type="button"
-            disabled={loading || isEmpty}
-            onClick={() => clearCart()}
-            className={cn(
-              "self-start text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-500 transition-colors",
-              "hover:text-zinc-900 dark:hover:text-zinc-200",
-              "disabled:pointer-events-none disabled:opacity-30",
-            )}
+    <div className="min-h-screen bg-[#FDFDFD] pb-32">
+      <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-6 md:py-16">
+
+        {/* Navigation & Header */}
+        <div className="mb-12 space-y-6">
+          <Link
+            href="/products"
+            className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400 transition-colors hover:text-zinc-600"
           >
-            Clear cart
-          </button>
-        </header>
+            <ArrowLeft className="h-3 w-3" />
+            Continue Shopping
+          </Link>
+          <div className="flex items-baseline justify-between border-b border-[#F6F1E9] pb-8">
+            <h1 className="text-2xl font-light tracking-tight text-zinc-900 md:text-3xl">
+              Shopping Cart <span className="text-zinc-400 italic">({itemCount} items)</span>
+            </h1>
+            <button
+              type="button"
+              disabled={loading || isEmpty}
+              onClick={() => clearCart()}
+              className="text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400 hover:text-[#77080E] disabled:opacity-30 transition-colors"
+            >
+              Clear Cart
+            </button>
+          </div>
+        </div>
 
         {loading && !isEmpty ? (
           <p className="text-sm font-light text-zinc-500">{m.common.loading}</p>
         ) : isEmpty ? (
           <div className="mx-auto max-w-md py-20 text-center">
-            <p className="font-serif text-xl font-light tracking-tight text-zinc-800 dark:text-zinc-100">
+            <p className="text-xl font-light tracking-tight text-zinc-800 dark:text-zinc-100">
               Your bag is empty
             </p>
             <p className="mt-3 text-sm font-light leading-relaxed text-zinc-500">
@@ -212,8 +181,8 @@ export default function CartClient() {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-12 lg:grid-cols-[1fr_380px] lg:items-start">
-            <ul className="space-y-0 divide-y divide-zinc-200/90 dark:divide-zinc-800/90">
+          <div className="grid gap-16 lg:grid-cols-[1fr_400px] lg:items-start">
+            <ul className="space-y-6">
               {items.map((item) => (
                 <CartLine
                   key={item.id}
@@ -225,39 +194,93 @@ export default function CartClient() {
               ))}
             </ul>
 
-            <aside className="border border-zinc-200/70 bg-white/80 p-8 backdrop-blur-sm dark:border-zinc-800/80 dark:bg-zinc-900/40 lg:sticky lg:top-28">
-              <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-zinc-500">Summary</p>
-              <dl className="mt-8 space-y-4 text-sm">
-                <div className="flex justify-between gap-4 text-zinc-600 dark:text-zinc-400">
-                  <dt className="font-light">Unique items</dt>
-                  <dd className="tabular-nums text-zinc-900 dark:text-zinc-100">{uniqueItems}</dd>
+            <aside className="space-y-6 bg-white p-8 border border-[#F6F1E9] rounded-sm">
+              <h2 className="text-xl font-bold tracking-tight text-zinc-900">Order Summary</h2>
+
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-zinc-900">Promo Code</p>
+                <div className="flex gap-3">
+                  <div className="relative flex-1">
+                    <Trash2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 rotate-90" />
+                    <input
+                      type="text"
+                      placeholder="Enter code"
+                      className="w-full rounded-lg bg-[#F3F4F6] py-2.5 pl-10 pr-4 text-sm text-zinc-900 focus:outline-none placeholder:text-zinc-400"
+                    />
+                  </div>
+                  <button className="rounded-lg bg-[#E5E7EB] px-6 py-2.5 text-sm font-medium text-zinc-900 hover:bg-zinc-200 transition-colors">
+                    Apply
+                  </button>
                 </div>
-                <div className="flex justify-between gap-4 text-zinc-600 dark:text-zinc-400">
-                  <dt className="font-light">Total quantity</dt>
-                  <dd className="tabular-nums text-zinc-900 dark:text-zinc-100">{itemCount}</dd>
+              </div>
+
+              <div className="space-y-4 pt-4">
+                <div className="flex justify-between text-sm text-zinc-500">
+                  <span>Subtotal</span>
+                  <span className="font-medium text-zinc-900">{formatMoney(subtotal.amount, subtotal.currency)}</span>
                 </div>
-                <div className="flex justify-between gap-4 border-t border-zinc-200/80 pt-6 dark:border-zinc-800/80">
-                  <dt className="text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-500">Subtotal</dt>
-                  <dd className="text-lg font-light tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50">
-                    {formatMoney(subtotal.amount, subtotal.currency)}
-                  </dd>
+                <div className="flex justify-between text-sm text-zinc-500">
+                  <span>Shipping</span>
+                  <span className="font-medium text-zinc-900 uppercase">FREE</span>
                 </div>
-              </dl>
-              <button
-                type="button"
-                disabled={loading || actionLoading}
-                onClick={handleProceed}
-                className={cn(
-                  "mt-10 w-full border border-zinc-900 bg-zinc-900 py-4 text-[11px] font-medium uppercase tracking-[0.28em] text-white",
-                  "transition-colors hover:bg-zinc-800 dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white",
-                  "disabled:pointer-events-none disabled:opacity-40",
-                )}
-              >
-                Proceed to checkout
-              </button>
+                <div className="flex justify-between border-b border-[#F6F1E9] pb-4 text-sm text-zinc-500">
+                  <span>Tax</span>
+                  <span className="font-medium text-zinc-900">{formatMoney((parseFloat(subtotal.amount) * 0.08).toString(), subtotal.currency)}</span>
+                </div>
+                <div className="flex justify-between pt-2">
+                  <span className="text-base font-bold text-zinc-900">Total</span>
+                  <span className="text-base font-bold text-zinc-900">
+                    {formatMoney((parseFloat(subtotal.amount) * 1.08).toString(), subtotal.currency)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-4 space-y-4">
+                <button
+                  type="button"
+                  disabled={loading || actionLoading}
+                  onClick={handleProceed}
+                  className={cn(
+                    "flex w-full items-center justify-center gap-3 bg-[#1A1A1A] py-4 rounded-md text-sm font-medium text-white transition-all hover:bg-black",
+                    "disabled:opacity-40 disabled:pointer-events-none"
+                  )}
+                >
+                  <Lock className="h-4 w-4" />
+                  Proceed to Checkout
+                </button>
+
+                <p className="text-center text-sm text-zinc-400">
+                  Secure checkout powered by Stripe
+                </p>
+              </div>
+
+              <div className="space-y-4 border-t border-[#F6F1E9] pt-8">
+                <TrustItem icon={RotateCcw} text="Free returns within 30 days" isCheck />
+                <TrustItem icon={ShieldCheck} text="2-year warranty included" isCheck />
+                <TrustItem icon={CheckCircle2} text="Secure payment processing" isCheck />
+              </div>
             </aside>
           </div>
         )}
+
+        {/* SEO Footer: Popular Searches */}
+        <div className="mt-40 space-y-12">
+          <div className="flex h-12 w-12 items-center justify-center">
+            <Image src="/logo.svg" alt="Louve" width={48} height={20} className="opacity-40" />
+          </div>
+          <div className="space-y-8">
+            <h3 className="text-lg font-light tracking-wide text-zinc-900">Popular Searches</h3>
+            <div className="space-y-6">
+              <SEOSection label="For Women" links="Demi-Fine Jewellery | Rings For Women | Earrings For Women | Bracelet For Women | Pendants For Women | Necklaces For Women" />
+              <SEOSection label="For Men" links="Rings For Men | Pendant For Men | Chain For Men" />
+              <SEOSection label="Mangalsutra" links="Gold Mangalsutra | Diamond Mangalsutra | Infinity Mangalsutra" />
+              <SEOSection label="Pendants" links="Gold Pendants | Diamond Pendants | Solitaire Pendants | Evil Eye Pendants" />
+              <SEOSection label="Bracelets" links="Gold Bracelets | Diamond Bracelets | Pearl Bracelets | Evil Eye Bracelets | Chain Bracelets | Stone Bracelets | Cuff Bracelets" />
+              <SEOSection label="Necklace" links="Gold Necklace | Diamond Necklace | Pearl Necklace | Necklaces For Women | Evil Eye Necklace | Name Necklace | Emerald Necklace" />
+              <SEOSection label="Rings" links="Diamond Rings | Gold Rings | Silver Rings | Solitaire Rings | Gemstone Rings | Mens Rings | Engagement Ring | Couple Ring | Wedding Ring | Statement Ring | Emerald Ring" />
+            </div>
+          </div>
+        </div>
       </div>
 
       {checkoutPhase !== "idle" && pendingOrder && (
@@ -280,14 +303,14 @@ export default function CartClient() {
               onClick={checkoutPhase === "pay" ? () => void handleCancelCheckout() : undefined}
               className="absolute right-4 top-4 rounded-sm p-1 text-zinc-400 transition-colors hover:text-zinc-900 disabled:opacity-0 dark:hover:text-zinc-100"
             >
-              <IconClose className="h-5 w-5" />
+              <X className="h-5 w-5" />
             </button>
 
             {checkoutPhase === "pay" && (
               <>
                 <h2
                   id="checkout-dialog-title"
-                  className="font-serif text-2xl font-light tracking-tight text-zinc-900 dark:text-zinc-50"
+                  className="text-2xl font-light tracking-tight text-zinc-900 dark:text-zinc-50"
                 >
                   Checkout
                 </h2>
@@ -355,7 +378,7 @@ export default function CartClient() {
                 </div>
                 <h2
                   id="checkout-dialog-title"
-                  className="mt-6 font-serif text-2xl font-light tracking-tight text-zinc-900 dark:text-zinc-50"
+                  className="mt-6 text-2xl font-light tracking-tight text-zinc-900 dark:text-zinc-50"
                 >
                   Payment successful
                 </h2>
@@ -383,43 +406,19 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
   const product = item.product;
   const variant = item.variant;
   const imageUrl = product?.image;
-  const href = product?.handle ? `/products/${product.handle}` : undefined;
-
-  const title = (
-    <div className="min-w-0">
-      {product?.vendor && (
-        <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-zinc-500">{product.vendor}</p>
-      )}
-      {href ? (
-        <Link
-          href={href}
-          className="mt-1 block font-serif text-lg font-light tracking-tight text-zinc-900 transition-colors hover:text-zinc-600 dark:text-zinc-50 dark:hover:text-zinc-300"
-        >
-          {product?.title ?? "Product"}
-        </Link>
-      ) : (
-        <p className="mt-1 font-serif text-lg font-light tracking-tight text-zinc-900 dark:text-zinc-50">
-          {product?.title ?? "Product"}
-        </p>
-      )}
-      <p className="mt-2 text-xs font-light text-zinc-500">
-        {variant?.title && <span>{variant.title}</span>}
-        {variant?.title && variant?.sku && <span className="text-zinc-400"> · </span>}
-        {variant?.sku && <span className="tabular-nums">SKU {variant.sku}</span>}
-      </p>
-    </div>
-  );
 
   return (
-    <li className="flex flex-col gap-6 py-10 sm:flex-row sm:items-start">
-      <div className="relative h-36 w-full shrink-0 overflow-hidden bg-zinc-100/80 dark:bg-zinc-900/50 sm:h-32 sm:w-32">
+    <li className="relative flex items-start bg-white border border-[#F6F1E9] p-[20px] transition-all hover:border-[#E5C16C]/30">
+
+      {/* Product Image */}
+      <div className="relative h-20 w-20 shrink-0 overflow-hidden">
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={product?.image_alt || product?.title || "Product"}
             fill
-            sizes="128px"
-            className="object-contain object-center"
+            sizes="80px"
+            className="object-contain"
             unoptimized
           />
         ) : (
@@ -429,59 +428,133 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
         )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-6 sm:flex-row sm:justify-between">
-        <div className="min-w-0 flex-1">{title}</div>
+      {/* Product Details */}
+      <div className="ml-10 flex-1">
+        <div className="space-y-2">
+          <Link
+            href={`/products/${product?.handle}`}
+            className="block text-lg font-medium tracking-tight text-zinc-900 transition-colors hover:text-[#77080E]"
+          >
+            {product?.title ?? "Product"}
+          </Link>
 
-        <div className="flex flex-row items-end justify-between gap-6 sm:flex-col sm:items-end">
-          <div className="text-right">
-            <p className="text-xs font-light text-zinc-500">Unit</p>
-            <p className="mt-0.5 tabular-nums text-sm text-zinc-800 dark:text-zinc-100">
-              {variant?.price
-                ? formatMoney(variant.price.amount, variant.price.currency)
-                : "—"}
-            </p>
-            <p className="mt-3 text-xs font-light text-zinc-500">Line total</p>
-            <p className="mt-0.5 text-base font-light tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50">
-              {formatMoney(item.line_total.amount, item.line_total.currency)}
-            </p>
+          {/* Metadata Row */}
+          <div className="flex gap-16 text-sm font-light text-zinc-400">
+            <p>Color: <span className="text-zinc-600">Gold</span></p>
+            <p>Karat: <span className="text-zinc-600">22k</span></p>
+            <p>Size: <span className="text-zinc-600">22</span></p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center border border-zinc-200/90 dark:border-zinc-700/90">
+          {/* Tags */}
+          <div>
+            <span className="inline-block bg-[#F6E9E9] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-[#77080E]/70 rounded-sm">
+              TAGS
+            </span>
+          </div>
+
+          {/* Quantity Selector */}
+          <div className="pt-1">
+            <div className="inline-flex items-center border border-zinc-100 bg-[#FDFDFD] rounded-lg px-2">
               <button
                 type="button"
                 disabled={disabled}
-                aria-label="Decrease quantity"
                 onClick={() => onQtyChange(item, -1)}
-                className="flex h-10 w-10 items-center justify-center text-zinc-600 transition-colors hover:bg-zinc-100/80 disabled:opacity-40 dark:text-zinc-400 dark:hover:bg-zinc-800/60"
+                className="flex h-9 w-9 items-center justify-center text-zinc-300 hover:text-zinc-900 transition-colors disabled:opacity-20"
               >
-                <IconMinus className="h-4 w-4" />
+                <Minus className="h-3 w-3" strokeWidth={3} />
               </button>
-              <span className="min-w-[2rem] text-center text-sm tabular-nums text-zinc-900 dark:text-zinc-100">
+              <span className="min-w-[2rem] text-center text-sm font-medium tabular-nums text-zinc-800">
                 {item.quantity}
               </span>
               <button
                 type="button"
                 disabled={disabled}
-                aria-label="Increase quantity"
                 onClick={() => onQtyChange(item, 1)}
-                className="flex h-10 w-10 items-center justify-center text-zinc-600 transition-colors hover:bg-zinc-100/80 disabled:opacity-40 dark:text-zinc-400 dark:hover:bg-zinc-800/60"
+                className="flex h-9 w-9 items-center justify-center text-zinc-300 hover:text-zinc-900 transition-colors disabled:opacity-20"
               >
-                <IconPlus className="h-4 w-4" />
+                <Plus className="h-3 w-3" strokeWidth={3} />
               </button>
             </div>
-            <button
-              type="button"
-              disabled={disabled}
-              aria-label="Remove item"
-              onClick={onRemove}
-              className="flex h-10 w-10 items-center justify-center text-zinc-400 transition-colors hover:text-zinc-900 disabled:opacity-40 dark:hover:text-zinc-100"
-            >
-              <IconClose className="h-5 w-5" />
-            </button>
           </div>
         </div>
       </div>
+
+      {/* Price (Top Right) */}
+      <div className="text-right">
+        <p className="text-lg font-medium text-zinc-900">
+          {variant?.price ? formatMoney(variant.price.amount, variant.price.currency) : "₹00.00"}
+        </p>
+      </div>
+
+      {/* Actions (Bottom Right) */}
+      <div className="absolute bottom-8 right-8 flex items-center gap-4">
+        <button className="text-sm font-light text-zinc-400 hover:text-zinc-900 transition-colors">
+          Save for later
+        </button>
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={onRemove}
+          className="text-zinc-300 hover:text-[#77080E] transition-colors"
+        >
+          <Trash2 className="h-5 w-5" strokeWidth={1.5} />
+        </button>
+      </div>
     </li>
   );
+}
+
+// ── Components & Utilities ──
+
+function TrustItem({ icon: Icon, text, isCheck }: { icon: any; text: string; isCheck?: boolean }) {
+  if (isCheck) {
+    return (
+      <div className="flex items-center gap-3">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="h-4 w-4 text-zinc-400"
+        >
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        <span className="text-sm text-zinc-500 font-normal">{text}</span>
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center gap-3">
+      <Icon className="h-4 w-4 text-[#22C55E]" strokeWidth={1.5} />
+      <span className="text-[10px] text-zinc-500 font-medium">{text}</span>
+    </div>
+  );
+}
+
+function SEOSection({ label, links }: { label: string; links: string }) {
+  return (
+    <div className="space-y-1">
+      <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">{label}</p>
+      <p className="text-[10px] leading-relaxed text-zinc-400/80">
+        {links}
+      </p>
+    </div>
+  );
+}
+
+function formatMoney(amount: string, currency: string): string {
+  const num = parseFloat(amount);
+  try {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(num);
+  } catch {
+    return `${currency} ${num.toFixed(0)}`;
+  }
 }

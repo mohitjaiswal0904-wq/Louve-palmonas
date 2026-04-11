@@ -80,7 +80,7 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
       className={cn(
         "group flex min-w-0 flex-col bg-white outline-none transition-[box-shadow,background-color] duration-300",
         "hover:bg-zinc-50/80 dark:bg-zinc-950 dark:hover:bg-zinc-900/40",
-        inGrid ? "h-full" : "overflow-hidden rounded-md border border-zinc-200/80 dark:border-zinc-800",
+        inGrid ? "h-full" : "overflow-hidden rounded-md border border-[#F6F1E9] dark:border-zinc-800",
       )}
     >
       <div
@@ -95,7 +95,7 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
             alt={product.image.alt || product.title}
             fill
             sizes={imageSizes[size]}
-            className="object-contain object-center drop-shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-transform duration-500 ease-out group-hover:scale-[1.03] dark:drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
+            className="object-contain object-center drop-shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-transform duration-500 ease-out dark:drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
           />
         ) : (
           <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
@@ -152,7 +152,7 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
         </button>
       </div>
 
-      <div className={cn("flex flex-1 flex-col border-t border-zinc-200/90 bg-white dark:border-zinc-800 dark:bg-zinc-950", copyPadding[size])}>
+      <div className={cn("flex flex-1 flex-col border-t border-[#F6F1E9] bg-white dark:border-zinc-800 dark:bg-zinc-950", copyPadding[size])}>
         <p className={cn("mb-1 font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500", vendorSize[size])}>
           {product.vendor}
         </p>

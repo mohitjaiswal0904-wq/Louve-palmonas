@@ -304,7 +304,7 @@ export default function OrderDetailClient({ paramsPromise }: Props) {
           </header>
 
           <section className="mb-10">
-            <h2 className="font-serif text-lg font-light tracking-tight text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-lg font-light tracking-tight text-zinc-900 dark:text-zinc-50">
               Items
             </h2>
             <div className="mt-2 divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -315,7 +315,7 @@ export default function OrderDetailClient({ paramsPromise }: Props) {
           </section>
 
           <section className="mb-10 rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-6 dark:border-zinc-800 dark:bg-zinc-950/40">
-            <h2 className="font-serif text-lg font-light tracking-tight text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-lg font-light tracking-tight text-zinc-900 dark:text-zinc-50">
               Summary
             </h2>
             <dl className="mt-4 space-y-3 text-sm">
@@ -365,7 +365,7 @@ export default function OrderDetailClient({ paramsPromise }: Props) {
               <div>
                 <h2
                   id="checkout-title"
-                  className="font-serif text-xl font-light tracking-tight text-zinc-900 dark:text-zinc-50"
+                  className="text-xl font-light tracking-tight text-zinc-900 dark:text-zinc-50"
                 >
                   Simulated checkout
                 </h2>

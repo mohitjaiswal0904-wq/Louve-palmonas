@@ -2,21 +2,26 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ShieldCheck, Truck, RefreshCw, Award } from "lucide-react";
 
 import { ProductGrid } from "@/components/catalog";
 import { Badge } from "@/components/ui/badge";
-import { useCatalog, useMessages } from "@/hooks";
+import { Button } from "@/components/ui/button";
+import { useCatalog, useMessages, useCart } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { ProductDetailDTO, ProductDTO } from "@/types";
 
 export default function ProductDetailClient({ handle }: { handle: string }) {
   const m = useMessages();
   const catalog = useCatalog();
+  const cart = useCart();
+  const router = useRouter();
+
   const [product, setProduct] = useState<ProductDetailDTO | null>(null);
   const [similar, setSimilar] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [isAdding, setIsAdding] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [activeTab, setActiveTab] = useState(0);
   const didFetch = useRef(false);
@@ -41,7 +46,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
 
   if (loading) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center">
+      <div className="flex min-h-[50vh] items-center justify-center bg-white">
         <p className="text-sm text-muted-foreground">{m.common.loading}…</p>
       </div>
     );
@@ -49,7 +54,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
 
   if (!product) {
     return (
-      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3">
+      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3 bg-white">
         <p className="text-sm text-muted-foreground">{m.catalog.productNotFound}</p>
         <Link href="/products" className="text-sm underline underline-offset-4">
           {m.catalog.products}
@@ -62,172 +67,206 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
   const price = variant?.price ?? product.price;
   const compareAt = variant?.compare_at_price ?? product.compare_at_price;
   const hasDiscount = compareAt && parseFloat(compareAt.amount) > parseFloat(price.amount);
-  const discountPct = hasDiscount
-    ? Math.round(
-        ((parseFloat(compareAt!.amount) - parseFloat(price.amount)) /
-          parseFloat(compareAt!.amount)) *
-          100,
-      )
-    : 0;
-
+  
   const tabs = buildTabs(product, variant);
 
+  const handleBuyNow = async () => {
+    if (!variant || isAdding) return;
+    setIsAdding(true);
+    try {
+      await cart.addToCart({
+        product_id: product.id,
+        variant_id: variant.id,
+        quantity: 1,
+      });
+      router.push("/cart");
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
   return (
-    <div className="space-y-0">
-      {/* ── Hero: image + info ── */}
-      <div className="grid grid-cols-1 border-b border-zinc-200/80 md:grid-cols-2 dark:border-zinc-800">
-        {/* Main image */}
-        <div className="relative aspect-square bg-[#f5f5f3] dark:bg-zinc-900/30">
-          {product.images.length > 0 ? (
-            <Image
-              src={product.images[selectedImage]?.src ?? product.images[0].src}
-              alt={product.images[selectedImage]?.alt || product.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-contain p-10 sm:p-14 md:p-16"
-              priority
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              {m.catalog.noImage}
-            </div>
-          )}
-        </div>
-
-        {/* Product info */}
-        <div className="flex flex-col justify-center border-l border-zinc-200/80 bg-white px-6 py-8 sm:px-10 sm:py-12 md:px-14 dark:border-zinc-800 dark:bg-zinc-950">
-          <h1 className="text-lg font-medium leading-snug tracking-tight text-zinc-900 sm:text-xl dark:text-zinc-50">
-            {product.title}
-          </h1>
-
-          <div className="mt-4 flex items-baseline gap-2">
-            <span className="text-2xl font-semibold tabular-nums text-zinc-900 dark:text-zinc-50">
-              {formatMoney(price.amount, price.currency)}
-            </span>
-            {hasDiscount && (
-              <>
-                <span className="text-sm tabular-nums text-zinc-400 line-through">
-                  {formatMoney(compareAt!.amount, compareAt!.currency)}
-                </span>
-                <Badge variant="secondary" className="text-[10px]">
-                  -{discountPct}%
-                </Badge>
-              </>
+    <div className="flex flex-col bg-white">
+      {/* ── Section 1: Hero Purchase Area ── */}
+      <div className="w-full border-b border-[#F6F1E9]">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          {/* Main Hero Image */}
+          <div className="relative aspect-square w-full bg-[#f9f9f9] overflow-hidden border-r border-[#F6F1E9]">
+            {product.images.length > 0 ? (
+              <Image
+                src={product.images[0].src}
+                alt={product.images[0].alt || product.title}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-contain"
+                priority
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                {m.catalog.noImage}
+              </div>
             )}
           </div>
-          <p className="mt-1 text-xs text-muted-foreground">Inclusive of all taxes</p>
 
-          {/* Variant swatches */}
-          {product.variants.length > 1 &&
-            product.options
-              .filter((o) => o.name !== "Title")
-              .map((opt) => (
-                <div key={opt.name} className="mt-5 space-y-2">
-                  <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
-                    {opt.name}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {product.variants.map((v, i) => {
-                      const label =
-                        opt.name === product.options[0]?.name ? v.option1 :
-                        opt.name === product.options[1]?.name ? v.option2 : v.option3;
-                      if (!label) return null;
-                      return (
-                        <button
-                          key={v.id}
-                          type="button"
-                          onClick={() => setSelectedVariant(i)}
-                          className={cn(
-                            "rounded-full border px-4 py-1.5 text-xs transition",
-                            i === selectedVariant
-                              ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-50 dark:bg-zinc-50 dark:text-zinc-900"
-                              : "border-zinc-300 text-zinc-700 hover:border-zinc-500 dark:border-zinc-600 dark:text-zinc-300",
-                          )}
-                        >
-                          {label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
+          {/* Buy Box */}
+          <div className="flex flex-col justify-center space-y-8 px-6 py-12 md:px-12 lg:px-24">
+            <div className="space-y-4">
+              <h1 className="text-xl font-medium tracking-tight text-zinc-900 md:text-2xl">
+                {product.title}
+              </h1>
+              <div className="flex items-baseline gap-3">
+                <span className="text-2xl font-semibold text-zinc-900">
+                  {formatMoney(price.amount, price.currency)}
+                </span>
+                <p className="text-sm font-normal text-zinc-400">
+                  Inclusive Of All Taxes
+                </p>
+              </div>
+            </div>
 
-          {/* Tags */}
-          {product.tags.length > 0 && (
-            <div className="mt-6 flex flex-wrap gap-1.5">
-              {product.tags.slice(0, 6).map((t) => (
-                <Badge key={t} variant="outline" className="text-[10px] font-normal">
-                  {t}
-                </Badge>
+            {/* Colors Swatches */}
+            <div className="flex items-center gap-4">
+              {[
+                { name: "Silver", bg: "bg-[#D9D9D9]" },
+                { name: "Yellow", bg: "bg-[#E5C16C]" },
+                { name: "Rose", bg: "bg-[#E0A091]" }
+              ].map((metal, i) => (
+                <button
+                  key={metal.name}
+                  className={cn(
+                    "h-11 w-11 rounded-full border-2 p-1 transition-all",
+                    i === 1 ? "border-zinc-300" : "border-zinc-100"
+                  )}
+                >
+                  <div className={cn("h-full w-full rounded-full shadow-sm", metal.bg)} />
+                </button>
               ))}
             </div>
-          )}
 
-          {variant?.sku && (
-            <p className="mt-4 text-[10px] text-muted-foreground">
-              {m.catalog.sku}: {variant.sku}
-            </p>
-          )}
+            {/* Sizes */}
+            <div className="space-y-4">
+              <p className="text-sm font-medium text-zinc-800">
+                Select Ring Size(US)
+              </p>
+              <div className="flex items-center gap-8">
+                {["7", "8", "9", "10"].map((size) => (
+                  <button
+                    key={size}
+                    className={cn(
+                      "flex h-10 w-10 items-center justify-center text-xs transition-all",
+                      size === "7" 
+                        ? "rounded-full bg-zinc-900 font-bold text-white shadow-md" 
+                        : "text-zinc-500 hover:text-zinc-900"
+                    )}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+              <button className="block text-sm font-medium text-[#77080E] hover:underline">
+                More Details
+              </button>
+            </div>
+
+            {/* CTAs */}
+            <div className="flex flex-col gap-3 pt-4 sm:flex-row">
+              <Button 
+                onClick={handleBuyNow}
+                disabled={isAdding}
+                className="h-14 flex-1 rounded-none bg-[#1A1A1A] text-sm font-medium text-white hover:bg-black"
+              >
+                {isAdding ? "Processing..." : "Buy Now"}
+              </Button>
+              <Button className="h-14 flex-1 rounded-none bg-[#E5C16C] text-sm font-medium text-black hover:bg-[#D4B05B]">
+                Visit Store
+              </Button>
+              <Button variant="outline" className="h-14 flex-1 rounded-none border-zinc-900 text-sm font-medium text-black hover:bg-zinc-50">
+                Talk To An Expert
+              </Button>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="grid grid-cols-4 gap-4 pt-10">
+              {[
+                { label: "BIS Hallmark", icon: Award },
+                { label: "SGL/IGI Certified", icon: ShieldCheck },
+                { label: "Lifetime Buyback", icon: RefreshCw },
+                { label: "Easy Return/Exchange", icon: Truck },
+              ].map((item, i) => (
+                <div key={i} className="flex flex-col items-center gap-3 text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E5C16C]/10">
+                     <item.icon className="h-6 w-6 text-[#E5C16C]" strokeWidth={1.5} />
+                  </div>
+                  <span className="text-[8px] font-medium leading-tight text-zinc-500">
+                    {item.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ── Editorial image grid (2×2) ── */}
-      {product.images.length > 1 && (
-        <div className="grid grid-cols-2 border-b border-zinc-200/80 dark:border-zinc-800">
-          {product.images.slice(0, 4).map((img, i) => (
-            <button
-              key={img.id}
-              type="button"
-              onClick={() => setSelectedImage(i)}
-              className={cn(
-                "relative aspect-square overflow-hidden border-zinc-200/80 transition-opacity dark:border-zinc-800",
-                i % 2 === 0 ? "border-r" : "",
-                i < 2 ? "border-b" : "",
-                i !== selectedImage && "opacity-80 hover:opacity-100",
-              )}
-            >
-              <Image
-                src={img.src}
-                alt={img.alt || `${product.title} view ${i + 1}`}
-                fill
-                sizes="50vw"
-                className="object-cover"
-              />
-            </button>
-          ))}
-        </div>
-      )}
+      {/* ── Section 2: Editorial Gallery & Sticky Sidebar ── */}
+      <div className="border-t border-[#F6F1E9]">
+        <div className="w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-0">
+            
+            {/* Left Col: Vertical Gallery */}
+            <div className="flex flex-col gap-12 py-16 md:py-24 border-r border-[#F6F1E9]">
+              {product.images.map((img, i) => (
+                <div key={img.id} className="relative aspect-[3/4] w-full bg-[#f9f9f9] overflow-hidden rounded-sm group">
+                  <Image
+                    src={img.src}
+                    alt={img.alt || `${product.title} view ${i + 1}`}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                </div>
+              ))}
+            </div>
 
-      {/* ── Tabs section ── */}
-      <div className="border-b border-zinc-200/80 dark:border-zinc-800">
-        <div className="flex overflow-x-auto border-b border-zinc-200/80 dark:border-zinc-800">
-          {tabs.map((tab, i) => (
-            <button
-              key={tab.label}
-              type="button"
-              onClick={() => setActiveTab(i)}
-              className={cn(
-                "shrink-0 border-b-2 px-5 py-3.5 text-xs font-medium tracking-wide transition sm:px-8 sm:text-sm",
-                i === activeTab
-                  ? "border-zinc-900 text-zinc-900 dark:border-zinc-50 dark:text-zinc-50"
-                  : "border-transparent text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300",
-              )}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+            {/* Right Col: Sticky Tech Specs / Tabs */}
+            <div className="lg:h-fit lg:sticky lg:top-24 py-16 lg:py-24 px-4 md:px-12 lg:px-24">
+              <div className="space-y-12">
+                {/* Horizontal Tab Headers */}
+                <div className="flex items-center gap-8 overflow-x-auto no-scrollbar border-b border-[#F6F1E9] pb-4">
+                  {tabs.map((tab, i) => (
+                    <button
+                      key={tab.label}
+                      onClick={() => setActiveTab(i)}
+                      className={cn(
+                        "whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative",
+                        i === activeTab 
+                          ? "text-zinc-900 after:absolute after:-bottom-[17px] after:left-0 after:h-[2px] after:w-full after:bg-[#77080E]" 
+                          : "text-zinc-400 hover:text-zinc-600"
+                      )}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
 
-        <div className="px-5 py-8 sm:px-10 sm:py-10">
-          {tabs[activeTab]?.content}
+                {/* Active Tab Content */}
+                <div className="animate-in fade-in duration-500">
+                  {tabs[activeTab]?.content}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ── Similar products ── */}
+      {/* ── Section 3: Similar Products ── */}
       {similar.length > 0 && (
-        <section className="space-y-4 pt-12">
-          <h2 className="text-lg font-light tracking-wide">{m.catalog.similarProducts}</h2>
-          <ProductGrid products={similar} size="sm" columns="grid-cols-2 sm:grid-cols-4" />
+        <section className="w-full border-t border-[#F6F1E9] py-24">
+          <h2 className="text-xl font-light tracking-[0.1em] text-zinc-900 md:text-2xl mb-12">
+            {m.catalog.similarProducts}
+          </h2>
+          <ProductGrid products={similar} size="sm" columns="grid-cols-2 lg:grid-cols-4" />
         </section>
       )}
     </div>
@@ -240,61 +279,51 @@ function buildTabs(
   product: ProductDetailDTO,
   variant: ProductDetailDTO["variants"][0] | undefined,
 ): Tab[] {
-  const tabs: Tab[] = [];
-
-  // Product Details
-  tabs.push({
-    label: "Product Details",
-    content: (
-      <table className="w-full text-sm">
-        <tbody>
-          <DetailRow label="Product Type" value={product.product_type} />
-          <DetailRow label="Vendor" value={product.vendor} />
-          {variant && <DetailRow label="SKU" value={variant.sku} />}
-          {variant && variant.weight > 0 && (
-            <DetailRow label="Weight" value={`${variant.weight} ${variant.weight_unit}`} />
-          )}
-          {product.options
-            .filter((o) => o.name !== "Title")
-            .map((o) => (
-              <DetailRow key={o.name} label={o.name} value={o.values.join(", ")} />
-            ))}
-        </tbody>
-      </table>
-    ),
-  });
-
-  // Price Details
-  const price = variant?.price ?? product.price;
-  const compareAt = variant?.compare_at_price ?? product.compare_at_price;
-  tabs.push({
-    label: "Price Details",
-    content: (
-      <table className="w-full text-sm">
-        <tbody>
-          <DetailRow label="Price" value={formatMoney(price.amount, price.currency)} />
-          {compareAt && (
-            <DetailRow label="MRP" value={formatMoney(compareAt.amount, compareAt.currency)} />
-          )}
-          <DetailRow label="Currency" value={price.currency} />
-          <DetailRow label="Tax" value="Inclusive of all taxes" />
-        </tbody>
-      </table>
-    ),
-  });
-
-  // Description
-  if (product.body_html) {
-    tabs.push({
-      label: "Description",
+  const tabs: Tab[] = [
+    {
+      label: "Product Details",
       content: (
-        <div
-          className="prose prose-sm max-w-none text-muted-foreground dark:prose-invert"
-          dangerouslySetInnerHTML={{ __html: product.body_html }}
-        />
+        <table className="w-full">
+          <tbody className="divide-y divide-[#F6F1E9]">
+            <DetailRow label="Product Type" value={product.product_type} />
+            <DetailRow label="Vendor" value={product.vendor} />
+            <DetailRow label="Material" value="18KT Yellow Gold" />
+            <DetailRow label="Metal Color" value="Yellow" />
+            <DetailRow label="Karat" value="18k" />
+            <DetailRow label="Diamond Weight" value="1.50 CT" />
+            <DetailRow label="Item Code" value="LV-MNG-W" />
+            <DetailRow label="Origin" value="Lab Grown" />
+            {product.options
+              .filter((o) => o.name !== "Title")
+              .map((o) => (
+                <DetailRow key={o.name} label={o.name} value={o.values.join(", ")} />
+              ))}
+          </tbody>
+        </table>
       ),
-    });
-  }
+    },
+    {
+      label: "Price Info",
+      content: (
+        <div className="space-y-6">
+          <p className="text-xs text-zinc-500 leading-relaxed">
+            The price mentioned includes the cost of the jewelry piece, labor charges, and applicable taxes. 
+            All prices are subject to change based on current gold and diamond market rates.
+          </p>
+          <table className="w-full">
+            <tbody className="divide-y divide-[#F6F1E9]">
+              <DetailRow label="Base Price" value={formatMoney(product.price.amount, product.price.currency)} />
+              <DetailRow label="GST (3%)" value="Included" />
+              <DetailRow label="Shipping" value="Free" />
+            </tbody>
+          </table>
+        </div>
+      ),
+    },
+    { label: "Shipping & more", content: <div className="text-xs text-zinc-500 italic">Global shipping available. Standard delivery in 5-7 business days.</div> },
+    { label: "Returns & Exchange", content: <div className="text-xs text-zinc-500 italic">Hassle-free returns within 30 days of purchase.</div> },
+    { label: "Review", content: <div className="text-xs text-zinc-500 italic">Customer reviews will appear here soon.</div> },
+  ];
 
   return tabs;
 }
@@ -302,9 +331,9 @@ function buildTabs(
 function DetailRow({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return (
-    <tr className="border-b border-zinc-100 last:border-0 dark:border-zinc-800">
-      <td className="py-2.5 pr-6 text-xs font-medium text-zinc-500">{label}</td>
-      <td className="py-2.5 text-right text-xs text-zinc-900 dark:text-zinc-100">{value}</td>
+    <tr className="border-none">
+      <td className="py-4 pr-6 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">{label}</td>
+      <td className="py-4 text-right text-xs font-medium text-zinc-800">{value}</td>
     </tr>
   );
 }

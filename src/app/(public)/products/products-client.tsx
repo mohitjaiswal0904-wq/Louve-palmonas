@@ -71,17 +71,17 @@ export default function ProductsClient() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+      {/* <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
         <h1 className="text-xl font-light tracking-wide">{m.catalog.products}</h1>
         {pagination && (
           <p className="text-xs text-muted-foreground">
             {m.catalog.productCount.replace("{count}", String(pagination.total))}
           </p>
         )}
-      </div>
+      </div> */}
 
       {/* Filters bar */}
-      <div className="flex flex-wrap items-center gap-2 border-b pb-4">
+      {/* <div className="flex flex-wrap items-center gap-2 border-b pb-4">
         {filters?.vendors && (
           <select
             value={vendor}
@@ -135,7 +135,7 @@ export default function ProductsClient() {
             {m.catalog.clearFilters}
           </Button>
         )}
-      </div>
+      </div> */}
 
       {/* Grid */}
       {loading ? (

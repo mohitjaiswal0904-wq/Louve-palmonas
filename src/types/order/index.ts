@@ -2,6 +2,16 @@ export type CreateOrderRequest = {
   payment_method?: string;
   note?: string;
   address_id?: number;
+  shipping_address?: {
+    full_name: string;
+    phone: string;
+    line1: string;
+    line2?: string;
+    city: string;
+    state: string;
+    postal_code: string;
+    country: string;
+  };
 };
 
 export type CheckoutSimulateRequest = {

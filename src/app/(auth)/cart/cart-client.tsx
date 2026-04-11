@@ -21,29 +21,14 @@ import {
   ShieldCheck,
   RotateCcw,
   CheckCircle2,
-  MapPin,
   CreditCard,
   Truck,
-  ChevronRight,
 } from "lucide-react";
 
 import { PopularSearches } from "@/components/common";
-import {
-  useAuth,
-  useCart,
-  useMessages,
-  useOrder,
-  useAddress,
-  usePayment,
-} from "@/hooks";
+import { useAuth, useCart, useMessages, useOrder, usePayment } from "@/hooks";
 import { cn } from "@/lib/utils";
-import type {
-  CartItemDTO,
-  OrderDTO,
-  AddressDTO,
-  CreateAddressRequest,
-  PayOrderResponse,
-} from "@/types";
+import type { CartItemDTO, OrderDTO, PayOrderResponse } from "@/types";
 
 declare global {
   interface Window {
@@ -54,11 +39,45 @@ declare global {
   }
 }
 
-type CheckoutStep = 1 | 2 | 3;
 type PaymentMethod = "razorpay" | "cod";
 
-const STEP_LABELS = ["Address", "Payment", "Review"] as const;
+type CodAddress = {
+  full_name: string;
+  phone: string;
+  line1: string;
+  line2: string;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+};
+
 const TAX_RATE = 0.08;
+
+const EMPTY_COD_ADDRESS: CodAddress = {
+  full_name: "",
+  phone: "",
+  line1: "",
+  line2: "",
+  city: "",
+  state: "",
+  postal_code: "",
+  country: "India",
+};
+
+function formatMoney(amount: string, currency: string): string {
+  const num = parseFloat(amount);
+  try {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(num);
+  } catch {
+    return `${currency} ${num.toFixed(0)}`;
+  }
+}
 
 export default function CartClient() {
   const router = useRouter();
@@ -75,21 +94,10 @@ export default function CartClient() {
     refreshCart,
   } = useCart();
   const order = useOrder();
-  const {
-    addresses,
-    loading: addrLoading,
-    defaultAddress,
-    fetchAddresses,
-    createAddress,
-  } = useAddress();
   const { payOrder, verifyRazorpay } = usePayment();
 
-  const [step, setStep] = useState<CheckoutStep>(1);
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
-    null,
-  );
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("razorpay");
-  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [codAddress, setCodAddress] = useState<CodAddress>(EMPTY_COD_ADDRESS);
   const [actionLoading, setActionLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [successOrder, setSuccessOrder] = useState<OrderDTO | null>(null);
@@ -100,18 +108,6 @@ export default function CartClient() {
       router.replace("/auth/login");
     }
   }, [authLoading, user, router]);
-
-  useEffect(() => {
-    if (defaultAddress && !selectedAddressId) {
-      setSelectedAddressId(defaultAddress.id);
-    }
-  }, [defaultAddress, selectedAddressId]);
-
-  useEffect(() => {
-    if (addresses.length === 0 && !addrLoading) {
-      setShowAddressForm(true);
-    }
-  }, [addresses.length, addrLoading]);
 
   const loadRazorpayScript = useCallback((): Promise<void> => {
     if (razorpayLoaded.current && window.Razorpay) return Promise.resolve();
@@ -126,11 +122,6 @@ export default function CartClient() {
       document.body.appendChild(script);
     });
   }, []);
-
-  const selectedAddress = useMemo(
-    () => addresses.find((a) => a.id === selectedAddressId) ?? null,
-    [addresses, selectedAddressId],
-  );
 
   const sub = parseFloat(subtotal.amount);
   const tax = sub * TAX_RATE;
@@ -149,26 +140,47 @@ export default function CartClient() {
     [updateItem, removeItem],
   );
 
-  const canAdvance = (s: CheckoutStep): boolean => {
-    if (s === 1) return selectedAddressId !== null;
-    if (s === 2) return !!paymentMethod;
-    return false;
-  };
+  const codFormValid = useMemo(() => {
+    const { full_name, phone, line1, city, state, postal_code } = codAddress;
+    return !!(
+      full_name.trim() &&
+      phone.trim() &&
+      line1.trim() &&
+      city.trim() &&
+      state.trim() &&
+      postal_code.trim()
+    );
+  }, [codAddress]);
 
-  const handleNext = () => {
-    if (step < 3 && canAdvance(step)) setStep((step + 1) as CheckoutStep);
-  };
+  const canPlaceOrder =
+    paymentMethod === "razorpay" || (paymentMethod === "cod" && codFormValid);
 
   const handlePlaceOrder = useCallback(async () => {
-    if (!selectedAddressId) return;
+    if (paymentMethod === "cod" && !codFormValid) return;
     setCheckoutError(null);
     setActionLoading(true);
 
     try {
-      const createRes = await order.createOrder({
-        payment_method: paymentMethod,
-        address_id: selectedAddressId,
-      });
+      const createPayload: Record<string, unknown> =
+        paymentMethod === "cod"
+          ? {
+              payment_method: "cod",
+              shipping_address: {
+                full_name: codAddress.full_name,
+                phone: codAddress.phone,
+                line1: codAddress.line1,
+                line2: codAddress.line2,
+                city: codAddress.city,
+                state: codAddress.state,
+                postal_code: codAddress.postal_code,
+                country: codAddress.country || "India",
+              },
+            }
+          : { payment_method: "razorpay" };
+
+      const createRes = await order.createOrder(
+        createPayload as Parameters<typeof order.createOrder>[0],
+      );
 
       if (!createRes.success || !createRes.data) {
         setCheckoutError(
@@ -179,7 +191,6 @@ export default function CartClient() {
       }
 
       const createdOrder = createRes.data;
-
       const payRes = await payOrder(createdOrder.id);
 
       if (!payRes.success || !payRes.data) {
@@ -200,16 +211,17 @@ export default function CartClient() {
         return;
       }
 
-      // Razorpay flow
       await loadRazorpayScript();
 
       const options: Record<string, unknown> = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: parseFloat(payData.payment.amount) * 100,
+        amount: payData.payment.amount,
         currency: payData.payment.currency,
         name: "Louve",
         description: `Order ${createdOrder.order_number}`,
         order_id: payData.razorpay_order_id,
+        one_click_checkout: true,
+        show_coupons: false,
         prefill: {
           name: user?.profile?.display_name || "",
           email: user?.email || "",
@@ -237,7 +249,9 @@ export default function CartClient() {
               setCheckoutError("Payment verification failed.");
             }
           } catch {
-            setCheckoutError("Payment verification failed. Please contact support.");
+            setCheckoutError(
+              "Payment verification failed. Please contact support.",
+            );
           } finally {
             setActionLoading(false);
           }
@@ -269,8 +283,9 @@ export default function CartClient() {
       setActionLoading(false);
     }
   }, [
-    selectedAddressId,
     paymentMethod,
+    codFormValid,
+    codAddress,
     order,
     payOrder,
     verifyRazorpay,
@@ -279,30 +294,6 @@ export default function CartClient() {
     router,
     user,
   ]);
-
-  const handleAddressCreated = useCallback(
-    async (data: CreateAddressRequest) => {
-      setActionLoading(true);
-      try {
-        await createAddress(data);
-        await fetchAddresses();
-        setShowAddressForm(false);
-      } catch {
-        setCheckoutError("Could not save address.");
-      } finally {
-        setActionLoading(false);
-      }
-    },
-    [createAddress, fetchAddresses],
-  );
-
-  // After fetchAddresses, auto-select the newest address if none selected
-  useEffect(() => {
-    if (addresses.length > 0 && !selectedAddressId) {
-      const def = addresses.find((a) => a.is_default);
-      setSelectedAddressId(def?.id ?? addresses[0].id);
-    }
-  }, [addresses, selectedAddressId]);
 
   if (authLoading) {
     return (
@@ -319,13 +310,15 @@ export default function CartClient() {
   const loading = cartLoading;
   const isEmpty = items.length === 0 && !successOrder;
 
-  // ── Success overlay ──
   if (successOrder) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/45 p-4 backdrop-blur-md">
         <div className="relative w-full max-w-md border border-zinc-200/80 bg-zinc-50/95 p-10 text-center shadow-[0_32px_64px_-24px_rgba(0,0,0,0.35)]">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-zinc-300/80">
-            <CheckCircle2 className="h-7 w-7 text-zinc-800" strokeWidth={1.5} />
+            <CheckCircle2
+              className="h-7 w-7 text-zinc-800"
+              strokeWidth={1.5}
+            />
           </div>
           <h2 className="mt-6 text-2xl font-light tracking-tight text-zinc-900">
             Order placed successfully
@@ -389,7 +382,7 @@ export default function CartClient() {
           </div>
         ) : (
           <div className="grid gap-16 lg:grid-cols-[1fr_420px] lg:items-start">
-            {/* ── Cart items ── */}
+            {/* Cart items */}
             <ul className="space-y-6">
               {items.map((item) => (
                 <CartLine
@@ -402,132 +395,119 @@ export default function CartClient() {
               ))}
             </ul>
 
-            {/* ── Checkout sidebar ── */}
+            {/* Checkout sidebar */}
             <aside className="space-y-0 rounded-sm border border-[#F6F1E9] bg-white">
-              {/* Progress indicator */}
-              <div className="flex items-center justify-between border-b border-[#F6F1E9] px-8 py-5">
-                {STEP_LABELS.map((label, i) => {
-                  const stepNum = (i + 1) as CheckoutStep;
-                  const isActive = step === stepNum;
-                  const isDone = step > stepNum;
-                  return (
-                    <button
-                      key={label}
-                      type="button"
-                      onClick={() => {
-                        if (isDone) setStep(stepNum);
-                      }}
-                      disabled={!isDone}
-                      className={cn(
-                        "flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.18em] transition-colors",
-                        isActive && "text-zinc-900",
-                        isDone &&
-                          "cursor-pointer text-zinc-400 hover:text-zinc-600",
-                        !isActive && !isDone && "text-zinc-300",
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "flex h-5 w-5 items-center justify-center rounded-full text-[9px] font-semibold",
-                          isActive &&
-                            "bg-zinc-900 text-white",
-                          isDone &&
-                            "bg-zinc-200 text-zinc-600",
-                          !isActive &&
-                            !isDone &&
-                            "bg-zinc-100 text-zinc-300",
-                        )}
-                      >
-                        {isDone ? "✓" : stepNum}
-                      </span>
-                      <span className="hidden sm:inline">{label}</span>
-                      {i < STEP_LABELS.length - 1 && (
-                        <ChevronRight className="ml-1 h-3 w-3 text-zinc-200" />
-                      )}
-                    </button>
-                  );
-                })}
+              {/* Step 1: Payment method */}
+              <div className="px-8 py-6">
+                <div className="flex items-center gap-2">
+                  <CreditCard
+                    className="h-4 w-4 text-zinc-400"
+                    strokeWidth={1.5}
+                  />
+                  <h2 className="text-sm font-medium tracking-tight text-zinc-900">
+                    Payment Method
+                  </h2>
+                </div>
+
+                <div className="mt-4 space-y-2.5">
+                  <label
+                    className={cn(
+                      "flex cursor-pointer items-start gap-3 rounded-sm border p-4 transition-all",
+                      paymentMethod === "razorpay"
+                        ? "border-zinc-900 bg-zinc-50"
+                        : "border-[#F6F1E9] hover:border-zinc-300",
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="payment"
+                      checked={paymentMethod === "razorpay"}
+                      onChange={() => setPaymentMethod("razorpay")}
+                      className="mt-0.5 accent-zinc-900"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <CreditCard
+                          className="h-4 w-4 text-zinc-500"
+                          strokeWidth={1.5}
+                        />
+                        <span className="text-sm font-medium text-zinc-900">
+                          Online Payment (Razorpay)
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-xs font-light text-zinc-400">
+                        Pay securely via UPI, cards, net banking
+                      </p>
+                    </div>
+                  </label>
+
+                  <label
+                    className={cn(
+                      "flex cursor-pointer items-start gap-3 rounded-sm border p-4 transition-all",
+                      paymentMethod === "cod"
+                        ? "border-zinc-900 bg-zinc-50"
+                        : "border-[#F6F1E9] hover:border-zinc-300",
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="payment"
+                      checked={paymentMethod === "cod"}
+                      onChange={() => setPaymentMethod("cod")}
+                      className="mt-0.5 accent-zinc-900"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Truck
+                          className="h-4 w-4 text-zinc-500"
+                          strokeWidth={1.5}
+                        />
+                        <span className="text-sm font-medium text-zinc-900">
+                          Cash on Delivery
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-xs font-light text-zinc-400">
+                        Pay when your order arrives
+                      </p>
+                    </div>
+                  </label>
+                </div>
               </div>
 
-              {/* Step content */}
-              <div className="min-h-[260px] px-8 py-6">
-                {step === 1 && (
-                  <StepAddress
-                    addresses={addresses}
-                    loading={addrLoading}
-                    selectedId={selectedAddressId}
-                    onSelect={setSelectedAddressId}
-                    showForm={showAddressForm}
-                    onToggleForm={() => setShowAddressForm((v) => !v)}
-                    onCreateAddress={handleAddressCreated}
-                    formLoading={actionLoading}
+              {/* Step 2: COD address form or Place Order */}
+              <div className="border-t border-[#F6F1E9] px-8 py-6">
+                {paymentMethod === "cod" && (
+                  <CodAddressForm
+                    address={codAddress}
+                    onChange={setCodAddress}
                   />
                 )}
 
-                {step === 2 && (
-                  <StepPayment
-                    method={paymentMethod}
-                    onChange={setPaymentMethod}
-                  />
-                )}
-
-                {step === 3 && (
-                  <StepReview
-                    address={selectedAddress}
-                    method={paymentMethod}
-                    itemCount={itemCount}
-                    total={formatMoney(total.toString(), currency)}
-                  />
+                {paymentMethod === "razorpay" && (
+                  <p className="mb-4 text-xs font-light leading-relaxed text-zinc-400">
+                    Razorpay will securely collect your delivery address and
+                    payment details.
+                  </p>
                 )}
 
                 {checkoutError && (
-                  <p
-                    className="mt-4 text-sm text-[#77080E]"
-                    role="alert"
-                  >
+                  <p className="mb-4 text-sm text-[#77080E]" role="alert">
                     {checkoutError}
                   </p>
                 )}
 
-                {/* Step navigation */}
-                <div className="mt-6 flex items-center gap-3">
-                  {step > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => setStep((step - 1) as CheckoutStep)}
-                      className="border border-zinc-200 px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.18em] text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-700"
-                    >
-                      Back
-                    </button>
+                <button
+                  type="button"
+                  disabled={actionLoading || !canPlaceOrder}
+                  onClick={handlePlaceOrder}
+                  className={cn(
+                    "flex w-full items-center justify-center gap-2 bg-zinc-900 py-3.5 text-[11px] font-medium uppercase tracking-[0.2em] text-white transition-all hover:bg-black",
+                    "disabled:pointer-events-none disabled:opacity-40",
                   )}
-                  {step < 3 ? (
-                    <button
-                      type="button"
-                      disabled={!canAdvance(step)}
-                      onClick={handleNext}
-                      className={cn(
-                        "ml-auto flex items-center gap-2 bg-zinc-900 px-6 py-2.5 text-[10px] font-medium uppercase tracking-[0.18em] text-white transition-colors hover:bg-black",
-                        "disabled:opacity-30 disabled:pointer-events-none",
-                      )}
-                    >
-                      Continue
-                      <ChevronRight className="h-3 w-3" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      disabled={actionLoading}
-                      onClick={handlePlaceOrder}
-                      className={cn(
-                        "ml-auto flex w-full items-center justify-center gap-2 bg-zinc-900 py-3.5 text-[11px] font-medium uppercase tracking-[0.2em] text-white transition-all hover:bg-black",
-                        "disabled:opacity-40 disabled:pointer-events-none",
-                      )}
-                    >
-                      <Lock className="h-3.5 w-3.5" />
-                      {actionLoading ? "Processing…" : "Place Order"}
-                    </button>
-                  )}
-                </div>
+                >
+                  <Lock className="h-3.5 w-3.5" />
+                  {actionLoading ? "Processing…" : "Place Order"}
+                </button>
               </div>
 
               {/* Order summary */}
@@ -567,399 +547,115 @@ export default function CartClient() {
 
               {/* Trust badges */}
               <div className="space-y-3 border-t border-[#F6F1E9] px-8 py-6">
-                <TrustBadge icon={RotateCcw} text="Free returns within 30 days" />
-                <TrustBadge icon={ShieldCheck} text="2-year warranty included" />
-                <TrustBadge icon={CheckCircle2} text="Secure payment processing" />
+                <TrustBadge
+                  icon={RotateCcw}
+                  text="Free returns within 30 days"
+                />
+                <TrustBadge
+                  icon={ShieldCheck}
+                  text="2-year warranty included"
+                />
+                <TrustBadge
+                  icon={CheckCircle2}
+                  text="Secure payment processing"
+                />
               </div>
             </aside>
           </div>
         )}
 
-        <PopularSearches variant="footer" showLogo limit={12} title="Popular Searches" />
+        <PopularSearches
+          variant="footer"
+          showLogo
+          limit={12}
+          title="Popular Searches"
+        />
       </div>
     </div>
   );
 }
 
 // ═══════════════════════════════════════════════════════════════
-// Step 1 — Address Selection
+// COD Address Form
 // ═══════════════════════════════════════════════════════════════
 
-type StepAddressProps = {
-  addresses: AddressDTO[];
-  loading: boolean;
-  selectedId: number | null;
-  onSelect: (id: number) => void;
-  showForm: boolean;
-  onToggleForm: () => void;
-  onCreateAddress: (data: CreateAddressRequest) => Promise<void>;
-  formLoading: boolean;
-};
-
-function StepAddress({
-  addresses,
-  loading,
-  selectedId,
-  onSelect,
-  showForm,
-  onToggleForm,
-  onCreateAddress,
-  formLoading,
-}: StepAddressProps) {
-  return (
-    <div>
-      <div className="flex items-center gap-2">
-        <MapPin className="h-4 w-4 text-zinc-400" strokeWidth={1.5} />
-        <h2 className="text-sm font-medium tracking-tight text-zinc-900">
-          Delivery Address
-        </h2>
-      </div>
-
-      {loading ? (
-        <p className="mt-4 text-xs font-light text-zinc-400">
-          Loading addresses…
-        </p>
-      ) : (
-        <>
-          {addresses.length > 0 && (
-            <div className="mt-4 space-y-2.5">
-              {addresses.map((addr) => (
-                <label
-                  key={addr.id}
-                  className={cn(
-                    "flex cursor-pointer items-start gap-3 rounded-sm border p-3.5 transition-all",
-                    selectedId === addr.id
-                      ? "border-zinc-900 bg-zinc-50"
-                      : "border-[#F6F1E9] hover:border-zinc-300",
-                  )}
-                >
-                  <input
-                    type="radio"
-                    name="address"
-                    checked={selectedId === addr.id}
-                    onChange={() => onSelect(addr.id)}
-                    className="mt-0.5 accent-zinc-900"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-zinc-900">
-                      {addr.full_name}
-                      {addr.is_default && (
-                        <span className="ml-2 text-[9px] font-semibold uppercase tracking-widest text-zinc-400">
-                          Default
-                        </span>
-                      )}
-                    </p>
-                    <p className="mt-0.5 text-xs font-light leading-relaxed text-zinc-500">
-                      {addr.line1}
-                      {addr.line2 ? `, ${addr.line2}` : ""}
-                      <br />
-                      {addr.city}, {addr.state} {addr.postal_code}
-                    </p>
-                    <p className="mt-0.5 text-xs font-light text-zinc-400">
-                      {addr.phone}
-                    </p>
-                  </div>
-                </label>
-              ))}
-            </div>
-          )}
-
-          {!showForm && (
-            <button
-              type="button"
-              onClick={onToggleForm}
-              className="mt-4 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.18em] text-zinc-500 transition-colors hover:text-zinc-900"
-            >
-              <Plus className="h-3 w-3" />
-              Add new address
-            </button>
-          )}
-
-          {showForm && (
-            <div className="mt-4">
-              <AddressForm
-                onSubmit={onCreateAddress}
-                onCancel={
-                  addresses.length > 0 ? onToggleForm : undefined
-                }
-                loading={formLoading}
-              />
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════
-// Inline Address Form
-// ═══════════════════════════════════════════════════════════════
-
-function AddressForm({
-  onSubmit,
-  onCancel,
-  loading,
+function CodAddressForm({
+  address,
+  onChange,
 }: {
-  onSubmit: (data: CreateAddressRequest) => Promise<void>;
-  onCancel?: () => void;
-  loading: boolean;
+  address: CodAddress;
+  onChange: (addr: CodAddress) => void;
 }) {
-  const [form, setForm] = useState<CreateAddressRequest>({
-    full_name: "",
-    phone: "",
-    line1: "",
-    line2: "",
-    city: "",
-    state: "",
-    postal_code: "",
-    country: "India",
-    is_default: false,
-  });
-
-  const set = (field: keyof CreateAddressRequest, value: string | boolean) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    onSubmit(form);
-  };
+  const set = (field: keyof CodAddress, value: string) =>
+    onChange({ ...address, [field]: value });
 
   const inputCls =
     "w-full border border-[#F6F1E9] bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-300 focus:border-zinc-400 focus:outline-none transition-colors";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
-      <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-zinc-400">
-        New Address
+    <div className="mb-5">
+      <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.15em] text-zinc-400">
+        Delivery Address
       </p>
-      <div className="grid grid-cols-2 gap-3">
-        <input
-          required
-          placeholder="Full name"
-          value={form.full_name}
-          onChange={(e) => set("full_name", e.target.value)}
-          className={inputCls}
-        />
-        <input
-          required
-          placeholder="Phone"
-          value={form.phone}
-          onChange={(e) => set("phone", e.target.value)}
-          className={inputCls}
-        />
-      </div>
-      <input
-        required
-        placeholder="Address line 1"
-        value={form.line1}
-        onChange={(e) => set("line1", e.target.value)}
-        className={inputCls}
-      />
-      <input
-        placeholder="Address line 2 (optional)"
-        value={form.line2 ?? ""}
-        onChange={(e) => set("line2", e.target.value)}
-        className={inputCls}
-      />
-      <div className="grid grid-cols-3 gap-3">
-        <input
-          required
-          placeholder="City"
-          value={form.city}
-          onChange={(e) => set("city", e.target.value)}
-          className={inputCls}
-        />
-        <input
-          required
-          placeholder="State"
-          value={form.state}
-          onChange={(e) => set("state", e.target.value)}
-          className={inputCls}
-        />
-        <input
-          required
-          placeholder="PIN code"
-          value={form.postal_code}
-          onChange={(e) => set("postal_code", e.target.value)}
-          className={inputCls}
-        />
-      </div>
-      <input
-        placeholder="Country"
-        value={form.country ?? "India"}
-        onChange={(e) => set("country", e.target.value)}
-        className={inputCls}
-      />
-      <label className="flex items-center gap-2 text-xs text-zinc-500">
-        <input
-          type="checkbox"
-          checked={form.is_default ?? false}
-          onChange={(e) => set("is_default", e.target.checked)}
-          className="accent-zinc-900"
-        />
-        Set as default address
-      </label>
-      <div className="flex items-center gap-2 pt-1">
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-zinc-900 px-5 py-2 text-[10px] font-medium uppercase tracking-[0.18em] text-white transition-colors hover:bg-black disabled:opacity-40"
-        >
-          {loading ? "Saving…" : "Save Address"}
-        </button>
-        {onCancel && (
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-4 py-2 text-[10px] font-medium uppercase tracking-[0.18em] text-zinc-400 hover:text-zinc-600"
-          >
-            Cancel
-          </button>
-        )}
-      </div>
-    </form>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════
-// Step 2 — Payment Method
-// ═══════════════════════════════════════════════════════════════
-
-function StepPayment({
-  method,
-  onChange,
-}: {
-  method: PaymentMethod;
-  onChange: (m: PaymentMethod) => void;
-}) {
-  const options: { value: PaymentMethod; label: string; desc: string; icon: typeof CreditCard }[] = [
-    {
-      value: "razorpay",
-      label: "Razorpay",
-      desc: "Pay securely via UPI, cards, net banking",
-      icon: CreditCard,
-    },
-    {
-      value: "cod",
-      label: "Cash on Delivery",
-      desc: "Pay when your order arrives",
-      icon: Truck,
-    },
-  ];
-
-  return (
-    <div>
-      <div className="flex items-center gap-2">
-        <CreditCard className="h-4 w-4 text-zinc-400" strokeWidth={1.5} />
-        <h2 className="text-sm font-medium tracking-tight text-zinc-900">
-          Payment Method
-        </h2>
-      </div>
-      <div className="mt-4 space-y-2.5">
-        {options.map((opt) => (
-          <label
-            key={opt.value}
-            className={cn(
-              "flex cursor-pointer items-start gap-3 rounded-sm border p-4 transition-all",
-              method === opt.value
-                ? "border-zinc-900 bg-zinc-50"
-                : "border-[#F6F1E9] hover:border-zinc-300",
-            )}
-          >
-            <input
-              type="radio"
-              name="payment"
-              checked={method === opt.value}
-              onChange={() => onChange(opt.value)}
-              className="mt-0.5 accent-zinc-900"
-            />
-            <div>
-              <div className="flex items-center gap-2">
-                <opt.icon className="h-4 w-4 text-zinc-500" strokeWidth={1.5} />
-                <span className="text-sm font-medium text-zinc-900">
-                  {opt.label}
-                </span>
-              </div>
-              <p className="mt-0.5 text-xs font-light text-zinc-400">
-                {opt.desc}
-              </p>
-            </div>
-          </label>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════
-// Step 3 — Review
-// ═══════════════════════════════════════════════════════════════
-
-function StepReview({
-  address,
-  method,
-  itemCount,
-  total,
-}: {
-  address: AddressDTO | null;
-  method: PaymentMethod;
-  itemCount: number;
-  total: string;
-}) {
-  return (
-    <div>
-      <h2 className="text-sm font-medium tracking-tight text-zinc-900">
-        Review Your Order
-      </h2>
-
-      <div className="mt-4 space-y-4">
-        {/* Address summary */}
-        <div className="rounded-sm border border-[#F6F1E9] p-3.5">
-          <p className="text-[9px] font-semibold uppercase tracking-widest text-zinc-400">
-            Shipping to
-          </p>
-          {address ? (
-            <div className="mt-1.5">
-              <p className="text-sm font-medium text-zinc-900">
-                {address.full_name}
-              </p>
-              <p className="text-xs font-light leading-relaxed text-zinc-500">
-                {address.line1}
-                {address.line2 ? `, ${address.line2}` : ""}
-                <br />
-                {address.city}, {address.state} {address.postal_code}
-              </p>
-            </div>
-          ) : (
-            <p className="mt-1 text-xs text-zinc-400">No address selected</p>
-          )}
+      <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            required
+            placeholder="Full name *"
+            value={address.full_name}
+            onChange={(e) => set("full_name", e.target.value)}
+            className={inputCls}
+          />
+          <input
+            required
+            placeholder="Phone *"
+            value={address.phone}
+            onChange={(e) => set("phone", e.target.value)}
+            className={inputCls}
+          />
         </div>
-
-        {/* Payment summary */}
-        <div className="rounded-sm border border-[#F6F1E9] p-3.5">
-          <p className="text-[9px] font-semibold uppercase tracking-widest text-zinc-400">
-            Payment
-          </p>
-          <p className="mt-1.5 text-sm font-medium text-zinc-900">
-            {method === "razorpay"
-              ? "Razorpay (Online Payment)"
-              : "Cash on Delivery"}
-          </p>
+        <input
+          required
+          placeholder="Address line 1 *"
+          value={address.line1}
+          onChange={(e) => set("line1", e.target.value)}
+          className={inputCls}
+        />
+        <input
+          placeholder="Address line 2 (optional)"
+          value={address.line2}
+          onChange={(e) => set("line2", e.target.value)}
+          className={inputCls}
+        />
+        <div className="grid grid-cols-3 gap-3">
+          <input
+            required
+            placeholder="City *"
+            value={address.city}
+            onChange={(e) => set("city", e.target.value)}
+            className={inputCls}
+          />
+          <input
+            required
+            placeholder="State *"
+            value={address.state}
+            onChange={(e) => set("state", e.target.value)}
+            className={inputCls}
+          />
+          <input
+            required
+            placeholder="PIN code *"
+            value={address.postal_code}
+            onChange={(e) => set("postal_code", e.target.value)}
+            className={inputCls}
+          />
         </div>
-
-        {/* Quick totals */}
-        <div className="rounded-sm border border-[#F6F1E9] p-3.5">
-          <p className="text-[9px] font-semibold uppercase tracking-widest text-zinc-400">
-            Order
-          </p>
-          <div className="mt-1.5 flex items-baseline justify-between">
-            <span className="text-xs font-light text-zinc-500">
-              {itemCount} {itemCount === 1 ? "item" : "items"}
-            </span>
-            <span className="text-sm font-semibold text-zinc-900">{total}</span>
-          </div>
-        </div>
+        <input
+          placeholder="Country"
+          value={address.country}
+          onChange={(e) => set("country", e.target.value)}
+          className={inputCls}
+        />
       </div>
     </div>
   );
@@ -983,7 +679,6 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
 
   return (
     <li className="relative flex items-start border border-[#F6F1E9] bg-white p-[20px] transition-all hover:border-[#E5C16C]/30">
-      {/* Product Image */}
       <div className="relative h-20 w-20 shrink-0 overflow-hidden">
         {imageUrl ? (
           <Image
@@ -1001,7 +696,6 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
         )}
       </div>
 
-      {/* Product Details */}
       <div className="ml-10 flex-1">
         <div className="space-y-2">
           <Link
@@ -1029,7 +723,6 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
             </span>
           </div>
 
-          {/* Quantity Selector */}
           <div className="pt-1">
             <div className="inline-flex items-center rounded-lg border border-zinc-100 bg-[#FDFDFD] px-2">
               <button
@@ -1056,7 +749,6 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
         </div>
       </div>
 
-      {/* Price */}
       <div className="text-right">
         <p className="text-lg font-medium text-zinc-900">
           {variant?.price
@@ -1065,7 +757,6 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
         </p>
       </div>
 
-      {/* Actions */}
       <div className="absolute bottom-8 right-8 flex items-center gap-4">
         <button className="text-sm font-light text-zinc-400 transition-colors hover:text-zinc-900">
           Save for later
@@ -1084,7 +775,7 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// Shared Components & Utilities
+// Trust Badge
 // ═══════════════════════════════════════════════════════════════
 
 function TrustBadge({
@@ -1100,18 +791,4 @@ function TrustBadge({
       <span className="text-sm font-normal text-zinc-500">{text}</span>
     </div>
   );
-}
-
-function formatMoney(amount: string, currency: string): string {
-  const num = parseFloat(amount);
-  try {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(num);
-  } catch {
-    return `${currency} ${num.toFixed(0)}`;
-  }
 }

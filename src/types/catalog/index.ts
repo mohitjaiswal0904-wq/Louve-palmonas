@@ -93,4 +93,26 @@ export type ProductListParams = {
   currency?: string;
 };
 
+// Collections
+
+export type CollectionDTO = {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  image_url: string;
+  parent_slug?: string | null;
+  product_count: number;
+  children?: CollectionDTO[];
+  seo_title?: string;
+  seo_description?: string;
+};
+
+export type CollectionDetailDTO = CollectionDTO & {
+  products: ProductDTO[];
+  total: number;
+  page: number;
+  total_pages: number;
+};
+
 export type { Collection, Currency, Money, Product } from "./commerce";

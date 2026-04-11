@@ -69,7 +69,7 @@ export const messages = {
         title: "Company",
         links: [
           { key: "about", label: "About", href: "/about" },
-          { key: "stores", label: "Stores", href: "/stores" },
+          { key: "collections", label: "Collections", href: "/collections" },
           { key: "products", label: "Products", href: "/products" },
         ],
       },
@@ -84,12 +84,12 @@ export const messages = {
     ],
     megaMenu: {
       categories: [
-        { label: "Rings", href: "/products?category=rings" },
-        { label: "Earrings", href: "/products?category=earrings" },
-        { label: "Pendants", href: "/products?category=pendants" },
-        { label: "Bracelets", href: "/products?category=bracelets" },
-        { label: "Engagement Rings", href: "/products?category=engagement-rings" },
-        { label: "Gemstones", href: "/products?category=gemstones" },
+        { label: "Rings", href: "/collections/rings" },
+        { label: "Earrings", href: "/collections/earrings" },
+        { label: "Necklaces", href: "/collections/necklaces" },
+        { label: "Bracelets", href: "/collections/bracelets" },
+        { label: "Pendants", href: "/collections/pendants" },
+        { label: "All Collections", href: "/collections" },
       ],
       gallery: [
         { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "Collection view 1" },

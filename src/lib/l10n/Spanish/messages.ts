@@ -69,7 +69,7 @@ export const messages = {
         title: "Empresa",
         links: [
           { key: "about", label: "Acerca de", href: "/about" },
-          { key: "stores", label: "Tiendas", href: "/stores" },
+          { key: "collections", label: "Colecciones", href: "/collections" },
           { key: "products", label: "Productos", href: "/products" },
         ],
       },
@@ -84,12 +84,12 @@ export const messages = {
     ],
     megaMenu: {
       categories: [
-        { label: "Anillos", href: "/products?category=rings" },
-        { label: "Pendientes", href: "/products?category=earrings" },
-        { label: "Colgantes", href: "/products?category=pendants" },
-        { label: "Pulseras", href: "/products?category=bracelets" },
-        { label: "Anillos de compromiso", href: "/products?category=engagement-rings" },
-        { label: "Piedras preciosas", href: "/products?category=gemstones" },
+        { label: "Anillos", href: "/collections/rings" },
+        { label: "Pendientes", href: "/collections/earrings" },
+        { label: "Colgantes", href: "/collections/pendants" },
+        { label: "Pulseras", href: "/collections/bracelets" },
+        { label: "Collares", href: "/collections/necklaces" },
+        { label: "Todas las colecciones", href: "/collections/all" },
       ],
       gallery: [
         { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "Vista de colección 1" },

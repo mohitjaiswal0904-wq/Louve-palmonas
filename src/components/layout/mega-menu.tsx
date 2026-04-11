@@ -14,7 +14,7 @@ interface MegaMenuProps {
   onClose: () => void;
 }
 
-/** Match /products?category=… links to current route + search params. */
+/** Match nav links to current route (supports both path-only and ?category= legacy links). */
 function isCategoryActive(
   href: string,
   pathname: string,
@@ -23,6 +23,10 @@ function isCategoryActive(
   const q = href.indexOf("?");
   const pathPart = q >= 0 ? href.slice(0, q) : href;
   const queryPart = q >= 0 ? href.slice(q + 1) : "";
+
+  if (pathname === pathPart && !queryPart) return true;
+  if (pathname.startsWith(pathPart) && pathPart !== "/" && !queryPart) return true;
+
   if (pathname !== pathPart) return false;
   if (!queryPart) return !categoryParam;
   const want = new URLSearchParams(queryPart).get("category");

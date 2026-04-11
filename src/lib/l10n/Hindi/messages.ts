@@ -69,7 +69,7 @@ export const messages = {
         title: "कंपनी",
         links: [
           { key: "about", label: "हमारे बारे में", href: "/about" },
-          { key: "stores", label: "स्टोर", href: "/stores" },
+          { key: "collections", label: "कलेक्शन", href: "/collections" },
           { key: "products", label: "उत्पाद", href: "/products" },
         ],
       },
@@ -84,12 +84,12 @@ export const messages = {
     ],
     megaMenu: {
       categories: [
-        { label: "अंगूठियाँ", href: "/products?category=rings" },
-        { label: "बालियाँ", href: "/products?category=earrings" },
-        { label: "पेंडेंट", href: "/products?category=pendants" },
-        { label: "ब्रेसलेट", href: "/products?category=bracelets" },
-        { label: "इंगेजमेंट रिंग्स", href: "/products?category=engagement-rings" },
-        { label: "रत्न", href: "/products?category=gemstones" },
+        { label: "अंगूठियाँ", href: "/collections/rings" },
+        { label: "बालियाँ", href: "/collections/earrings" },
+        { label: "पेंडेंट", href: "/collections/pendants" },
+        { label: "ब्रेसलेट", href: "/collections/bracelets" },
+        { label: "हार", href: "/collections/necklaces" },
+        { label: "सभी कलेक्शन", href: "/collections/all" },
       ],
       gallery: [
         { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "कलेक्शन दृश्य 1" },

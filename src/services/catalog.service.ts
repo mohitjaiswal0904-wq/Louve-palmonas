@@ -6,6 +6,8 @@ import type {
   ProductDetailDTO,
   FiltersDTO,
   ProductListParams,
+  CollectionDTO,
+  CollectionDetailDTO,
 } from "@/types";
 
 function toQueryString(params: Record<string, unknown>): string {
@@ -31,4 +33,17 @@ export async function getProductById(client: ApiClient, id: number) {
 
 export async function getFilters(client: ApiClient) {
   return client.get<ApiResponse<FiltersDTO>>("/api/v1/catalog/filters");
+}
+
+export async function listCollections(client: ApiClient) {
+  return client.get<ApiResponse<CollectionDTO[]>>("/api/v1/catalog/collections");
+}
+
+export async function getCollectionBySlug(client: ApiClient, slug: string) {
+  return client.get<ApiResponse<CollectionDTO>>(`/api/v1/catalog/collections/${slug}`);
+}
+
+export async function getCollectionProducts(client: ApiClient, slug: string, params: { page?: number; limit?: number } = {}) {
+  const qs = toQueryString(params);
+  return client.get<ApiResponse<CollectionDetailDTO>>(`/api/v1/catalog/collections/${slug}/products${qs}`);
 }

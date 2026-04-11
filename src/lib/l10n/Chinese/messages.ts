@@ -69,7 +69,7 @@ export const messages = {
         title: "公司",
         links: [
           { key: "about", label: "关于我们", href: "/about" },
-          { key: "stores", label: "门店", href: "/stores" },
+          { key: "collections", label: "系列", href: "/collections" },
           { key: "products", label: "产品", href: "/products" },
         ],
       },
@@ -84,12 +84,12 @@ export const messages = {
     ],
     megaMenu: {
       categories: [
-        { label: "戒指", href: "/products?category=rings" },
-        { label: "耳环", href: "/products?category=earrings" },
-        { label: "吊坠", href: "/products?category=pendants" },
-        { label: "手链", href: "/products?category=bracelets" },
-        { label: "订婚戒指", href: "/products?category=engagement-rings" },
-        { label: "宝石", href: "/products?category=gemstones" },
+        { label: "戒指", href: "/collections/rings" },
+        { label: "耳环", href: "/collections/earrings" },
+        { label: "吊坠", href: "/collections/pendants" },
+        { label: "手链", href: "/collections/bracelets" },
+        { label: "项链", href: "/collections/necklaces" },
+        { label: "所有系列", href: "/collections/all" },
       ],
       gallery: [
         { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "系列展示 1" },

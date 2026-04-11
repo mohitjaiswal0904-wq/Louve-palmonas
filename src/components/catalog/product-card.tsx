@@ -7,7 +7,7 @@ import { useMessages } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { ProductDTO } from "@/types";
 
-export type CardSize = "sm" | "md" | "lg";
+export type CardSize = "sm" | "md" | "lg" | "showcase";
 
 type ProductCardProps = {
   product: ProductDTO;
@@ -15,37 +15,56 @@ type ProductCardProps = {
   inGrid?: boolean;
 };
 
-const imagePadding: Record<CardSize, string> = {
+/** Single-column phone (large), 3-col tablet (compact), 3-col desktop (large) — matches collection grids. */
+export const SHOWCASE_IMAGE_PADDING =
+  "p-8 sm:p-9 md:p-7 lg:p-12 xl:p-14";
+export const SHOWCASE_IMAGE_SIZES =
+  "(max-width: 767px) 100vw, (max-width: 1023px) 34vw, 33vw";
+export const SHOWCASE_COPY_PADDING =
+  "px-4 py-3.5 sm:px-5 sm:py-4 md:px-4 md:py-3 lg:px-7 lg:py-5 xl:px-8 xl:py-5";
+const showcaseVendor =
+  "text-[9px] md:text-[10px] lg:text-[10px] xl:text-[11px]";
+const showcaseTitle =
+  "text-sm md:text-[13px] lg:text-[15px]";
+const showcasePrice =
+  "text-sm md:text-sm lg:text-[17px]";
+
+// Aliases for ProductCard internal use
+const showcaseImagePadding = SHOWCASE_IMAGE_PADDING;
+const showcaseImageSizes = SHOWCASE_IMAGE_SIZES;
+const showcaseCopyPadding = SHOWCASE_COPY_PADDING;
+
+const imagePadding: Record<Exclude<CardSize, "showcase">, string> = {
   sm: "p-4 sm:p-5",
   md: "p-6 sm:p-8 md:p-10",
   lg: "p-8 sm:p-10 md:p-12 lg:p-14",
 };
 
-const imageSizes: Record<CardSize, string> = {
+const imageSizes: Record<Exclude<CardSize, "showcase">, string> = {
   sm: "(max-width: 640px) 50vw, 25vw",
   md: "(max-width: 640px) 50vw, 33vw",
   lg: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
 };
 
-const copyPadding: Record<CardSize, string> = {
+const copyPadding: Record<Exclude<CardSize, "showcase">, string> = {
   sm: "px-3 py-2.5 sm:px-3.5 sm:py-3",
   md: "px-4 py-3 sm:px-5 sm:py-3.5",
   lg: "px-5 py-4 sm:px-6 sm:py-4 md:px-8 md:py-5",
 };
 
-const vendorSize: Record<CardSize, string> = {
+const vendorSize: Record<Exclude<CardSize, "showcase">, string> = {
   sm: "text-[9px]",
   md: "text-[10px]",
   lg: "text-[10px] sm:text-[11px]",
 };
 
-const titleSize: Record<CardSize, string> = {
+const titleSize: Record<Exclude<CardSize, "showcase">, string> = {
   sm: "text-xs",
   md: "text-[13px]",
   lg: "text-sm sm:text-[15px]",
 };
 
-const priceSize: Record<CardSize, string> = {
+const priceSize: Record<Exclude<CardSize, "showcase">, string> = {
   sm: "text-xs",
   md: "text-sm",
   lg: "text-base sm:text-[17px]",
@@ -57,6 +76,13 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
   const hasDiscount =
     product.compare_at_price &&
     parseFloat(product.compare_at_price.amount) > parseFloat(product.price.amount);
+
+  const imgPad = size === "showcase" ? showcaseImagePadding : imagePadding[size];
+  const imgSz = size === "showcase" ? showcaseImageSizes : imageSizes[size];
+  const cpPad = size === "showcase" ? showcaseCopyPadding : copyPadding[size];
+  const vSz = size === "showcase" ? showcaseVendor : vendorSize[size];
+  const tSz = size === "showcase" ? showcaseTitle : titleSize[size];
+  const pSz = size === "showcase" ? showcasePrice : priceSize[size];
 
   return (
     <Link
@@ -70,7 +96,7 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
       <div
         className={cn(
           "relative aspect-square bg-[#f9f9f9] dark:bg-zinc-900/35",
-          imagePadding[size],
+          imgPad,
         )}
       >
         {product.image ? (
@@ -78,7 +104,7 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
             src={product.image.src}
             alt={product.image.alt || product.title}
             fill
-            sizes={imageSizes[size]}
+            sizes={imgSz}
             className="object-contain object-center drop-shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-transform duration-500 ease-out dark:drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
           />
         ) : (
@@ -94,15 +120,15 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
         {/* Wishlist heart hidden — /wishlist redirects to /cart */}
       </div>
 
-      <div className={cn("flex flex-1 flex-col border-t border-[#F6F1E9] bg-white dark:border-zinc-800 dark:bg-zinc-950", copyPadding[size])}>
-        <p className={cn("mb-1 font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500", vendorSize[size])}>
+      <div className={cn("flex flex-1 flex-col border-t border-[#F6F1E9] bg-white dark:border-zinc-800 dark:bg-zinc-950", cpPad)}>
+        <p className={cn("mb-1 font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500", vSz)}>
           {product.vendor}
         </p>
-        <h3 className={cn("line-clamp-1 font-normal leading-snug tracking-tight text-zinc-800 dark:text-zinc-100", titleSize[size])}>
+        <h3 className={cn("line-clamp-1 font-normal leading-snug tracking-tight text-zinc-800 dark:text-zinc-100", tSz)}>
           {product.title}
         </h3>
         <div className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-          <span className={cn("font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50", priceSize[size])}>
+          <span className={cn("font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50", pSz)}>
             {formatMoney(product.price.amount, product.price.currency)}
           </span>
           {hasDiscount && (

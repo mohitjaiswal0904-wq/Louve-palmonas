@@ -69,7 +69,7 @@ export const messages = {
         title: "회사",
         links: [
           { key: "about", label: "소개", href: "/about" },
-          { key: "stores", label: "매장", href: "/stores" },
+          { key: "collections", label: "컬렉션", href: "/collections" },
           { key: "products", label: "제품", href: "/products" },
         ],
       },
@@ -84,12 +84,12 @@ export const messages = {
     ],
     megaMenu: {
       categories: [
-        { label: "반지", href: "/products?category=rings" },
-        { label: "귀걸이", href: "/products?category=earrings" },
-        { label: "펜던트", href: "/products?category=pendants" },
-        { label: "팔찌", href: "/products?category=bracelets" },
-        { label: "약혼 반지", href: "/products?category=engagement-rings" },
-        { label: "원석", href: "/products?category=gemstones" },
+        { label: "반지", href: "/collections/rings" },
+        { label: "귀걸이", href: "/collections/earrings" },
+        { label: "펜던트", href: "/collections/pendants" },
+        { label: "팔찌", href: "/collections/bracelets" },
+        { label: "목걸이", href: "/collections/necklaces" },
+        { label: "모든 컬렉션", href: "/collections/all" },
       ],
       gallery: [
         { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "컬렉션 뷰 1" },

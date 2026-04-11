@@ -1,8 +1,6 @@
 "use client";
 
 import { useMessages } from "@/hooks";
-import { HomeCollections } from "../collections";
-import { HomeCTA } from "../cta";
 import { CardOne } from "./cards/card-one";
 import { CardTwo } from "./cards/card-two";
 import { CardThree } from "./cards/card-three";
@@ -61,27 +59,7 @@ export function HomeStackingCards() {
       component: <CardSeven />,
       bgColor: "bg-white",
       textColor: "text-zinc-900",
-    },
-    {
-      id: "collections",
-      component: (
-        <div className="h-full w-full px-[46px] flex flex-col justify-center">
-          <HomeCollections />
-        </div>
-      ),
-      bgColor: "bg-white",
-      textColor: "text-zinc-900",
-    },
-    {
-      id: "cta",
-      component: (
-        <div className="h-full w-full px-[46px] flex flex-col justify-center">
-          <HomeCTA />
-        </div>
-      ),
-      bgColor: "bg-zinc-50",
-      textColor: "text-zinc-900",
-    },
+    }
   ];
 
   return (

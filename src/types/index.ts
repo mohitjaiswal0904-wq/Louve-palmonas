@@ -39,6 +39,8 @@ export type {
 } from "./search";
 
 export type {
+  CollectionDTO,
+  CollectionDetailDTO,
   FiltersDTO,
   ImageDTO,
   MoneyDTO,

@@ -69,7 +69,7 @@ export const messages = {
         title: "Unternehmen",
         links: [
           { key: "about", label: "Über uns", href: "/about" },
-          { key: "stores", label: "Stores", href: "/stores" },
+          { key: "collections", label: "Kollektionen", href: "/collections" },
           { key: "products", label: "Produkte", href: "/products" },
         ],
       },
@@ -84,12 +84,12 @@ export const messages = {
     ],
     megaMenu: {
       categories: [
-        { label: "Ringe", href: "/products?category=rings" },
-        { label: "Ohrringe", href: "/products?category=earrings" },
-        { label: "Anhänger", href: "/products?category=pendants" },
-        { label: "Armbänder", href: "/products?category=bracelets" },
-        { label: "Verlobungsringe", href: "/products?category=engagement-rings" },
-        { label: "Edelsteine", href: "/products?category=gemstones" },
+        { label: "Ringe", href: "/collections/rings" },
+        { label: "Ohrringe", href: "/collections/earrings" },
+        { label: "Anhänger", href: "/collections/pendants" },
+        { label: "Armbänder", href: "/collections/bracelets" },
+        { label: "Halsketten", href: "/collections/necklaces" },
+        { label: "Alle Kollektionen", href: "/collections/all" },
       ],
       gallery: [
         { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "Kollektionsansicht 1" },

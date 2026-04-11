@@ -69,7 +69,7 @@ export const messages = {
         title: "الشركة",
         links: [
           { key: "about", label: "من نحن", href: "/about" },
-          { key: "stores", label: "المتاجر", href: "/stores" },
+          { key: "collections", label: "المجموعات", href: "/collections" },
           { key: "products", label: "المنتجات", href: "/products" },
         ],
       },
@@ -84,12 +84,12 @@ export const messages = {
     ],
     megaMenu: {
       categories: [
-        { label: "الخواتم", href: "/products?category=rings" },
-        { label: "الأقراط", href: "/products?category=earrings" },
-        { label: "الدلايات", href: "/products?category=pendants" },
-        { label: "الأساور", href: "/products?category=bracelets" },
-        { label: "خواتم الخطوبة", href: "/products?category=engagement-rings" },
-        { label: "الأحجار الكريمة", href: "/products?category=gemstones" },
+        { label: "الخواتم", href: "/collections/rings" },
+        { label: "الأقراط", href: "/collections/earrings" },
+        { label: "الدلايات", href: "/collections/pendants" },
+        { label: "الأساور", href: "/collections/bracelets" },
+        { label: "قلادات", href: "/collections/necklaces" },
+        { label: "جميع المجموعات", href: "/collections/all" },
       ],
       gallery: [
         { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "عرض المجموعة 1" },

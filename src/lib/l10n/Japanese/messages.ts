@@ -69,7 +69,7 @@ export const messages = {
         title: "会社情報",
         links: [
           { key: "about", label: "について", href: "/about" },
-          { key: "stores", label: "店舗", href: "/stores" },
+          { key: "collections", label: "コレクション", href: "/collections" },
           { key: "products", label: "商品", href: "/products" },
         ],
       },
@@ -84,12 +84,12 @@ export const messages = {
     ],
     megaMenu: {
       categories: [
-        { label: "リング", href: "/products?category=rings" },
-        { label: "イヤリング", href: "/products?category=earrings" },
-        { label: "ペンダント", href: "/products?category=pendants" },
-        { label: "ブレスレット", href: "/products?category=bracelets" },
-        { label: "婚約指輪", href: "/products?category=engagement-rings" },
-        { label: "宝石", href: "/products?category=gemstones" },
+        { label: "リング", href: "/collections/rings" },
+        { label: "イヤリング", href: "/collections/earrings" },
+        { label: "ペンダント", href: "/collections/pendants" },
+        { label: "ブレスレット", href: "/collections/bracelets" },
+        { label: "ネックレス", href: "/collections/necklaces" },
+        { label: "すべてのコレクション", href: "/collections/all" },
       ],
       gallery: [
         { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "コレクションビュー 1" },

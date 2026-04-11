@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut, Package, ShoppingBag, User } from "lucide-react";
+import { LayoutDashboard, LogOut, Package, ShoppingBag, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -77,6 +77,12 @@ export function UserMenu() {
           <p className="truncate text-xs text-muted-foreground">{user.phone}</p>
         </div>
         <DropdownMenuSeparator />
+        {user.role === "admin" && (
+          <DropdownMenuItem className="cursor-pointer" onClick={() => go("/dashboard")}>
+            <LayoutDashboard className="mr-2 size-4 shrink-0" />
+            Dashboard
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           className="cursor-pointer"
           onClick={() => go("/account/profile")}

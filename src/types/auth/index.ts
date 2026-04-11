@@ -35,6 +35,7 @@ export type UserResponse = {
   phone: string;
   email?: string;
   status: string;
+  role: string;
   profile?: ProfileResponse;
   created_at: string;
 };

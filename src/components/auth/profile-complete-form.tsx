@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,11 +8,10 @@ import { useAuth } from "@/hooks";
 
 import { AuthCard } from "./auth-card";
 
-export function SignupForm() {
-  const { signup } = useAuth();
+export function ProfileCompleteForm() {
+  const { updateProfile, clearNewUser } = useAuth();
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -22,10 +20,9 @@ export function SignupForm() {
     setError("");
     setSubmitting(true);
     try {
-      await signup({
-        email,
-        password,
+      await updateProfile({
         display_name: displayName || undefined,
+        email: email || undefined,
       });
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -36,16 +33,8 @@ export function SignupForm() {
 
   return (
     <AuthCard
-      title="Create your account"
-      subtitle="Join Louve — contemporary fine jewellery"
-      footer={
-        <>
-          Already have an account?{" "}
-          <Link href="/auth/login" className="font-medium text-zinc-900 underline underline-offset-4 hover:text-zinc-700 dark:text-zinc-50 dark:hover:text-zinc-300">
-            Sign in
-          </Link>
-        </>
-      }
+      title="Complete your profile"
+      subtitle="These details are optional — you can update them later in your account."
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
@@ -64,6 +53,7 @@ export function SignupForm() {
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             autoComplete="name"
+            autoFocus
             className="h-11"
           />
         </div>
@@ -77,34 +67,29 @@ export function SignupForm() {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
             autoComplete="email"
             className="h-11"
           />
-        </div>
-        <div className="space-y-2">
-          <label htmlFor="password" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Password
-          </label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="Min. 8 characters"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="new-password"
-            minLength={8}
-            className="h-11"
-          />
+          <p className="text-[11px] text-muted-foreground">
+            Optional — we&apos;ll use this for order updates and receipts.
+          </p>
         </div>
         <Button
           type="submit"
           disabled={submitting}
           className="h-11 w-full bg-zinc-900 text-sm font-medium tracking-wide text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
-          {submitting ? "Creating account…" : "Create account"}
+          {submitting ? "Saving..." : "Continue"}
         </Button>
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={() => { clearNewUser(); window.location.href = "/"; }}
+            className="text-xs text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-50"
+          >
+            Skip for now
+          </button>
+        </div>
       </form>
     </AuthCard>
   );

@@ -47,11 +47,6 @@ export function UserMenu() {
             <User className="mr-2 size-4 shrink-0" />
             Sign in
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer" onClick={() => go("/auth/signup")}>
-            {/* Using User icon for signup too or another relevant icon */}
-            <User className="mr-2 size-4 shrink-0" />
-            Sign up
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     );
@@ -64,7 +59,7 @@ export function UserMenu() {
         .join("")
         .toUpperCase()
         .slice(0, 2)
-    : user.email[0].toUpperCase();
+    : user.phone ? user.phone.slice(-2) : "L";
 
   return (
     <DropdownMenu>
@@ -79,7 +74,7 @@ export function UserMenu() {
           <p className="truncate text-sm font-medium">
             {user.profile?.display_name ?? "Louve member"}
           </p>
-          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+          <p className="truncate text-xs text-muted-foreground">{user.phone}</p>
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem

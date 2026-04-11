@@ -1,6 +1,4 @@
 export { AuthCard } from "./auth-card";
 export { LoginForm } from "./login-form";
-export { SignupForm } from "./signup-form";
-export { ForgotPasswordForm } from "./forgot-password-form";
-export { ResetPasswordForm } from "./reset-password-form";
+export { ProfileCompleteForm } from "./profile-complete-form";
 export { ProfileView } from "./profile-view";

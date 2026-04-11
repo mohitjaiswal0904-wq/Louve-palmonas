@@ -11,8 +11,7 @@ import {
 import type { ApiResponse, AuthResponse } from "@/types";
 
 const AUTH_TOKEN_PATHS = new Set([
-  "/api/v1/auth/login",
-  "/api/v1/auth/signup",
+  "/api/v1/auth/verify-otp",
   "/api/v1/auth/refresh",
 ]);
 

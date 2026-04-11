@@ -1,11 +1,10 @@
 export { healthCheck } from "./health.service";
 
 export {
-  login,
-  signup,
+  sendOTP,
+  verifyOTP,
   logout,
-  forgotPassword,
-  resetPassword,
+  updateProfile,
   getMe,
 } from "./auth.service";
 

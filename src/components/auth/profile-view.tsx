@@ -92,7 +92,7 @@ export function ProfileView() {
         .join("")
         .toUpperCase()
         .slice(0, 2)
-    : user.email[0].toUpperCase();
+    : user.phone ? user.phone.slice(-2) : "L";
 
   function openAdd() {
     setEditingId(null);
@@ -182,21 +182,18 @@ export function ProfileView() {
             <h1 className="text-lg font-medium tracking-tight">
               {user.profile?.display_name ?? "Louve member"}
             </h1>
-            <p className="text-sm text-muted-foreground">{user.email}</p>
+            <p className="text-sm text-muted-foreground">{user.phone}</p>
           </div>
         </CardHeader>
         <CardContent className="space-y-4 pt-4">
           <div className="grid gap-3">
-            <Row label="Email" value={user.email} />
-            <Row label="Verified" value={user.email_verified ? "Yes" : "No"} />
+            <Row label="Phone" value={user.phone} />
+            {user.email && <Row label="Email" value={user.email} />}
             <Row label="Status" value={user.status} />
             <Row
               label="Member since"
               value={new Date(user.created_at).toLocaleDateString()}
             />
-            {user.profile?.phone && (
-              <Row label="Phone" value={user.profile.phone} />
-            )}
             {user.profile?.locale && (
               <Row label="Locale" value={user.profile.locale} />
             )}

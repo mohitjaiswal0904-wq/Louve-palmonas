@@ -1,29 +1,22 @@
 /** Auth request/response types matching the Go backend auth module DTOs. */
 
-export type LoginRequest = {
-  email: string;
-  password: string;
+export type SendOTPRequest = {
+  phone: string;
 };
 
-export type SignupRequest = {
-  email: string;
-  password: string;
-  display_name?: string;
-  phone?: string;
-  locale?: string;
+export type VerifyOTPRequest = {
+  phone: string;
+  code: string;
 };
 
 export type RefreshTokenRequest = {
   refresh_token: string;
 };
 
-export type ForgotPasswordRequest = {
-  email: string;
-};
-
-export type ResetPasswordRequest = {
-  token: string;
-  new_password: string;
+export type UpdateProfileRequest = {
+  display_name?: string;
+  email?: string;
+  locale?: string;
 };
 
 export type AuthResponse = {
@@ -32,14 +25,15 @@ export type AuthResponse = {
   token_type: string;
   expires_in: number;
   expires_at: string;
+  is_new_user: boolean;
   user: UserResponse;
   session: SessionResponse;
 };
 
 export type UserResponse = {
   id: number;
-  email: string;
-  email_verified: boolean;
+  phone: string;
+  email?: string;
   status: string;
   profile?: ProfileResponse;
   created_at: string;

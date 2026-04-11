@@ -20,15 +20,14 @@ export type {
 
 export type {
   AuthResponse,
-  ForgotPasswordRequest,
-  LoginRequest,
   LocationResponse,
   ProfileResponse,
   RefreshTokenRequest,
-  ResetPasswordRequest,
+  SendOTPRequest,
   SessionResponse,
-  SignupRequest,
+  UpdateProfileRequest,
   UserResponse,
+  VerifyOTPRequest,
 } from "./auth";
 
 export type {

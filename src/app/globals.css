@@ -134,4 +134,8 @@
   html {
     @apply font-sans;
   }
+  /* Fixed header (64px) + iOS / Android safe area — use with pt-[var(--site-header-offset)] */
+  :root {
+    --site-header-offset: calc(4rem + env(safe-area-inset-top, 0px));
+  }
 }

@@ -149,8 +149,8 @@ export default function OrdersClient() {
   if (!user) return null;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-      <header className="mb-10 border-b border-zinc-200/80 pb-8 dark:border-zinc-800">
+    <div className="mx-auto max-w-4xl px-3 py-8 pb-[max(2rem,env(safe-area-inset-bottom,0px))] sm:px-4 sm:py-10 md:px-6 md:py-12">
+      <header className="mb-8 border-b border-zinc-200/80 pb-6 sm:mb-10 sm:pb-8 dark:border-zinc-800">
         <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-zinc-500">Account</p>
         <h1 className="mt-2 text-3xl font-light tracking-tight text-zinc-900 dark:text-zinc-50">
           Your orders
@@ -161,7 +161,7 @@ export default function OrdersClient() {
       </header>
 
       <div
-        className="mb-8 flex flex-wrap gap-2 border-b border-zinc-200/60 pb-4 dark:border-zinc-800/80"
+        className="-mx-1 mb-6 flex gap-2 overflow-x-auto overflow-y-hidden border-b border-zinc-200/60 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:mx-0 sm:mb-8 sm:flex-wrap sm:overflow-visible dark:border-zinc-800/80 [&::-webkit-scrollbar]:hidden"
         role="tablist"
         aria-label="Filter orders by status"
       >
@@ -173,7 +173,7 @@ export default function OrdersClient() {
             aria-selected={filter === key}
             onClick={() => onFilterChange(key)}
             className={cn(
-              "rounded-full border px-4 py-1.5 text-xs font-medium tracking-wide transition-colors",
+              "shrink-0 snap-start rounded-full border px-4 py-2.5 text-xs font-medium tracking-wide transition-colors touch-manipulation sm:py-1.5",
               filter === key
                 ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
                 : "border-transparent bg-zinc-100/80 text-zinc-600 hover:bg-zinc-200/80 dark:bg-zinc-900/50 dark:text-zinc-400 dark:hover:bg-zinc-800",
@@ -237,7 +237,7 @@ export default function OrdersClient() {
             {orders.map((order) => (
               <li key={order.id}>
                 <div className="group relative overflow-hidden rounded-2xl border border-zinc-200/90 bg-white shadow-sm transition hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950/60 dark:hover:border-zinc-700">
-                  <Link href={`/account/orders/${order.id}`} className="block px-5 py-5 pr-14 sm:px-6">
+                  <Link href={`/account/orders/${order.id}`} className="block px-4 py-5 pr-10 sm:px-6 sm:pr-14">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                       <div className="space-y-2">
                         <p className="text-[11px] font-medium uppercase tracking-[0.25em] text-zinc-500">

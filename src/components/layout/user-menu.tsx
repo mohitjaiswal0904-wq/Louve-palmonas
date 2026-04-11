@@ -27,7 +27,7 @@ export function UserMenu() {
 
   if (loading) {
     return (
-      <Button variant="ghost" size="icon" disabled aria-busy>
+      <Button variant="ghost" size="icon" className="size-10 touch-manipulation sm:size-9" disabled aria-busy>
         <User className="size-5 opacity-50" />
       </Button>
     );
@@ -37,12 +37,12 @@ export function UserMenu() {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger
-          className="inline-flex size-8 items-center justify-center rounded-lg hover:bg-muted/50 transition-colors"
+          className="inline-flex size-10 items-center justify-center rounded-lg touch-manipulation hover:bg-muted/50 sm:size-9"
           aria-label="User menu"
         >
           <User className="size-5 stroke-[1.5]" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-52">
+        <DropdownMenuContent align="end" sideOffset={8} className="w-[min(100vw-2rem,13rem)]">
           <DropdownMenuItem className="cursor-pointer" onClick={() => go("/auth/login")}>
             <User className="mr-2 size-4 shrink-0" />
             Sign in
@@ -63,13 +63,17 @@ export function UserMenu() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger 
-        className="inline-flex size-8 items-center justify-center rounded-lg hover:bg-muted/50 transition-colors"
+      <DropdownMenuTrigger
+        className="inline-flex size-10 items-center justify-center rounded-lg touch-manipulation hover:bg-muted/50 sm:size-9"
         aria-label="User menu"
       >
         <User className="size-5 stroke-[1.5]" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-52">
+      <DropdownMenuContent
+        align="end"
+        sideOffset={8}
+        className="max-h-[min(70dvh,22rem)] w-[min(100vw-2rem,13rem)] overflow-y-auto"
+      >
         <div className="px-2 py-1.5">
           <p className="truncate text-sm font-medium">
             {user.profile?.display_name ?? "Louve member"}

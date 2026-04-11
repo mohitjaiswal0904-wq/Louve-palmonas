@@ -9,14 +9,12 @@ import {
   useMemo,
   useRef,
   useState,
-  type FormEvent,
 } from "react";
 import {
   Lock,
   Trash2,
   Plus,
   Minus,
-  X,
   ArrowLeft,
   ShieldCheck,
   RotateCcw,
@@ -334,19 +332,19 @@ export default function CartClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] pb-32">
-      <div className="mx-auto max-w-[1440px] px-4 py-8 md:px-6 md:py-16">
+    <div className="min-h-screen bg-[#FDFDFD] pb-[max(6rem,env(safe-area-inset-bottom,0px))]">
+      <div className="mx-auto max-w-[1440px] px-3 py-6 sm:px-4 sm:py-8 md:px-6 md:py-12 lg:px-8 lg:py-16">
         {/* Navigation & Header */}
-        <div className="mb-12 space-y-6">
+        <div className="mb-8 space-y-4 sm:mb-10 sm:space-y-6 md:mb-12">
           <Link
             href="/products"
-            className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400 transition-colors hover:text-zinc-600"
+            className="inline-flex min-h-[44px] items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400 transition-colors hover:text-zinc-600 touch-manipulation"
           >
-            <ArrowLeft className="h-3 w-3" />
+            <ArrowLeft className="h-3 w-3 shrink-0" />
             Continue Shopping
           </Link>
-          <div className="flex items-baseline justify-between border-b border-[#F6F1E9] pb-8">
-            <h1 className="text-2xl font-light tracking-tight text-zinc-900 md:text-3xl">
+          <div className="flex flex-col gap-4 border-b border-[#F6F1E9] pb-6 sm:flex-row sm:items-baseline sm:justify-between sm:pb-8">
+            <h1 className="text-xl font-light tracking-tight text-zinc-900 sm:text-2xl md:text-3xl">
               Shopping Cart{" "}
               <span className="italic text-zinc-400">({itemCount} items)</span>
             </h1>
@@ -354,7 +352,7 @@ export default function CartClient() {
               type="button"
               disabled={loading || isEmpty}
               onClick={() => clearCart()}
-              className="text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400 transition-colors hover:text-[#77080E] disabled:opacity-30"
+              className="min-h-[44px] shrink-0 self-start text-left text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400 transition-colors hover:text-[#77080E] disabled:opacity-30 sm:self-auto sm:min-h-0 touch-manipulation"
             >
               Clear Cart
             </button>
@@ -381,9 +379,9 @@ export default function CartClient() {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-16 lg:grid-cols-[1fr_420px] lg:items-start">
+          <div className="grid gap-8 sm:gap-10 lg:grid-cols-[1fr_min(100%,420px)] lg:items-start lg:gap-12 xl:gap-16">
             {/* Cart items */}
-            <ul className="space-y-6">
+            <ul className="min-w-0 space-y-4 sm:space-y-6">
               {items.map((item) => (
                 <CartLine
                   key={item.id}
@@ -396,9 +394,9 @@ export default function CartClient() {
             </ul>
 
             {/* Checkout sidebar */}
-            <aside className="space-y-0 rounded-sm border border-[#F6F1E9] bg-white">
+            <aside className="order-last space-y-0 rounded-sm border border-[#F6F1E9] bg-white lg:sticky lg:top-[calc(var(--site-header-offset,4rem)+0.5rem)] lg:max-h-[calc(100dvh-var(--site-header-offset,4rem)-1.5rem)] lg:overflow-y-auto">
               {/* Step 1: Payment method */}
-              <div className="px-8 py-6">
+              <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
                 <div className="flex items-center gap-2">
                   <CreditCard
                     className="h-4 w-4 text-zinc-400"
@@ -412,7 +410,7 @@ export default function CartClient() {
                 <div className="mt-4 space-y-2.5">
                   <label
                     className={cn(
-                      "flex cursor-pointer items-start gap-3 rounded-sm border p-4 transition-all",
+                      "flex min-h-[52px] cursor-pointer items-start gap-3 rounded-sm border p-3 transition-all touch-manipulation sm:p-4",
                       paymentMethod === "razorpay"
                         ? "border-zinc-900 bg-zinc-50"
                         : "border-[#F6F1E9] hover:border-zinc-300",
@@ -423,7 +421,7 @@ export default function CartClient() {
                       name="payment"
                       checked={paymentMethod === "razorpay"}
                       onChange={() => setPaymentMethod("razorpay")}
-                      className="mt-0.5 accent-zinc-900"
+                      className="mt-1 size-4 shrink-0 accent-zinc-900"
                     />
                     <div>
                       <div className="flex items-center gap-2">
@@ -443,7 +441,7 @@ export default function CartClient() {
 
                   <label
                     className={cn(
-                      "flex cursor-pointer items-start gap-3 rounded-sm border p-4 transition-all",
+                      "flex min-h-[52px] cursor-pointer items-start gap-3 rounded-sm border p-3 transition-all touch-manipulation sm:p-4",
                       paymentMethod === "cod"
                         ? "border-zinc-900 bg-zinc-50"
                         : "border-[#F6F1E9] hover:border-zinc-300",
@@ -454,7 +452,7 @@ export default function CartClient() {
                       name="payment"
                       checked={paymentMethod === "cod"}
                       onChange={() => setPaymentMethod("cod")}
-                      className="mt-0.5 accent-zinc-900"
+                      className="mt-1 size-4 shrink-0 accent-zinc-900"
                     />
                     <div>
                       <div className="flex items-center gap-2">
@@ -475,7 +473,7 @@ export default function CartClient() {
               </div>
 
               {/* Step 2: COD address form or Place Order */}
-              <div className="border-t border-[#F6F1E9] px-8 py-6">
+              <div className="border-t border-[#F6F1E9] px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
                 {paymentMethod === "cod" && (
                   <CodAddressForm
                     address={codAddress}
@@ -501,7 +499,7 @@ export default function CartClient() {
                   disabled={actionLoading || !canPlaceOrder}
                   onClick={handlePlaceOrder}
                   className={cn(
-                    "flex w-full items-center justify-center gap-2 bg-zinc-900 py-3.5 text-[11px] font-medium uppercase tracking-[0.2em] text-white transition-all hover:bg-black",
+                    "flex min-h-[48px] w-full items-center justify-center gap-2 bg-zinc-900 py-3.5 text-[11px] font-medium uppercase tracking-[0.2em] text-white transition-all hover:bg-black touch-manipulation",
                     "disabled:pointer-events-none disabled:opacity-40",
                   )}
                 >
@@ -511,7 +509,7 @@ export default function CartClient() {
               </div>
 
               {/* Order summary */}
-              <div className="border-t border-[#F6F1E9] px-8 py-6">
+              <div className="border-t border-[#F6F1E9] px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
                 <h3 className="text-[10px] font-medium uppercase tracking-[0.18em] text-zinc-400">
                   Order Summary
                 </h3>
@@ -546,7 +544,7 @@ export default function CartClient() {
               </div>
 
               {/* Trust badges */}
-              <div className="space-y-3 border-t border-[#F6F1E9] px-8 py-6">
+              <div className="space-y-3 border-t border-[#F6F1E9] px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
                 <TrustBadge
                   icon={RotateCcw}
                   text="Free returns within 30 days"
@@ -598,20 +596,22 @@ function CodAddressForm({
         Delivery Address
       </p>
       <div className="space-y-3">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <input
             required
             placeholder="Full name *"
             value={address.full_name}
             onChange={(e) => set("full_name", e.target.value)}
-            className={inputCls}
+            className={cn(inputCls, "min-h-[44px] sm:min-h-0")}
           />
           <input
             required
             placeholder="Phone *"
+            inputMode="tel"
+            autoComplete="tel"
             value={address.phone}
             onChange={(e) => set("phone", e.target.value)}
-            className={inputCls}
+            className={cn(inputCls, "min-h-[44px] sm:min-h-0")}
           />
         </div>
         <input
@@ -627,27 +627,28 @@ function CodAddressForm({
           onChange={(e) => set("line2", e.target.value)}
           className={inputCls}
         />
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <input
             required
             placeholder="City *"
             value={address.city}
             onChange={(e) => set("city", e.target.value)}
-            className={inputCls}
+            className={cn(inputCls, "min-h-[44px] sm:min-h-0")}
           />
           <input
             required
             placeholder="State *"
             value={address.state}
             onChange={(e) => set("state", e.target.value)}
-            className={inputCls}
+            className={cn(inputCls, "min-h-[44px] sm:min-h-0")}
           />
           <input
             required
             placeholder="PIN code *"
+            inputMode="numeric"
             value={address.postal_code}
             onChange={(e) => set("postal_code", e.target.value)}
-            className={inputCls}
+            className={cn(inputCls, "min-h-[44px] sm:min-h-0")}
           />
         </div>
         <input
@@ -678,97 +679,102 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
   const imageUrl = product?.image;
 
   return (
-    <li className="relative flex items-start border border-[#F6F1E9] bg-white p-[20px] transition-all hover:border-[#E5C16C]/30">
-      <div className="relative h-20 w-20 shrink-0 overflow-hidden">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={product?.image_alt || product?.title || "Product"}
-            fill
-            sizes="80px"
-            className="object-contain"
-            unoptimized
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-[10px] uppercase tracking-widest text-zinc-400">
-            No image
-          </div>
-        )}
-      </div>
-
-      <div className="ml-10 flex-1">
-        <div className="space-y-2">
-          <Link
-            href={`/products/${product?.handle}`}
-            className="block text-lg font-medium tracking-tight text-zinc-900 transition-colors hover:text-[#77080E]"
-          >
-            {product?.title ?? "Product"}
-          </Link>
-
-          <div className="flex gap-16 text-sm font-light text-zinc-400">
-            <p>
-              Color: <span className="text-zinc-600">Gold</span>
-            </p>
-            <p>
-              Karat: <span className="text-zinc-600">22k</span>
-            </p>
-            <p>
-              Size: <span className="text-zinc-600">22</span>
-            </p>
+    <li className="border border-[#F6F1E9] bg-white p-4 transition-all hover:border-[#E5C16C]/30 sm:p-5 md:p-[20px]">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+        <div className="flex gap-4 sm:min-w-0 sm:flex-1">
+          <div className="relative h-24 w-24 shrink-0 overflow-hidden sm:h-20 sm:w-20">
+            {imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt={product?.image_alt || product?.title || "Product"}
+                fill
+                sizes="(max-width:640px) 96px, 80px"
+                className="object-contain"
+                unoptimized
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-[10px] uppercase tracking-widest text-zinc-400">
+                No image
+              </div>
+            )}
           </div>
 
-          <div>
+          <div className="min-w-0 flex-1 space-y-2">
+            <Link
+              href={`/products/${product?.handle}`}
+              className="block text-base font-medium leading-snug tracking-tight text-zinc-900 transition-colors hover:text-[#77080E] sm:text-lg"
+            >
+              {product?.title ?? "Product"}
+            </Link>
+
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-light text-zinc-400 sm:text-sm">
+              <p>
+                Color: <span className="text-zinc-600">Gold</span>
+              </p>
+              <p>
+                Karat: <span className="text-zinc-600">22k</span>
+              </p>
+              <p>
+                Size: <span className="text-zinc-600">22</span>
+              </p>
+            </div>
+
             <span className="inline-block rounded-sm bg-[#F6E9E9] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-[#77080E]/70">
               TAGS
             </span>
-          </div>
 
-          <div className="pt-1">
-            <div className="inline-flex items-center rounded-lg border border-zinc-100 bg-[#FDFDFD] px-2">
+            <div className="inline-flex items-center rounded-lg border border-zinc-100 bg-[#FDFDFD] px-1">
               <button
                 type="button"
                 disabled={disabled}
                 onClick={() => onQtyChange(item, -1)}
-                className="flex h-9 w-9 items-center justify-center text-zinc-300 transition-colors hover:text-zinc-900 disabled:opacity-20"
+                className="flex size-11 items-center justify-center text-zinc-300 transition-colors hover:text-zinc-900 disabled:opacity-20 touch-manipulation sm:size-9"
+                aria-label="Decrease quantity"
               >
                 <Minus className="h-3 w-3" strokeWidth={3} />
               </button>
-              <span className="min-w-[2rem] text-center text-sm font-medium tabular-nums text-zinc-800">
+              <span className="min-w-[2.5rem] text-center text-sm font-medium tabular-nums text-zinc-800">
                 {item.quantity}
               </span>
               <button
                 type="button"
                 disabled={disabled}
                 onClick={() => onQtyChange(item, 1)}
-                className="flex h-9 w-9 items-center justify-center text-zinc-300 transition-colors hover:text-zinc-900 disabled:opacity-20"
+                className="flex size-11 items-center justify-center text-zinc-300 transition-colors hover:text-zinc-900 disabled:opacity-20 touch-manipulation sm:size-9"
+                aria-label="Increase quantity"
               >
                 <Plus className="h-3 w-3" strokeWidth={3} />
               </button>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="text-right">
-        <p className="text-lg font-medium text-zinc-900">
-          {variant?.price
-            ? formatMoney(variant.price.amount, variant.price.currency)
-            : "₹00.00"}
-        </p>
-      </div>
-
-      <div className="absolute bottom-8 right-8 flex items-center gap-4">
-        <button className="text-sm font-light text-zinc-400 transition-colors hover:text-zinc-900">
-          Save for later
-        </button>
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={onRemove}
-          className="text-zinc-300 transition-colors hover:text-[#77080E]"
-        >
-          <Trash2 className="h-5 w-5" strokeWidth={1.5} />
-        </button>
+        <div className="flex flex-row items-center justify-between gap-4 border-t border-[#F6F1E9] pt-4 sm:flex-col sm:items-end sm:border-t-0 sm:pt-0">
+          <p className="text-lg font-medium tabular-nums text-zinc-900">
+            {variant?.price
+              ? formatMoney(variant.price.amount, variant.price.currency)
+              : "₹00.00"}
+          </p>
+          <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-2">
+            <button
+              type="button"
+              className="hidden text-sm font-light text-zinc-400 transition-colors hover:text-zinc-900 md:inline"
+              tabIndex={-1}
+              aria-hidden
+            >
+              Save for later
+            </button>
+            <button
+              type="button"
+              disabled={disabled}
+              onClick={onRemove}
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-zinc-300 transition-colors hover:text-[#77080E] disabled:opacity-30 touch-manipulation sm:min-h-0 sm:min-w-0"
+              aria-label="Remove from cart"
+            >
+              <Trash2 className="h-5 w-5" strokeWidth={1.5} />
+            </button>
+          </div>
+        </div>
       </div>
     </li>
   );
@@ -786,9 +792,9 @@ function TrustBadge({
   text: string;
 }) {
   return (
-    <div className="flex items-center gap-3">
-      <Icon className="h-4 w-4 text-zinc-400" strokeWidth={1.5} />
-      <span className="text-sm font-normal text-zinc-500">{text}</span>
+    <div className="flex items-start gap-3">
+      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" strokeWidth={1.5} />
+      <span className="text-sm font-normal leading-snug text-zinc-500">{text}</span>
     </div>
   );
 }

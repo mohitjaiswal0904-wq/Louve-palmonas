@@ -102,11 +102,11 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
             {m.catalog.noImage}
           </div>
         )}
-        {hasDiscount && (
+        {/* {hasDiscount && (
           <span className="absolute left-2 top-2 bg-[var(--louve-primal-rouge)] px-1.5 py-0.5 text-[9px] font-medium tracking-[0.12em] text-white">
             {m.catalog.sale}
           </span>
-        )}
+        )} */}
         <button
           type="button"
           aria-pressed={isWishlisted}

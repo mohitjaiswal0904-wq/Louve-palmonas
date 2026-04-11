@@ -21,6 +21,10 @@ export function UserMenu() {
   const m = useMessages();
   const u = m.navigation.userMenu;
 
+  const go = (path: string) => {
+    router.push(path);
+  };
+
   if (loading) {
     return (
       <Button variant="ghost" size="icon" disabled aria-busy>
@@ -61,10 +65,6 @@ export function UserMenu() {
         .toUpperCase()
         .slice(0, 2)
     : user.email[0].toUpperCase();
-
-  const go = (path: string) => {
-    router.push(path);
-  };
 
   return (
     <DropdownMenu>

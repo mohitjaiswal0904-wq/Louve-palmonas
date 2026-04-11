@@ -6,8 +6,10 @@
 
 | File | Role |
 |------|------|
-| **`Dockerfile`** | Multi-stage **Next.js standalone** build with **pnpm**, non-root user, exposes app port. |
-| **`ecosystem.config.cjs`** | **PM2** — `next start` on port 3000; use for VM/bare-metal deploys. |
+| **`Dockerfile`** | Multi-stage **Next.js standalone** build with **pnpm**, **pm2-runtime** in the final image, non-root user. |
+| **`docker-compose.yaml`** | Local/prod-like stack: `make up` / `make down` / `make rebuild` from repo root. |
+| **`ecosystem.config.cjs`** | **PM2** on the host — `next start` on port 3000 (VM/bare-metal, not Docker). |
+| **`ecosystem.docker.cjs`** | **PM2 in Docker** — `server.js` standalone; copied as `ecosystem.config.cjs` in the image. |
 
 ## Build context
 
@@ -15,6 +17,6 @@ Docker build should run from **repository root** (see **`Makefile`** **`ROOT`**)
 
 ## Related
 
-- Root **`Makefile`** — `make build`, `make start`, `make restart`.
+- Root **`Makefile`** — Docker: `make up`, `make down`, `make rebuild`; host PM2: `make pm2-reload`; local: `make build`, `make start`.
 - **`docs/DEPLOYMENT.md`** — Amplify, Docker, PM2 narrative.
 - **`amplify.yaml`** (repo root) — AWS Amplify build spec.

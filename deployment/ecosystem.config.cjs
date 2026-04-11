@@ -1,6 +1,6 @@
 /**
  * PM2 — run from frontend root: pnpm exec pm2 start deployment/ecosystem.config.cjs
- * Rebuild + reload: make restart (from louve-frontend root)
+ * Rebuild + reload: make pm2-reload (from louve-frontend root)
  */
 const path = require("path");
 

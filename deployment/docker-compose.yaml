@@ -1,0 +1,20 @@
+name: louve-frontend
+
+# Project directory = repo root (see Makefile --project-directory .).
+# Build: docker compose -f deployment/docker-compose.yaml --project-directory . up -d --build
+
+services:
+  web:
+    build:
+      # Resolved relative to Compose project dir (Makefile: --project-directory . = louve-frontend root)
+      context: .
+      dockerfile: deployment/Dockerfile
+    image: louve-frontend:local
+    container_name: louve-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PUBLISH_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"

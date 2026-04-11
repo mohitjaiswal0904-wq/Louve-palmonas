@@ -38,7 +38,7 @@ pnpm build
 pnpm start
 ```
 
-**Makefile** (optional): `make install`, `make build`, `make start`, `make restart` (PM2).
+**Makefile** (optional): `make up` / `make down` / `make rebuild` (Docker), `make pm2-reload` (PM2 on host), `make install`, `make build`, `make start`.
 
 ## Documentation map
 

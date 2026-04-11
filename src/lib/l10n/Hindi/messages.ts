@@ -82,70 +82,26 @@ export const messages = {
         ],
       },
     ],
-    sidebar: [
-      { key: "home", label: "होम", href: "/" },
-      {
-        key: "collections",
-        label: "कलेक्शन्स",
-        children: [
-          { key: "collections-all", label: "सभी कलेक्शन्स", href: "/collections" },
-          {
-            key: "collections-core",
-            label: "कोर गोल्ड एसेंशियल्स",
-            href: "/collections#core-gold-essentials",
-          },
-          {
-            key: "collections-diamond",
-            label: "डायमंड स्टेपल्स",
-            href: "/collections#diamond-staples",
-          },
-          {
-            key: "collections-occasion",
-            label: "ऑकेज़न पीसेज़",
-            href: "/collections#occasion-pieces",
-          },
-          {
-            key: "collections-signature",
-            label: "सिग्नेचर लूव डिज़ाइन्स",
-            href: "/collections#signature-louve-designs",
-          },
-        ],
-      },
-      {
-        key: "products",
-        label: "उत्पाद",
-        children: [
-          { key: "products-all", label: "सभी उत्पाद", href: "/products" },
-          {
-            key: "products-category",
-            label: "श्रेणियाँ",
-            children: [
-              { key: "products-rings", label: "अंगूठियाँ", href: "/products?category=rings" },
-              { key: "products-earrings", label: "बालियाँ", href: "/products?category=earrings" },
-              {
-                key: "products-necklaces",
-                label: "हार",
-                href: "/products?category=necklaces",
-              },
-            ],
-          },
-          {
-            key: "products-sample",
-            label: "नमूना उत्पाद (प्लेसहोल्डर)",
-            href: "/products/sample-product",
-          },
-        ],
-      },
-      { key: "about", label: "हमारे बारे में", href: "/about" },
-      { key: "stores", label: "स्टोर", href: "/stores" },
-      { key: "contact", label: "संपर्क", href: "/contact" },
-      { key: "shipping", label: "शिपिंग", href: "/shipping" },
-    ],
+    megaMenu: {
+      categories: [
+        { label: "अंगूठियाँ", href: "/products?category=rings" },
+        { label: "बालियाँ", href: "/products?category=earrings" },
+        { label: "पेंडेंट", href: "/products?category=pendants" },
+        { label: "ब्रेसलेट", href: "/products?category=bracelets" },
+        { label: "इंगेजमेंट रिंग्स", href: "/products?category=engagement-rings" },
+        { label: "रत्न", href: "/products?category=gemstones" },
+      ],
+      gallery: [
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "कलेक्शन दृश्य 1" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-third-image-f00e6cb4.png", alt: "कलेक्शन दृश्य 2" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-eighth-image-89e96d50.jpg", alt: "कलेक्शन दृश्य 3" },
+      ],
+      cta: { label: "एक्सप्लोर करें", href: "/products" },
+    },
   },
   common: {
     openMenu: "मेनू खोलें",
     closeMenu: "मेनू बंद करें",
-    closeSidebar: "साइडबार बंद करें",
     back: "वापस",
     browse: "ब्राउज़ करें",
     notes: "नोट्स",
@@ -154,8 +110,6 @@ export const messages = {
     language: "भाषा",
     brandAlt: "Louve",
     loading: "लोड हो रहा है",
-    sidebar: "साइडबार",
-    sidebarSub: "साइडबार उप-मेनू",
   },
   catalog: {
     products: "उत्पाद",

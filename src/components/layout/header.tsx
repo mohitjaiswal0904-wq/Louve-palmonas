@@ -12,6 +12,7 @@ import { HEADER_ACTION_ICONS } from "./header-actions";
 import { HeaderSearch } from "./header-search";
 import { LanguageSwitcher } from "./language-switcher";
 import { UserMenu } from "./user-menu";
+import { MegaMenu } from "./mega-menu";
 
 function HeaderCountBadge({ count, className }: { count: number; className?: string }) {
   if (count < 1) return null;
@@ -30,7 +31,7 @@ function HeaderCountBadge({ count, className }: { count: number; className?: str
 }
 
 export function Header() {
-  const { toggleSidebar } = useLayoutContext();
+  const { sidebarOpen, toggleSidebar } = useLayoutContext();
   const m = useMessages();
   const { count: wishlistCount } = useWishlist();
   const { itemCount: cartItemCount } = useCart();
@@ -105,6 +106,11 @@ export function Header() {
           <UserMenu />
         </div>
       </div>
+
+      <MegaMenu 
+        isOpen={sidebarOpen} 
+        onClose={() => toggleSidebar()} 
+      />
     </header>
   );
 }

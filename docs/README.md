@@ -87,7 +87,7 @@ From `louve-frontend/`:
 make install
 make build
 make start
-make restart   # rebuild + pm2 reload (server/VM usage)
+make pm2-reload   # rebuild + pm2 reload (server/VM usage)
 ```
 
 ## Architecture

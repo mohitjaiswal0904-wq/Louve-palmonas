@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 interface CardSixProps {
   images?: string[];
+  buttonLink?: string;
 }
 
 export function CardSix({
@@ -14,6 +16,7 @@ export function CardSix({
     "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-seventh-image-db258ca5.jpg",
     "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-seventh-image-db258ca5.jpg",
   ],
+  buttonLink = "/products",
 }: CardSixProps) {
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden bg-white md:flex-row">
@@ -46,12 +49,14 @@ export function CardSix({
             </div>
             
             <div className="pt-2">
-              <Button
-                size="sm"
-                className="h-8 rounded-none bg-[#77080E] px-6 text-[9px] font-semibold uppercase tracking-[0.2em] text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-xl"
-              >
-                Explore More
-              </Button>
+              <Link href={buttonLink}>
+                <Button
+                  size="sm"
+                  className="h-8 rounded-none bg-[#77080E] px-6 text-[9px] font-semibold uppercase tracking-[0.2em] text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-xl"
+                >
+                  Explore More
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

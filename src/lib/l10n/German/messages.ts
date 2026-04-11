@@ -82,70 +82,26 @@ export const messages = {
         ],
       },
     ],
-    sidebar: [
-      { key: "home", label: "Start", href: "/" },
-      {
-        key: "collections",
-        label: "Kollektionen",
-        children: [
-          { key: "collections-all", label: "Alle Kollektionen", href: "/collections" },
-          {
-            key: "collections-core",
-            label: "Gold-Essentials",
-            href: "/collections#core-gold-essentials",
-          },
-          {
-            key: "collections-diamond",
-            label: "Diamant-Klassiker",
-            href: "/collections#diamond-staples",
-          },
-          {
-            key: "collections-occasion",
-            label: "Anlassstücke",
-            href: "/collections#occasion-pieces",
-          },
-          {
-            key: "collections-signature",
-            label: "Signature Louve Designs",
-            href: "/collections#signature-louve-designs",
-          },
-        ],
-      },
-      {
-        key: "products",
-        label: "Produkte",
-        children: [
-          { key: "products-all", label: "Alle Produkte", href: "/products" },
-          {
-            key: "products-category",
-            label: "Kategorien",
-            children: [
-              { key: "products-rings", label: "Ringe", href: "/products?category=rings" },
-              { key: "products-earrings", label: "Ohrringe", href: "/products?category=earrings" },
-              {
-                key: "products-necklaces",
-                label: "Halsketten",
-                href: "/products?category=necklaces",
-              },
-            ],
-          },
-          {
-            key: "products-sample",
-            label: "Beispielprodukt (Platzhalter)",
-            href: "/products/sample-product",
-          },
-        ],
-      },
-      { key: "about", label: "Über uns", href: "/about" },
-      { key: "stores", label: "Stores", href: "/stores" },
-      { key: "contact", label: "Kontakt", href: "/contact" },
-      { key: "shipping", label: "Versand", href: "/shipping" },
-    ],
+    megaMenu: {
+      categories: [
+        { label: "Ringe", href: "/products?category=rings" },
+        { label: "Ohrringe", href: "/products?category=earrings" },
+        { label: "Anhänger", href: "/products?category=pendants" },
+        { label: "Armbänder", href: "/products?category=bracelets" },
+        { label: "Verlobungsringe", href: "/products?category=engagement-rings" },
+        { label: "Edelsteine", href: "/products?category=gemstones" },
+      ],
+      gallery: [
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "Kollektionsansicht 1" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-third-image-f00e6cb4.png", alt: "Kollektionsansicht 2" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-eighth-image-89e96d50.jpg", alt: "Kollektionsansicht 3" },
+      ],
+      cta: { label: "Mehr entdecken", href: "/products" },
+    },
   },
   common: {
     openMenu: "Menü öffnen",
     closeMenu: "Menü schließen",
-    closeSidebar: "Seitenleiste schließen",
     back: "Zurück",
     browse: "Entdecken",
     notes: "Hinweise",
@@ -154,8 +110,6 @@ export const messages = {
     language: "Sprache",
     brandAlt: "Louve",
     loading: "Wird geladen",
-    sidebar: "Seitenleiste",
-    sidebarSub: "Untermenü der Seitenleiste",
   },
   catalog: {
     products: "Produkte",

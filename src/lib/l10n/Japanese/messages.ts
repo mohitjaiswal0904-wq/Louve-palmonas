@@ -82,70 +82,26 @@ export const messages = {
         ],
       },
     ],
-    sidebar: [
-      { key: "home", label: "ホーム", href: "/" },
-      {
-        key: "collections",
-        label: "コレクション",
-        children: [
-          { key: "collections-all", label: "すべてのコレクション", href: "/collections" },
-          {
-            key: "collections-core",
-            label: "コアゴールドエッセンシャル",
-            href: "/collections#core-gold-essentials",
-          },
-          {
-            key: "collections-diamond",
-            label: "ダイヤモンドステープル",
-            href: "/collections#diamond-staples",
-          },
-          {
-            key: "collections-occasion",
-            label: "オケージョンピース",
-            href: "/collections#occasion-pieces",
-          },
-          {
-            key: "collections-signature",
-            label: "シグネチャー・ルーヴ デザイン",
-            href: "/collections#signature-louve-designs",
-          },
-        ],
-      },
-      {
-        key: "products",
-        label: "商品",
-        children: [
-          { key: "products-all", label: "すべての商品", href: "/products" },
-          {
-            key: "products-category",
-            label: "カテゴリー",
-            children: [
-              { key: "products-rings", label: "リング", href: "/products?category=rings" },
-              { key: "products-earrings", label: "イヤリング", href: "/products?category=earrings" },
-              {
-                key: "products-necklaces",
-                label: "ネックレス",
-                href: "/products?category=necklaces",
-              },
-            ],
-          },
-          {
-            key: "products-sample",
-            label: "サンプル商品（プレースホルダー）",
-            href: "/products/sample-product",
-          },
-        ],
-      },
-      { key: "about", label: "について", href: "/about" },
-      { key: "stores", label: "店舗", href: "/stores" },
-      { key: "contact", label: "お問い合わせ", href: "/contact" },
-      { key: "shipping", label: "配送", href: "/shipping" },
-    ],
+    megaMenu: {
+      categories: [
+        { label: "リング", href: "/products?category=rings" },
+        { label: "イヤリング", href: "/products?category=earrings" },
+        { label: "ペンダント", href: "/products?category=pendants" },
+        { label: "ブレスレット", href: "/products?category=bracelets" },
+        { label: "婚約指輪", href: "/products?category=engagement-rings" },
+        { label: "宝石", href: "/products?category=gemstones" },
+      ],
+      gallery: [
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png", alt: "コレクションビュー 1" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-third-image-f00e6cb4.png", alt: "コレクションビュー 2" },
+        { src: "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-eighth-image-89e96d50.jpg", alt: "コレクションビュー 3" },
+      ],
+      cta: { label: "もっと見る", href: "/products" },
+    },
   },
   common: {
     openMenu: "メニューを開く",
     closeMenu: "メニューを閉じる",
-    closeSidebar: "サイドバーを閉じる",
     back: "戻る",
     browse: "見る",
     notes: "メモ",
@@ -154,8 +110,6 @@ export const messages = {
     language: "言語",
     brandAlt: "Louve",
     loading: "読み込み中",
-    sidebar: "サイドバー",
-    sidebarSub: "サイドバーのサブメニュー",
   },
   catalog: {
     products: "商品",

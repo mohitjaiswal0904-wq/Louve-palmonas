@@ -8,17 +8,24 @@ If Amplify uses an older Node runtime, set the build image/runtime in Amplify se
 
 ## Docker
 
-Build:
+From **louve-frontend** repo root (Compose project dir = `.`):
+
+```bash
+make up        # build & start (image louve-frontend:local)
+make down
+make rebuild   # down, then up with rebuild
+```
+
+Optional host port: `FRONTEND_PUBLISH_PORT=3001 make up`.
+
+Manual build/run:
 
 ```bash
 docker build -f deployment/Dockerfile -t louve-frontend:latest .
-```
-
-Run:
-
-```bash
 docker run --rm -p 3000:3000 louve-frontend:latest
 ```
+
+The container runs **Next.js standalone** under **pm2-runtime** (see `deployment/ecosystem.docker.cjs`).
 
 ## PM2 (VM)
 
@@ -33,6 +40,6 @@ pnpm exec pm2 start deployment/ecosystem.config.cjs
 Redeploy / restart:
 
 ```bash
-make restart
+make pm2-reload
 ```
 

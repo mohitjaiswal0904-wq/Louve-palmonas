@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 interface CardOneProps {
   title?: string;
   tagline?: string;
   buttonText?: string;
+  buttonLink?: string;
   imageUrl?: string;
 }
 
@@ -14,6 +16,7 @@ export function CardOne({
   title = "Lorem Ipsum Dolor Sit Amet",
   tagline = "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit",
   buttonText = "Explore More",
+  buttonLink = "/products",
   imageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-first-image-322f7522.png",
 }: CardOneProps) {
   return (
@@ -40,12 +43,14 @@ export function CardOne({
             {tagline}
           </p>
           <div className="pt-6">
-            <Button
-              size="lg"
-              className="h-12 rounded-none bg-[#77080E] px-10 text-xs font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] hover:shadow-lg active:scale-95"
-            >
-              {buttonText}
-            </Button>
+            <Link href={buttonLink}>
+              <Button
+                size="lg"
+                className="h-12 rounded-none bg-[#77080E] px-10 text-xs font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] hover:shadow-lg active:scale-95"
+              >
+                {buttonText}
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

@@ -24,6 +24,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(0);
+  const [selectedSize, setSelectedSize] = useState("7");
   const [activeTab, setActiveTab] = useState(0);
   const didFetch = useRef(false);
 
@@ -40,9 +41,9 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
         }).then((sr) => {
           const items = (sr.data ?? []).filter((p) => p.handle !== handle);
           setSimilar(items.slice(0, 4));
-        }).catch(() => {});
+        }).catch(() => { });
       }
-    }).catch(() => {}).finally(() => setLoading(false));
+    }).catch(() => { }).finally(() => setLoading(false));
   }, [catalog, handle]);
 
   if (loading) {
@@ -68,7 +69,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
   const price = variant?.price ?? product.price;
   const compareAt = variant?.compare_at_price ?? product.compare_at_price;
   const hasDiscount = compareAt && parseFloat(compareAt.amount) > parseFloat(price.amount);
-  
+
   const tabs = buildTabs(product, variant);
 
   const handleBuyNow = async () => {
@@ -155,10 +156,18 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
                 {["7", "8", "9", "10"].map((size) => (
                   <button
                     key={size}
+                    onClick={() => {
+                      setSelectedSize(size);
+                      // Update variant if a match is found in the actual product data
+                      const vIdx = product.variants.findIndex(v => 
+                        v.option1 === size || v.option2 === size || v.option3 === size
+                      );
+                      if (vIdx !== -1) setSelectedVariant(vIdx);
+                    }}
                     className={cn(
-                      "flex h-10 w-10 items-center justify-center text-xs transition-all",
-                      size === "7" 
-                        ? "rounded-full bg-zinc-900 font-bold text-white shadow-md" 
+                      "flex h-10 w-10 items-center justify-center text-xs",
+                      size === selectedSize
+                        ? "rounded-full bg-zinc-900 font-bold text-white shadow-md"
                         : "text-zinc-500 hover:text-zinc-900"
                     )}
                   >
@@ -173,7 +182,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
 
             {/* CTAs */}
             <div className="flex flex-col gap-3 pt-4 sm:flex-row">
-              <Button 
+              <Button
                 onClick={handleBuyNow}
                 disabled={isAdding}
                 className="h-14 flex-1 rounded-none bg-[#1A1A1A] text-sm font-medium text-white hover:bg-black"
@@ -198,7 +207,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
               ].map((item, i) => (
                 <div key={i} className="flex flex-col items-center gap-3 text-center">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E5C16C]/10">
-                     <item.icon className="h-6 w-6 text-[#E5C16C]" strokeWidth={1.5} />
+                    <item.icon className="h-6 w-6 text-[#E5C16C]" strokeWidth={1.5} />
                   </div>
                   <span className="text-[8px] font-medium leading-tight text-zinc-500">
                     {item.label}
@@ -214,7 +223,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
       <div className="border-t border-[#F6F1E9]">
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-0">
-            
+
             {/* Left Col: Vertical Gallery */}
             <div className="flex flex-col gap-12 py-16 md:py-24 border-r border-[#F6F1E9]">
               {product.images.map((img, i) => (
@@ -241,8 +250,8 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
                       onClick={() => setActiveTab(i)}
                       className={cn(
                         "whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative",
-                        i === activeTab 
-                          ? "text-zinc-900 after:absolute after:-bottom-[17px] after:left-0 after:h-[2px] after:w-full after:bg-[#77080E]" 
+                        i === activeTab
+                          ? "text-zinc-900 after:absolute after:-bottom-[17px] after:left-0 after:h-[2px] after:w-full after:bg-[#77080E]"
                           : "text-zinc-400 hover:text-zinc-600"
                       )}
                     >
@@ -308,7 +317,7 @@ function buildTabs(
       content: (
         <div className="space-y-6">
           <p className="text-xs text-zinc-500 leading-relaxed">
-            The price mentioned includes the cost of the jewelry piece, labor charges, and applicable taxes. 
+            The price mentioned includes the cost of the jewelry piece, labor charges, and applicable taxes.
             All prices are subject to change based on current gold and diamond market rates.
           </p>
           <table className="w-full">

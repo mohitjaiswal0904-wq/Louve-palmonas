@@ -9,7 +9,7 @@ export type {
   PagesMessages,
   ProductDetailPageMessages,
   SearchResultsPageMessages,
-  SidebarNavMessage,
+  MegaMenuMessage,
 } from "./messages";
 export {
   APP_LOCALES,

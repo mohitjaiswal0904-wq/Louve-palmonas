@@ -1,10 +1,9 @@
 import type { AppLocale } from "./locale";
 
-export type SidebarNavMessage = {
-  key: string;
-  label: string;
-  href?: string;
-  children?: SidebarNavMessage[];
+export type MegaMenuMessage = {
+  categories: { label: string; href: string }[];
+  gallery: { src: string; alt: string }[];
+  cta: { label: string; href: string };
 };
 
 export type FooterSectionMessage = {
@@ -130,12 +129,11 @@ export type AppMessages = {
       signOut: string;
     };
     footer: FooterSectionMessage[];
-    sidebar: SidebarNavMessage[];
+    megaMenu: MegaMenuMessage;
   };
   common: {
     openMenu: string;
     closeMenu: string;
-    closeSidebar: string;
     back: string;
     browse: string;
     notes: string;
@@ -144,8 +142,6 @@ export type AppMessages = {
     language: string;
     brandAlt: string;
     loading: string;
-    sidebar: string;
-    sidebarSub: string;
   };
   errors: {
     errorTitle: string;

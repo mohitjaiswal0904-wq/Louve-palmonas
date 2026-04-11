@@ -24,8 +24,8 @@ export function CardThree({
   return (
     <div className="relative flex h-full min-h-full w-full flex-col overflow-hidden bg-white md:flex-row">
       {/* Left Column: Focused Content */}
-      <div className="flex flex-[1.2] flex-col items-center justify-center p-10 md:p-20">
-        <div className="flex flex-col space-y-10 max-w-lg w-full">
+      <div className="flex flex-[1.2] flex-col items-start justify-center p-10 md:p-14 lg:items-center lg:p-20">
+        <div className="flex flex-col space-y-8 max-w-lg w-full md:space-y-10">
            {/* Product Image (Rings) */}
           <div className="relative aspect-[16/10] w-full overflow-hidden">
             <Image
@@ -38,8 +38,8 @@ export function CardThree({
           </div>
           
           {/* Text Content */}
-          <div className="space-y-4 px-2">
-            <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 md:text-4xl">
+          <div className="space-y-4 px-1 md:px-2">
+            <h2 className="text-2xl font-bold tracking-tight text-zinc-900 md:text-3xl lg:text-3xl lg:font-semibold">
               {title}
             </h2>
             <p className="max-w-md text-sm font-normal leading-relaxed text-zinc-500 md:text-base">
@@ -49,7 +49,7 @@ export function CardThree({
               <Link href={buttonLink}>
                 <Button
                   size="lg"
-                  className="h-11 rounded-none bg-[#77080E] px-10 text-[11px] font-semibold uppercase tracking-widest text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-md"
+                  className="h-11 rounded-none bg-[#77080E] px-10 text-[11px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-[#5A060A] active:scale-95 shadow-md lg:font-semibold lg:tracking-widest"
                 >
                   {buttonText}
                 </Button>

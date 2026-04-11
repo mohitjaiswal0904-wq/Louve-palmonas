@@ -9,6 +9,10 @@ services:
       # Resolved relative to Compose project dir (Makefile: --project-directory . = louve-frontend root)
       context: .
       dockerfile: deployment/Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://louve.palmonas.tech}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api-louve.palmonas.tech}
+        NEXT_PUBLIC_RAZORPAY_KEY_ID: ${NEXT_PUBLIC_RAZORPAY_KEY_ID:-}
     image: louve-frontend:local
     container_name: louve-frontend
     restart: unless-stopped

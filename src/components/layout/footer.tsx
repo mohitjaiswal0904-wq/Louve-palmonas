@@ -26,7 +26,9 @@ export function Footer() {
                 <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
                   {section.title}
                 </div>
-                {section.links.map((l) => (
+                {section.links
+                  .filter((l) => l.key !== "stores")
+                  .map((l) => (
                   <Link
                     key={l.key}
                     className="block text-sm text-muted-foreground hover:text-foreground"

@@ -6,7 +6,7 @@ import { Menu } from "lucide-react";
 
 import { useLayoutContext } from "@/providers/layout-context";
 import { Button } from "@/components/ui/button";
-import { useCart, useMessages, useWishlist } from "@/hooks";
+import { useCart, useMessages } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { HEADER_ACTION_ICONS } from "./header-actions";
 import { HeaderSearch } from "./header-search";
@@ -33,7 +33,6 @@ function HeaderCountBadge({ count, className }: { count: number; className?: str
 export function Header() {
   const { sidebarOpen, toggleSidebar } = useLayoutContext();
   const m = useMessages();
-  const { count: wishlistCount } = useWishlist();
   const { itemCount: cartItemCount } = useCart();
 
   return (
@@ -74,6 +73,8 @@ export function Header() {
           <LanguageSwitcher />
           {m.navigation.header.actions.map((a) => {
             if (a.key === "account") return null;
+            /* Wishlist hidden — route redirects to /cart */
+            if (a.key === "wishlist") return null;
 
             if (a.key === "search") {
               return <HeaderSearch key={a.key} ariaLabel={a.ariaLabel} />;
@@ -82,8 +83,7 @@ export function Header() {
             const Icon = HEADER_ACTION_ICONS[a.key];
             if (!Icon) return null;
 
-            const badgeCount =
-              a.key === "wishlist" ? wishlistCount : a.key === "cart" ? cartItemCount : 0;
+            const badgeCount = a.key === "cart" ? cartItemCount : 0;
             const ariaLabel =
               badgeCount > 0 ? `${a.ariaLabel}, ${badgeCount}` : a.ariaLabel;
 
@@ -96,7 +96,7 @@ export function Header() {
               >
                 <Button variant="ghost" size="icon" className="relative">
                   <Icon className="size-5" />
-                  {(a.key === "wishlist" || a.key === "cart") && (
+                  {a.key === "cart" && (
                     <HeaderCountBadge count={badgeCount} />
                   )}
                 </Button>

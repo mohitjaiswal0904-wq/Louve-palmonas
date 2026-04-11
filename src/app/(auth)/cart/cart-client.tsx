@@ -225,7 +225,7 @@ export default function CartClient() {
         prefill: {
           name: user?.profile?.display_name || "",
           email: user?.email || "",
-          contact: user?.profile?.phone || "",
+          contact: user?.phone || "",
         },
         theme: { color: "#1A1A1A" },
         handler: async (response: {

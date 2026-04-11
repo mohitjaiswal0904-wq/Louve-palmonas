@@ -15,22 +15,22 @@ import { useRouter } from "next/navigation";
 import { createCsrApiClient } from "@/lib/client";
 import * as authService from "@/services/auth.service";
 import type {
-  ForgotPasswordRequest,
-  LoginRequest,
-  ResetPasswordRequest,
-  SignupRequest,
+  SendOTPRequest,
+  VerifyOTPRequest,
+  UpdateProfileRequest,
   UserResponse,
 } from "@/types";
 
 export type AuthStateValue = {
   user: UserResponse | null;
   loading: boolean;
-  login: (data: LoginRequest) => Promise<void>;
-  signup: (data: SignupRequest) => Promise<void>;
+  isNewUser: boolean;
+  sendOTP: (data: SendOTPRequest) => Promise<void>;
+  verifyOTP: (data: VerifyOTPRequest) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
-  forgotPassword: (data: ForgotPasswordRequest) => Promise<void>;
-  resetPassword: (data: ResetPasswordRequest) => Promise<void>;
+  updateProfile: (data: UpdateProfileRequest) => Promise<void>;
+  clearNewUser: () => void;
 };
 
 const AuthStateContext = createContext<AuthStateValue | null>(null);
@@ -38,6 +38,7 @@ const AuthStateContext = createContext<AuthStateValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isNewUser, setIsNewUser] = useState(false);
   const router = useRouter();
   const client = useMemo(() => createCsrApiClient(), []);
   const didInit = useRef(false);
@@ -72,25 +73,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => { cancelled = true; };
   }, [client]);
 
-  const login = useCallback(
-    async (data: LoginRequest) => {
-      const res = await authService.login(client, data);
-      if (res.success && res.data) {
-        setUser(res.data.user);
-        router.push("/");
-        router.refresh();
-      }
+  const sendOTP = useCallback(
+    async (data: SendOTPRequest) => {
+      await authService.sendOTP(client, data);
     },
-    [client, router],
+    [client],
   );
 
-  const signup = useCallback(
-    async (data: SignupRequest) => {
-      const res = await authService.signup(client, data);
+  const verifyOTP = useCallback(
+    async (data: VerifyOTPRequest) => {
+      const res = await authService.verifyOTP(client, data);
       if (res.success && res.data) {
         setUser(res.data.user);
-        router.push("/");
-        router.refresh();
+        if (res.data.is_new_user) {
+          setIsNewUser(true);
+        } else {
+          router.push("/");
+          router.refresh();
+        }
       }
     },
     [client, router],
@@ -99,36 +99,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logoutFn = useCallback(async () => {
     await authService.logout(client);
     setUser(null);
+    setIsNewUser(false);
     router.push("/");
     router.refresh();
   }, [client, router]);
 
-  const forgotPassword = useCallback(
-    async (data: ForgotPasswordRequest) => {
-      await authService.forgotPassword(client, data);
+  const updateProfileFn = useCallback(
+    async (data: UpdateProfileRequest) => {
+      const res = await authService.updateProfile(client, data);
+      if (res.success && res.data) {
+        setUser(res.data);
+      }
+      setIsNewUser(false);
+      router.push("/");
+      router.refresh();
     },
-    [client],
+    [client, router],
   );
 
-  const resetPassword = useCallback(
-    async (data: ResetPasswordRequest) => {
-      await authService.resetPassword(client, data);
-    },
-    [client],
-  );
+  const clearNewUser = useCallback(() => {
+    setIsNewUser(false);
+  }, []);
 
   const value = useMemo(
     () => ({
       user,
       loading,
-      login,
-      signup,
+      isNewUser,
+      sendOTP,
+      verifyOTP,
       logout: logoutFn,
       refreshUser,
-      forgotPassword,
-      resetPassword,
+      updateProfile: updateProfileFn,
+      clearNewUser,
     }),
-    [user, loading, login, signup, logoutFn, refreshUser, forgotPassword, resetPassword],
+    [user, loading, isNewUser, sendOTP, verifyOTP, logoutFn, refreshUser, updateProfileFn, clearNewUser],
   );
 
   return (

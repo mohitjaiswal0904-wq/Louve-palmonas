@@ -1,12 +1,6 @@
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-import { buildStaticPageMetadata } from "@/lib/l10n/build-page-metadata";
-import WishlistClient from "./wishlist-client";
-
-export async function generateMetadata(): Promise<Metadata> {
-  return buildStaticPageMetadata("wishlist", "/wishlist");
-}
-
+/** Wishlist UI paused — send direct links to cart. */
 export default function WishlistPage() {
-  return <WishlistClient />;
+  redirect("/cart");
 }

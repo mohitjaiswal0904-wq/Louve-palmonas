@@ -2,7 +2,7 @@ import "server-only";
 
 import { cookies } from "next/headers";
 
-import { getApiBaseUrl } from "@/lib/config/env";
+import { getServerApiBaseUrl } from "@/lib/config/env";
 import { createApiClient } from "./create-api-client";
 
 /**
@@ -14,7 +14,7 @@ export async function createSsrApiClient() {
   const accessToken = store.get("louve_access_token")?.value;
 
   return createApiClient({
-    baseUrl: getApiBaseUrl(),
+    baseUrl: getServerApiBaseUrl(),
     fetchImpl: (input, init) =>
       fetch(input, {
         ...init,

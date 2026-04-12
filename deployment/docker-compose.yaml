@@ -22,3 +22,6 @@ services:
       NODE_ENV: production
       PORT: "3000"
       HOSTNAME: "0.0.0.0"
+      # Runtime only: where the Next.js server reaches the Go API (see docs/DEPLOYMENT.md).
+      # Example same host: http://172.26.9.251:8080 or http://host.docker.internal:8080
+      INTERNAL_API_URL: ${INTERNAL_API_URL:-}

@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { getApiBaseUrl } from "@/lib/config/env";
+import { getServerApiBaseUrl } from "@/lib/config/env";
 import {
   ACCESS_TOKEN_COOKIE,
   ACCESS_TOKEN_MAX_AGE,
@@ -29,7 +29,7 @@ function upstreamUnavailableResponse() {
       error: {
         code: "UPSTREAM_UNAVAILABLE",
         message:
-          "Could not reach the Louve API. Start the backend (e.g. make run-api) or set NEXT_PUBLIC_API_URL.",
+          "Could not reach the Louve API. Start the backend, set NEXT_PUBLIC_API_URL at build time, or set INTERNAL_API_URL at runtime (Docker) so the BFF can reach the API.",
       },
       timestamp: new Date().toISOString(),
     },
@@ -50,7 +50,7 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
   const backendPath = `/api/${path.join("/")}`;
   // Forward ?query=params — required for catalog filters, search `q`, pagination, etc.
   const search = req.nextUrl.search;
-  const backendUrl = `${getApiBaseUrl()}${backendPath}${search}`;
+  const backendUrl = `${getServerApiBaseUrl()}${backendPath}${search}`;
   const store = await cookies();
   const accessToken = store.get(ACCESS_TOKEN_COOKIE)?.value;
   const refreshToken = store.get(REFRESH_TOKEN_COOKIE)?.value;
@@ -82,7 +82,7 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
   }
 
   if (res.status === 401 && refreshToken && !backendPath.includes("/auth/refresh")) {
-    const refreshRes = await fetchBackend(`${getApiBaseUrl()}/api/v1/auth/refresh`, {
+    const refreshRes = await fetchBackend(`${getServerApiBaseUrl()}/api/v1/auth/refresh`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({ refresh_token: refreshToken }),

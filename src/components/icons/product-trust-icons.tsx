@@ -1,5 +1,7 @@
 import type { SVGProps } from "react";
 
+import { cn } from "@/lib/utils";
+
 const gold = "#DCB873";
 
 type IconProps = SVGProps<SVGSVGElement>;
@@ -11,7 +13,7 @@ export function TrustBisHallmarkIcon({ className, ...props }: IconProps) {
       viewBox="0 0 42 41"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className={cn("origin-center scale-[1.50]", className)}
       aria-hidden
       {...props}
     >

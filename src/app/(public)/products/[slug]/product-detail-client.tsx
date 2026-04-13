@@ -245,10 +245,10 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
                 { label: "Easy Return/Exchange", Icon: TrustReturnExchangeIcon },
               ].map((item) => (
                 <div key={item.label} className="flex flex-col items-center gap-3 text-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E5C16C]/10">
-                    <item.Icon className="h-6 w-6 shrink-0" />
+                  <div className="flex h-[40.32px] w-[40.32px] items-center justify-center">
+                    <item.Icon className="h-8 w-8 shrink-0" />
                   </div>
-                  <span className="text-[8px] font-medium leading-tight text-zinc-500">
+                  <span className="text-[10px] font-[400] leading-tight text-[#3E3E3E">
                     {item.label}
                   </span>
                 </div>

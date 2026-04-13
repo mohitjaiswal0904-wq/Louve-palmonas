@@ -708,21 +708,22 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
               {product?.title ?? "Product"}
             </Link>
 
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-light text-zinc-400 sm:text-sm">
-              <p>
-                Color: <span className="text-zinc-600">Gold</span>
-              </p>
-              <p>
-                Karat: <span className="text-zinc-600">22k</span>
-              </p>
-              <p>
-                Size: <span className="text-zinc-600">22</span>
-              </p>
+            <div className="space-y-2">
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-light text-zinc-400 sm:text-sm">
+                <p>
+                  Color: <span className="text-zinc-600">Gold</span>
+                </p>
+                <p>
+                  Karat: <span className="text-zinc-600">22k</span>
+                </p>
+                <p>
+                  Size: <span className="text-zinc-600">22</span>
+                </p>
+              </div>
+              <span className="inline-block rounded-sm bg-[#F6E9E9] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-[#77080E]/70">
+                TAGS
+              </span>
             </div>
-
-            <span className="inline-block rounded-sm bg-[#F6E9E9] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-[#77080E]/70">
-              TAGS
-            </span>
 
             <div className="inline-flex items-center rounded-lg border border-zinc-100 bg-[#FDFDFD] px-1">
               <button
@@ -756,7 +757,7 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
               ? formatMoney(variant.price.amount, variant.price.currency)
               : "₹00.00"}
           </p>
-          <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-2">
+          <div className="flex items-center gap-3 sm:items-end sm:gap-2 mt-16">
             <button
               type="button"
               className="hidden text-sm font-light text-zinc-400 transition-colors hover:text-zinc-900 md:inline"

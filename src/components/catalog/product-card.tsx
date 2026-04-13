@@ -134,7 +134,7 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
               alt={product.image.alt || product.title}
               fill
               sizes={imgSz}
-              className="object-contain object-center drop-shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-transform duration-500 ease-out group-hover:scale-[1.02] dark:drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
+              className="object-contain object-center drop-shadow-[0_12px_24px_rgba(0,0,0,0.08)] dark:drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
             />
           ) : (
             <span className="flex h-full items-center justify-center text-xs text-muted-foreground">
@@ -169,8 +169,8 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
           cpPad,
         )}
       >
-        <p className={cn("mb-1 font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500", vSz)}>
-          {product.vendor}
+        {/* <p className={cn("mb-1 font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500", vSz)}>
+          {produc t.vendor}
         </p> */}
         <h3 className="line-clamp-1 text-[22px] font-normal leading-snug tracking-tight text-[#1F1F1F] dark:text-zinc-100">
           {product.title}

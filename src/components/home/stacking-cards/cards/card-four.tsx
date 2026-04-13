@@ -21,30 +21,34 @@ export function CardFour({
 }: CardFourProps) {
   return (
     <div className="relative flex h-full max-h-full min-h-0 w-full min-w-0 max-w-full flex-col overflow-x-hidden overflow-y-hidden bg-white md:flex-row">
-      <div className="relative z-10 flex min-h-0 min-w-0 flex-1 items-center justify-center overflow-hidden p-6 md:p-12 lg:p-24">
-        <div className="relative aspect-square w-full max-w-md overflow-hidden shadow-2xl">
+      <div className="relative z-20 flex min-h-0 min-w-0 flex-1 items-center justify-center overflow-visible p-6 md:p-12 lg:p-24">
+        <div className="relative isolate aspect-square w-full max-w-md overflow-visible shadow-2xl">
           <Image
             src={imageUrl}
             alt="Feature Portrait"
             fill
-            className="object-cover"
+            className="z-0 object-cover"
             sizes="(max-width: 768px) 100vw, 40vw"
           />
 
-          <div className="pointer-events-none absolute bottom-0 right-0 z-20 h-[100%] w-[100%] translate-x-[35%] translate-y-[35%] select-none opacity-70">
-            <svg
+          <div className="pointer-events-none absolute bottom-0 right-0 z-10 h-[100%] w-[100%] translate-x-[35%] translate-y-[35%] select-none opacity-70">
+            {/* <svg
               viewBox="0 0 200 200"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               className="h-full w-full fill-[#FADBD8]"
             >
               <path d="M100 0C100 55.2285 144.772 100 200 100C144.772 100 100 144.772 100 200C100 144.772 55.2285 100 0 100C55.2285 100 100 55.2285 100 0Z" />
+            </svg> */}
+            <svg width="521" height="521" viewBox="0 0 521 521" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M260.5 0L286.718 87.1713C307.958 157.79 363.21 213.042 433.829 234.282L521 260.5L433.829 286.718C363.21 307.958 307.958 363.21 286.718 433.829L260.5 521L234.282 433.829C213.042 363.21 157.79 307.958 87.1713 286.718L0 260.5L87.1713 234.282C157.79 213.042 213.042 157.79 234.282 87.1713L260.5 0Z" fill="#B95252" fill-opacity="0.3"/>
             </svg>
+
           </div>
         </div>
       </div>
 
-      <div className="relative z-10 flex min-h-0 min-w-0 flex-1 flex-col justify-center overflow-y-auto overflow-x-hidden px-8 py-10 md:max-h-full md:px-14 md:py-12 lg:px-32 lg:py-16">
+      <div className="relative z-0 flex min-h-0 min-w-0 flex-1 flex-col justify-center overflow-y-auto overflow-x-hidden px-8 py-10 md:max-h-full md:px-14 md:py-12 lg:px-32 lg:py-16">
         <div className="absolute inset-0 z-0 select-none opacity-[0.08] pointer-events-none">
           <Image
             src={imageUrl}

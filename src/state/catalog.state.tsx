@@ -13,6 +13,7 @@ import type {
   ApiResponse,
   FiltersDTO,
   PaginatedResponse,
+  PopularSearchCategoryDTO,
   ProductDetailDTO,
   ProductDTO,
   ProductListParams,
@@ -25,6 +26,7 @@ export type CatalogStateValue = {
   getProductByHandle: (handle: string) => Promise<ApiResponse<ProductDetailDTO>>;
   getProductById: (id: number) => Promise<ApiResponse<ProductDetailDTO>>;
   getFilters: () => Promise<ApiResponse<FiltersDTO>>;
+  getPopularSearches: () => Promise<ApiResponse<PopularSearchCategoryDTO[]>>;
 };
 
 const CatalogStateContext = createContext<CatalogStateValue | null>(null);
@@ -38,6 +40,7 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
       getProductByHandle: (handle) => catalogService.getProductByHandle(client, handle),
       getProductById: (id) => catalogService.getProductById(client, id),
       getFilters: () => catalogService.getFilters(client),
+      getPopularSearches: () => catalogService.getPopularSearches(client),
     }),
     [client],
   );

@@ -8,6 +8,7 @@ import type {
   ProductListParams,
   CollectionDTO,
   CollectionDetailDTO,
+  PopularSearchCategoryDTO,
 } from "@/types";
 
 function toQueryString(params: Record<string, unknown>): string {
@@ -46,4 +47,11 @@ export async function getCollectionBySlug(client: ApiClient, slug: string) {
 export async function getCollectionProducts(client: ApiClient, slug: string, params: { page?: number; limit?: number } = {}) {
   const qs = toQueryString(params);
   return client.get<ApiResponse<CollectionDetailDTO>>(`/api/v1/catalog/collections/${slug}/products${qs}`);
+}
+
+/** Site-wide SEO popular search rows (integrate on Go: `GET /api/v1/catalog/popular-searches`). */
+export async function getPopularSearches(client: ApiClient) {
+  return client.get<ApiResponse<PopularSearchCategoryDTO[]>>(
+    "/api/v1/catalog/popular-searches",
+  );
 }

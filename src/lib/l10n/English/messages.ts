@@ -140,6 +140,11 @@ export const messages = {
     searching: "Searching…",
     productNotFound: "Product not found.",
     similarProducts: "You may also like",
+    addToCart: "Add to cart",
+    addingToCart: "Adding…",
+    buyNow: "Buy now",
+    signInToAddToCart: "Sign in to add items to your cart",
+    variantUnavailable: "This option is unavailable.",
   },
   errors: {
     errorTitle: "Something went wrong",

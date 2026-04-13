@@ -140,6 +140,11 @@ export const messages = {
     searching: "搜索中…",
     productNotFound: "未找到该商品。",
     similarProducts: "您可能还喜欢",
+    addToCart: "加入购物车",
+    addingToCart: "正在添加…",
+    buyNow: "立即购买",
+    signInToAddToCart: "登录后将商品加入购物车",
+    variantUnavailable: "该选项暂时无法购买。",
   },
   errors: {
     errorTitle: "出了点问题",

@@ -40,7 +40,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   if (!user || user.role !== "admin") return null;
 
   return (
-    <div className="flex min-h-[100dvh] min-w-0 flex-col bg-zinc-50 pb-[env(safe-area-inset-bottom,0px)] pt-[env(safe-area-inset-top,0px)] dark:bg-zinc-950 md:flex-row md:overflow-hidden md:pb-0">
+    <div className="flex h-[100dvh] max-h-[100dvh] min-h-0 min-w-0 flex-col overflow-hidden bg-zinc-50 pb-[env(safe-area-inset-bottom,0px)] pt-[env(safe-area-inset-top,0px)] dark:bg-zinc-950 md:flex-row md:pb-0">
       <DashboardSidebar />
 
       <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
@@ -76,9 +76,9 @@ export function DashboardShell({ children }: { children: ReactNode }) {
         </SheetContent>
       </Sheet>
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col md:overflow-hidden">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
         <DashboardHeader onOpenMobileNav={() => setMobileNavOpen(true)} />
-        <main className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6 sm:py-6">
+        <main className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 py-5 sm:px-6 sm:py-6">
           {children}
         </main>
         <footer className="shrink-0 border-t bg-white/80 px-4 py-3 text-center text-xs text-muted-foreground backdrop-blur-sm dark:bg-zinc-900/80 sm:px-6 sm:text-left">

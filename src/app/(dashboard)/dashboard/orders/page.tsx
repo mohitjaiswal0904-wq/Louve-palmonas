@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createCsrApiClient } from "@/lib/client";
+import { buildLoginHref } from "@/lib/auth/return-url";
 import * as adminService from "@/services/admin.service";
 import type { AdminOrderResponse } from "@/types";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -35,6 +36,7 @@ function isUnauthorized(err: unknown): boolean {
 }
 
 export default function DashboardOrdersPage() {
+  const pathname = usePathname();
   const router = useRouter();
   const client = useMemo(() => createCsrApiClient(), []);
   const [orders, setOrders] = useState<AdminOrderResponse[]>([]);
@@ -58,11 +60,11 @@ export default function DashboardOrdersPage() {
           }
         })
         .catch((err: unknown) => {
-          if (isUnauthorized(err)) router.replace("/auth/login");
+          if (isUnauthorized(err)) router.replace(buildLoginHref(pathname || "/dashboard/orders"));
         })
         .finally(() => setLoading(false));
     },
-    [client, router],
+    [client, router, pathname],
   );
 
   useEffect(() => {

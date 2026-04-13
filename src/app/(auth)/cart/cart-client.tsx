@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 
 import { PopularSearches } from "@/components/common";
-import { useAuth, useCart, useMessages, useOrder, usePayment } from "@/hooks";
+import { useAuth, useCart, useLoginGate, useMessages, useOrder, usePayment } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { CartItemDTO, OrderDTO, PayOrderResponse } from "@/types";
 
@@ -79,6 +79,7 @@ function formatMoney(amount: string, currency: string): string {
 
 export default function CartClient() {
   const router = useRouter();
+  const { replaceWithLogin } = useLoginGate();
   const m = useMessages();
   const { user, loading: authLoading } = useAuth();
   const {
@@ -103,9 +104,9 @@ export default function CartClient() {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      router.replace("/auth/login");
+      replaceWithLogin();
     }
-  }, [authLoading, user, router]);
+  }, [authLoading, user, replaceWithLogin]);
 
   const loadRazorpayScript = useCallback((): Promise<void> => {
     if (razorpayLoaded.current && window.Razorpay) return Promise.resolve();

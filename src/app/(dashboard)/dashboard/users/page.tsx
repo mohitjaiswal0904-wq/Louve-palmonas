@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createCsrApiClient } from "@/lib/client";
+import { buildLoginHref } from "@/lib/auth/return-url";
 import * as adminService from "@/services/admin.service";
 import type { AdminUserResponse } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ function isUnauthorized(err: unknown): boolean {
 }
 
 export default function DashboardUsersPage() {
+  const pathname = usePathname();
   const router = useRouter();
   const client = useMemo(() => createCsrApiClient(), []);
   const [users, setUsers] = useState<AdminUserResponse[]>([]);
@@ -38,11 +40,11 @@ export default function DashboardUsersPage() {
           }
         })
         .catch((err: unknown) => {
-          if (isUnauthorized(err)) router.replace("/auth/login");
+          if (isUnauthorized(err)) router.replace(buildLoginHref(pathname || "/dashboard/users"));
         })
         .finally(() => setLoading(false));
     },
-    [client, router],
+    [client, router, pathname],
   );
 
   useEffect(() => {
@@ -64,7 +66,7 @@ export default function DashboardUsersPage() {
         );
       }
     } catch (err: unknown) {
-      if (isUnauthorized(err)) router.replace("/auth/login");
+      if (isUnauthorized(err)) router.replace(buildLoginHref(pathname || "/dashboard/users"));
     }
   }
 

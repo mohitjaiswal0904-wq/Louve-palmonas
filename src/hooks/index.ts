@@ -1,4 +1,5 @@
 export { useAuth } from "./auth/use-auth";
+export { useLoginGate } from "./auth/use-login-gate";
 export { useCatalog } from "./catalog/use-catalog";
 export { useSearch } from "./search/use-search";
 export { useHealth } from "./health/use-health";

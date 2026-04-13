@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useAuth, useCart, useMessages, useWishlist } from "@/hooks";
+import { buildLoginHref } from "@/lib/auth/return-url";
 import { cn } from "@/lib/utils";
 import type { WishlistItemDTO, WishlistProductInfo } from "@/types";
 
@@ -360,7 +361,7 @@ export default function WishlistClient() {
             </p>
           </div>
           <Link
-            href="/auth/login"
+            href={buildLoginHref("/wishlist")}
             className={buttonVariants({ variant: "default", size: "sm", className: "tracking-tight" })}
           >
             Sign in

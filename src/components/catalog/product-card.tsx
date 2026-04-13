@@ -3,11 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useCallback, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { ShoppingBag } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useAuth, useCart, useMessages } from "@/hooks";
+import { useAuth, useCart, useLoginGate, useMessages } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { ProductDTO, VariantDTO } from "@/types";
 
@@ -76,7 +75,7 @@ const priceSize: Record<Exclude<CardSize, "showcase">, string> = {
 
 export function ProductCard({ product, size = "lg", inGrid = true }: ProductCardProps) {
   const m = useMessages();
-  const router = useRouter();
+  const { openLogin } = useLoginGate();
   const { user } = useAuth();
   const { addToCart } = useCart();
   const [adding, setAdding] = useState(false);
@@ -88,7 +87,7 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
       e.stopPropagation();
       if (!cartVariant || adding) return;
       if (!user) {
-        router.push("/auth/login");
+        openLogin();
         return;
       }
       setAdding(true);
@@ -104,7 +103,7 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
         setAdding(false);
       }
     },
-    [addToCart, adding, cartVariant, product.id, router, user],
+    [addToCart, adding, cartVariant, openLogin, product.id, user],
   );
 
   const hasDiscount =

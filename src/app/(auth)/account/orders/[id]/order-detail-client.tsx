@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { use, useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { useAuth, useMessages, useOrder } from "@/hooks";
+import { buildLoginHref } from "@/lib/auth/return-url";
 import { cn } from "@/lib/utils";
 import type { OrderDTO, OrderItemDTO, OrderMoneyInfo } from "@/types";
 
@@ -106,6 +107,7 @@ function LineItem({ item, skuLabel }: { item: OrderItemDTO; skuLabel: string }) 
 
 export default function OrderDetailClient({ paramsPromise }: Props) {
   const { id: idParam } = use(paramsPromise);
+  const pathname = usePathname();
   const router = useRouter();
   const m = useMessages();
   const { user, loading: authLoading } = useAuth();
@@ -147,9 +149,9 @@ export default function OrderDetailClient({ paramsPromise }: Props) {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      router.replace("/auth/login");
+      router.replace(buildLoginHref(pathname || `/account/orders/${idParam}`));
     }
-  }, [authLoading, user, router]);
+  }, [authLoading, user, router, pathname, idParam]);
 
   useEffect(() => {
     if (!user) return;

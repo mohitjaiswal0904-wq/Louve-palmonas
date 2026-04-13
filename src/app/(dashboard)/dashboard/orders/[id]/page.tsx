@@ -19,6 +19,8 @@ const ALL_STATUSES = [
   "refunded",
 ];
 
+const PAYMENT_STATUSES = ["pending", "collected", "failed", "refunded"];
+
 export default function DashboardOrderDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -26,6 +28,7 @@ export default function DashboardOrderDetailPage() {
   const [order, setOrder] = useState<AdminOrderResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [newStatus, setNewStatus] = useState("");
+  const [newPaymentStatus, setNewPaymentStatus] = useState("");
   const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
@@ -36,17 +39,32 @@ export default function DashboardOrderDetailPage() {
         if (res.success && res.data) {
           setOrder(res.data);
           setNewStatus(res.data.status);
+          setNewPaymentStatus(res.data.payment_status);
         }
       })
       .finally(() => setLoading(false));
   }, [client, id]);
 
   async function handleStatusUpdate() {
-    if (!order || newStatus === order.status) return;
+    if (!order) return;
+    const statusChanged = newStatus !== order.status;
+    const payChanged = newPaymentStatus !== order.payment_status;
+    if (!statusChanged && !payChanged) return;
     setUpdating(true);
-    const res = await adminService.updateOrderStatus(client, order.id, newStatus);
+    const res = await adminService.patchOrder(client, order.id, {
+      ...(statusChanged ? { status: newStatus } : {}),
+      ...(payChanged ? { payment_status: newPaymentStatus } : {}),
+    });
     if (res.success) {
-      setOrder((prev) => (prev ? { ...prev, status: newStatus } : prev));
+      setOrder((prev) =>
+        prev
+          ? {
+              ...prev,
+              status: statusChanged ? newStatus : prev.status,
+              payment_status: payChanged ? newPaymentStatus : prev.payment_status,
+            }
+          : prev,
+      );
     }
     setUpdating(false);
   }
@@ -87,6 +105,10 @@ export default function DashboardOrderDetailPage() {
           <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
             Order {order.order_number}
           </h2>
+          <p className="mt-0.5 font-mono text-xs text-muted-foreground">
+            {[order.order_code, order.user_code].filter(Boolean).join(" · ") || `Order #${order.id}`}
+            {order.user_id != null ? ` · customer #${order.user_id}` : ""}
+          </p>
           <p className="mt-0.5 text-sm text-muted-foreground">
             Placed {new Date(order.created_at).toLocaleString()}
           </p>
@@ -124,8 +146,8 @@ export default function DashboardOrderDetailPage() {
                   <dd className="tabular-nums">{order.item_count}</dd>
                 </div>
                 <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-4">
-                  <dt className="text-muted-foreground">User ID</dt>
-                  <dd className="tabular-nums">{order.user_id}</dd>
+                  <dt className="text-muted-foreground">User</dt>
+                  <dd className="font-mono text-xs">{order.user_code ?? `— (#${order.user_id})`}</dd>
                 </div>
               </dl>
             </CardContent>
@@ -151,7 +173,7 @@ export default function DashboardOrderDetailPage() {
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium leading-snug">{item.product_title}</p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {item.variant_title} &middot; SKU: {item.sku || "—"}
+                      {[item.line_code, item.variant_title].filter(Boolean).join(" · ")} · SKU {item.sku || "—"}
                     </p>
                   </div>
                   <div className="text-left text-sm sm:text-right">
@@ -171,11 +193,11 @@ export default function DashboardOrderDetailPage() {
         <div className="space-y-4 lg:col-span-1">
           <Card className="shadow-sm">
             <CardHeader>
-              <CardTitle className="text-base">Update status</CardTitle>
+              <CardTitle className="text-base">Update order</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <label className="flex flex-col gap-1.5">
-                <span className="text-xs font-medium text-muted-foreground">New status</span>
+                <span className="text-xs font-medium text-muted-foreground">Fulfillment status</span>
                 <select
                   className="h-11 w-full rounded-lg border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   value={newStatus}
@@ -188,14 +210,35 @@ export default function DashboardOrderDetailPage() {
                   ))}
                 </select>
               </label>
+              <label className="flex flex-col gap-1.5">
+                <span className="text-xs font-medium text-muted-foreground">Payment status</span>
+                <select
+                  className="h-11 w-full rounded-lg border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  value={newPaymentStatus}
+                  onChange={(e) => setNewPaymentStatus(e.target.value)}
+                >
+                  {PAYMENT_STATUSES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <p className="text-xs text-muted-foreground">
+                For COD, mark payment collected when cash is received. Online payments are usually set
+                automatically.
+              </p>
               <Button
                 type="button"
                 className="min-h-11 w-full"
                 size="sm"
-                disabled={updating || newStatus === order.status}
+                disabled={
+                  updating ||
+                  (newStatus === order.status && newPaymentStatus === order.payment_status)
+                }
                 onClick={() => void handleStatusUpdate()}
               >
-                {updating ? "Updating..." : "Update status"}
+                {updating ? "Updating..." : "Save changes"}
               </Button>
             </CardContent>
           </Card>

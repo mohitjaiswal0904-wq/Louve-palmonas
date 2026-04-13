@@ -130,4 +130,11 @@ export type {
   AnalyticsOverviewResponse,
   CartInsightsResponse,
   SQLQueryResponse,
+  UserInsightsResponse,
+  UserSessionLogsResponse,
+  SessionLogEntry,
+  SessionOverviewResponse,
+  SessionTrafficPoint,
+  SessionCategoryShare,
+  SessionHourOfDayPoint,
 } from "./admin";

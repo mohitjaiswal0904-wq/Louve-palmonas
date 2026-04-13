@@ -34,6 +34,7 @@ import { buildLoginHref } from "@/lib/auth/return-url";
 import * as healthService from "@/services/health.service";
 import type { BackendHealthData, FrontendHealthData } from "@/types/health";
 import { cn } from "@/lib/utils";
+import { formatTime } from "@/utils/format";
 
 const POLL_MS = 10_000;
 const MAX_SAMPLES = 36;
@@ -51,10 +52,11 @@ function formatBytes(b: number): string {
 }
 
 function formatClock(ts: number): string {
-  return new Date(ts).toLocaleTimeString(undefined, {
+  return formatTime(ts, "en-IN", {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
+    hour12: true,
   });
 }
 

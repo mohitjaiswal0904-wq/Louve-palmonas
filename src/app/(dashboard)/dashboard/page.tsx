@@ -18,6 +18,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/utils/format";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -299,7 +300,7 @@ export default function DashboardPage() {
                       <td className="whitespace-nowrap px-4 py-2.5 text-xs capitalize">{o.status}</td>
                       <td className="whitespace-nowrap px-4 py-2.5 text-xs">{o.payment_status}</td>
                       <td className="whitespace-nowrap px-4 py-2.5 tabular-nums font-medium">{o.currency} {o.total_amount}</td>
-                      <td className="whitespace-nowrap px-4 py-2.5 text-xs tabular-nums">{new Date(o.created_at).toLocaleDateString()}</td>
+                      <td className="whitespace-nowrap px-4 py-2.5 text-xs tabular-nums">{formatDate(o.created_at, "en-IN")}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -321,10 +322,6 @@ function formatCurrency(n: number) {
 }
 
 function formatShortDate(dateStr: string) {
-  try {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
-  } catch {
-    return dateStr;
-  }
+  const s = formatDate(dateStr, "en-IN", { day: "numeric", month: "short" });
+  return s || dateStr;
 }

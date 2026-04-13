@@ -25,6 +25,7 @@ import * as authService from "@/services/auth.service";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/utils/format";
 import type {
   AddressDTO,
   CreateAddressRequest,
@@ -181,7 +182,7 @@ export function ProfileView() {
       ? user.phone.slice(-2)
       : "L";
 
-  const memberSince = new Date(user.created_at).toLocaleDateString(undefined, {
+  const memberSince = formatDate(user.created_at, "en", {
     year: "numeric",
     month: "long",
     day: "numeric",

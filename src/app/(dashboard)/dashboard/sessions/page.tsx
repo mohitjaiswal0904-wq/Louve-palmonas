@@ -349,7 +349,7 @@ export default function DashboardSessionsPage() {
               <CardHeader>
                 <CardTitle className="text-base">By hour of day</CardTitle>
                 <p className="text-xs text-muted-foreground">
-                  Total requests in each clock hour ({overview.period_days}d), server time—see peak shopping
+                  Total requests in each clock hour ({overview.period_days}d), India time (IST)—see peak shopping
                   hours.
                 </p>
               </CardHeader>

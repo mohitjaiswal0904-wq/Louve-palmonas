@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth, useMessages, useOrder } from "@/hooks";
 import { buildLoginHref } from "@/lib/auth/return-url";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/utils/format";
 import type { OrderSummaryDTO, Pagination } from "@/types";
 
 type FilterTab = "all" | "pending" | "confirmed" | "delivered" | "cancelled";
@@ -23,10 +24,7 @@ const FILTERS: { key: FilterTab; label: string }[] = [
 
 function formatOrderDate(iso: string) {
   try {
-    return new Intl.DateTimeFormat("en-GB", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    }).format(new Date(iso));
+    return formatDate(iso, "en-IN", { dateStyle: "medium", timeStyle: "short" });
   } catch {
     return iso;
   }

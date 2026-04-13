@@ -9,16 +9,14 @@ import { Button } from "@/components/ui/button";
 import { useAuth, useMessages, useOrder } from "@/hooks";
 import { buildLoginHref } from "@/lib/auth/return-url";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/utils/format";
 import type { OrderDTO, OrderItemDTO, OrderMoneyInfo } from "@/types";
 
 type Props = { paramsPromise: Promise<{ id: string }> };
 
 function formatOrderDate(iso: string) {
   try {
-    return new Intl.DateTimeFormat("en-GB", {
-      dateStyle: "full",
-      timeStyle: "short",
-    }).format(new Date(iso));
+    return formatDate(iso, "en-IN", { dateStyle: "full", timeStyle: "short" });
   } catch {
     return iso;
   }

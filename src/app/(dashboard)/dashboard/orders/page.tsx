@@ -10,6 +10,7 @@ import type { AdminOrderResponse } from "@/types";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/utils/format";
 
 const STATUS_OPTIONS = [
   "",
@@ -133,7 +134,7 @@ export default function DashboardOrdersPage() {
                       {o.currency} {o.total_amount}
                     </p>
                     <p className="text-[11px] text-muted-foreground">
-                      {new Date(o.created_at).toLocaleDateString()}
+                      {formatDate(o.created_at, "en-IN")}
                     </p>
                   </div>
                   <Link
@@ -203,7 +204,7 @@ export default function DashboardOrdersPage() {
                     {o.currency} {o.total_amount}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-xs tabular-nums">
-                    {new Date(o.created_at).toLocaleDateString()}
+                    {formatDate(o.created_at, "en-IN")}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">
                     <Link

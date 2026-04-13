@@ -10,6 +10,7 @@ import * as adminService from "@/services/admin.service";
 import type { UserInsightsResponse, SessionLogEntry } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDate } from "@/utils/format";
 
 function isUnauthorized(err: unknown): boolean {
   return typeof err === "object" && err !== null && "status" in err && (err as { status: number }).status === 401;
@@ -210,7 +211,9 @@ export default function DashboardUserDetailPage() {
             </div>
             <div className="flex justify-between gap-2">
               <span className="text-muted-foreground">Joined</span>
-              <span className="tabular-nums">{new Date(u.created_at).toLocaleString()}</span>
+              <span className="tabular-nums">
+                {formatDate(u.created_at, "en-IN", { dateStyle: "medium", timeStyle: "short" })}
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -323,7 +326,7 @@ export default function DashboardUserDetailPage() {
                 {logs.map((row, idx) => (
                   <tr key={`${row.created_at}-${idx}`} className="border-b border-border/60 last:border-0">
                     <td className="py-1.5 pr-2 whitespace-nowrap tabular-nums">
-                      {new Date(row.created_at).toLocaleString()}
+                      {formatDate(row.created_at, "en-IN", { dateStyle: "medium", timeStyle: "short" })}
                     </td>
                     <td className="py-1.5 pr-2">{row.category}</td>
                     <td className="py-1.5 pr-2">{row.method}</td>

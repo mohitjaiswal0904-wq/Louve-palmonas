@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { formatDate } from "@/utils/format";
 
 function isUnauthorized(err: unknown): boolean {
   return typeof err === "object" && err !== null && "status" in err && (err as { status: number }).status === 401;
@@ -133,7 +134,7 @@ export default function DashboardUsersPage() {
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {u.status} · joined {new Date(u.created_at).toLocaleDateString()}
+                  {u.status} · joined {formatDate(u.created_at, "en-IN")}
                 </p>
                 <div className="flex flex-col gap-2">
                   <Link
@@ -211,7 +212,7 @@ export default function DashboardUsersPage() {
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-xs">{u.status}</td>
                   <td className="whitespace-nowrap px-4 py-3 text-xs tabular-nums">
-                    {new Date(u.created_at).toLocaleDateString()}
+                    {formatDate(u.created_at, "en-IN")}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">
                     <Link

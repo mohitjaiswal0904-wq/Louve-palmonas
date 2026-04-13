@@ -5,6 +5,7 @@ import { createCsrApiClient } from "@/lib/client";
 import * as adminService from "@/services/admin.service";
 import type { AnalyticsOverviewResponse } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDate } from "@/utils/format";
 import { Button } from "@/components/ui/button";
 import {
   ResponsiveContainer,
@@ -258,7 +259,7 @@ export default function AnalyticsPage() {
 
 function fmtDate(dateStr: string) {
   try {
-    return new Date(dateStr).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+    return formatDate(dateStr, "en-IN", { day: "numeric", month: "short" });
   } catch {
     return dateStr;
   }

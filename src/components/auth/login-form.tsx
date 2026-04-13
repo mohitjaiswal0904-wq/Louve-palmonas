@@ -5,6 +5,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks";
+import { peekReturnUrlFromWindow } from "@/lib/auth/return-url";
 
 import { AuthCard } from "./auth-card";
 import { ProfileCompleteForm } from "./profile-complete-form";
@@ -40,7 +41,7 @@ export function LoginForm() {
     setError("");
     setSubmitting(true);
     try {
-      await verifyOTP({ phone, code });
+      await verifyOTP({ phone, code }, { returnTo: peekReturnUrlFromWindow() });
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Invalid OTP");
     } finally {

@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createCsrApiClient } from "@/lib/client";
+import { buildLoginHref } from "@/lib/auth/return-url";
 import * as adminService from "@/services/admin.service";
 import type { AnalyticsOverviewResponse, DashboardStatsResponse } from "@/types";
 import {
@@ -47,6 +48,7 @@ function isUnauthorized(err: unknown): boolean {
 }
 
 export default function DashboardPage() {
+  const pathname = usePathname();
   const router = useRouter();
   const client = useMemo(() => createCsrApiClient(), []);
   const [stats, setStats] = useState<DashboardStatsResponse | null>(null);
@@ -63,10 +65,10 @@ export default function DashboardPage() {
         if (analyticsRes.success && analyticsRes.data) setAnalytics(analyticsRes.data);
       })
       .catch((err: unknown) => {
-        if (isUnauthorized(err)) router.replace("/auth/login");
+        if (isUnauthorized(err)) router.replace(buildLoginHref(pathname || "/dashboard"));
       })
       .finally(() => setLoading(false));
-  }, [client, router]);
+  }, [client, router, pathname]);
 
   if (loading) {
     return (

@@ -12,11 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/hooks";
-import { useMessages } from "@/hooks";
+import { useAuth, useLoginGate, useMessages } from "@/hooks";
 
 export function UserMenu() {
   const { user, loading, logout } = useAuth();
+  const { openLogin } = useLoginGate();
   const router = useRouter();
   const m = useMessages();
   const u = m.navigation.userMenu;
@@ -43,7 +43,7 @@ export function UserMenu() {
           <User className="size-5 stroke-[1.5]" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" sideOffset={8} className="w-[min(100vw-2rem,13rem)]">
-          <DropdownMenuItem className="cursor-pointer" onClick={() => go("/auth/login")}>
+          <DropdownMenuItem className="cursor-pointer" onClick={() => openLogin()}>
             <User className="mr-2 size-4 shrink-0" />
             Sign in
           </DropdownMenuItem>

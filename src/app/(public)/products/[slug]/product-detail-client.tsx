@@ -9,7 +9,7 @@ import { ShieldCheck, Truck, RefreshCw, Award } from "lucide-react";
 import { ProductGrid } from "@/components/catalog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useAuth, useCatalog, useMessages, useCart } from "@/hooks";
+import { useAuth, useCatalog, useCart, useLoginGate, useMessages } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { ProductDetailDTO, ProductDTO } from "@/types";
 
@@ -18,6 +18,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
   const catalog = useCatalog();
   const cart = useCart();
   const { user } = useAuth();
+  const { openLogin } = useLoginGate();
   const router = useRouter();
 
   const [product, setProduct] = useState<ProductDetailDTO | null>(null);
@@ -83,7 +84,7 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
   const runAddToCart = async (mode: "add" | "buy") => {
     if (!variant?.available || cartBusy) return;
     if (!user) {
-      router.push("/auth/login");
+      openLogin();
       return;
     }
     setCartError(null);

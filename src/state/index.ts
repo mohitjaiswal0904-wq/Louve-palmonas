@@ -1,6 +1,6 @@
 export { LocaleProvider, useLocaleState } from "./locale.state";
 export { AuthProvider, useAuthState } from "./auth.state";
-export type { AuthStateValue } from "./auth.state";
+export type { AuthRedirectOptions, AuthStateValue } from "./auth.state";
 export { CatalogProvider, useCatalogState } from "./catalog.state";
 export type { CatalogStateValue } from "./catalog.state";
 export { SearchProvider, useSearchState } from "./search.state";

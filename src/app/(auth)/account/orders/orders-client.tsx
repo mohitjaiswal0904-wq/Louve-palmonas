@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { PaginationBar } from "@/components/catalog/pagination-bar";
 import { Button } from "@/components/ui/button";
 import { useAuth, useMessages, useOrder } from "@/hooks";
+import { buildLoginHref } from "@/lib/auth/return-url";
 import { cn } from "@/lib/utils";
 import type { OrderSummaryDTO, Pagination } from "@/types";
 
@@ -88,7 +89,7 @@ export default function OrdersClient() {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      router.replace("/auth/login");
+      router.replace(buildLoginHref("/account/orders"));
     }
   }, [authLoading, user, router]);
 

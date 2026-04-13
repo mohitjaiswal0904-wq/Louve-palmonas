@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 
 import { createCsrApiClient } from "@/lib/client";
+import { sanitizeReturnPath } from "@/lib/auth/return-url";
 import * as authService from "@/services/auth.service";
 import type {
   SendOTPRequest,
@@ -21,19 +22,25 @@ import type {
   UserResponse,
 } from "@/types";
 
+export type AuthRedirectOptions = { returnTo?: string };
+
 export type AuthStateValue = {
   user: UserResponse | null;
   loading: boolean;
   isNewUser: boolean;
   sendOTP: (data: SendOTPRequest) => Promise<void>;
-  verifyOTP: (data: VerifyOTPRequest) => Promise<void>;
+  verifyOTP: (data: VerifyOTPRequest, redirect?: AuthRedirectOptions) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
-  updateProfile: (data: UpdateProfileRequest) => Promise<void>;
+  updateProfile: (data: UpdateProfileRequest, redirect?: AuthRedirectOptions) => Promise<void>;
   clearNewUser: () => void;
 };
 
 const AuthStateContext = createContext<AuthStateValue | null>(null);
+
+function resolvePostAuthPath(explicit?: string): string {
+  return sanitizeReturnPath(explicit) ?? "/";
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserResponse | null>(null);
@@ -81,14 +88,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const verifyOTP = useCallback(
-    async (data: VerifyOTPRequest) => {
+    async (data: VerifyOTPRequest, redirect?: AuthRedirectOptions) => {
       const res = await authService.verifyOTP(client, data);
       if (res.success && res.data) {
         setUser(res.data.user);
         if (res.data.is_new_user) {
           setIsNewUser(true);
         } else {
-          router.push("/");
+          router.push(resolvePostAuthPath(redirect?.returnTo));
           router.refresh();
         }
       }
@@ -105,13 +112,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [client, router]);
 
   const updateProfileFn = useCallback(
-    async (data: UpdateProfileRequest) => {
+    async (data: UpdateProfileRequest, redirect?: AuthRedirectOptions) => {
       const res = await authService.updateProfile(client, data);
       if (res.success && res.data) {
         setUser(res.data);
       }
       setIsNewUser(false);
-      router.push("/");
+      router.push(resolvePostAuthPath(redirect?.returnTo));
       router.refresh();
     },
     [client, router],

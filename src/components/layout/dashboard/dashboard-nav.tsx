@@ -8,6 +8,7 @@ import {
   Box,
   Database,
   LayoutDashboard,
+  LineChart,
   ShoppingCart,
   TrendingUp,
   Users,
@@ -18,6 +19,7 @@ import { cn } from "@/lib/utils";
 export const DASHBOARD_NAV = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Analytics", href: "/dashboard/analytics", icon: TrendingUp },
+  { label: "Sessions over time", href: "/dashboard/sessions", icon: LineChart },
   { label: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
   { label: "Users", href: "/dashboard/users", icon: Users },
   { label: "Products", href: "/dashboard/products", icon: Box },

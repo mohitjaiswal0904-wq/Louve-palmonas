@@ -8,6 +8,7 @@ import { buildLoginHref } from "@/lib/auth/return-url";
 import * as adminService from "@/services/admin.service";
 import type { AdminUserResponse } from "@/types";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
@@ -112,7 +113,9 @@ export default function DashboardUsersPage() {
               <CardContent className="space-y-3 pt-4">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="font-mono text-xs text-muted-foreground">ID {u.id}</p>
+                    <p className="font-mono text-xs text-muted-foreground">
+                      {u.user_code ?? `LV${String(u.id).padStart(7, "0")}`}
+                    </p>
                     <p className="mt-1 font-mono text-sm">{u.phone}</p>
                     <p className="mt-0.5 truncate text-sm">
                       {u.profile?.display_name ?? "—"}
@@ -132,15 +135,23 @@ export default function DashboardUsersPage() {
                 <p className="text-xs text-muted-foreground">
                   {u.status} · joined {new Date(u.created_at).toLocaleDateString()}
                 </p>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  className="min-h-10 w-full"
-                  onClick={() => void handleRoleToggle(u)}
-                >
-                  {u.role === "admin" ? "Revoke admin" : "Make admin"}
-                </Button>
+                <div className="flex flex-col gap-2">
+                  <Link
+                    href={`/dashboard/users/${u.id}`}
+                    className="flex min-h-10 w-full items-center justify-center rounded-md bg-secondary px-3 text-sm font-medium text-secondary-foreground hover:bg-secondary/90"
+                  >
+                    View details
+                  </Link>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="min-h-10 w-full"
+                    onClick={() => void handleRoleToggle(u)}
+                  >
+                    {u.role === "admin" ? "Revoke admin" : "Make admin"}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))
@@ -151,26 +162,27 @@ export default function DashboardUsersPage() {
         <table className="w-full min-w-[860px] text-sm">
           <thead>
             <tr className="border-b text-left text-xs uppercase tracking-wide text-muted-foreground">
-              <th className="whitespace-nowrap px-4 py-3 font-medium">ID</th>
+              <th className="whitespace-nowrap px-4 py-3 font-medium">User code</th>
               <th className="whitespace-nowrap px-4 py-3 font-medium">Phone</th>
               <th className="whitespace-nowrap px-4 py-3 font-medium">Name</th>
               <th className="whitespace-nowrap px-4 py-3 font-medium">Email</th>
               <th className="whitespace-nowrap px-4 py-3 font-medium">Role</th>
               <th className="whitespace-nowrap px-4 py-3 font-medium">Status</th>
               <th className="whitespace-nowrap px-4 py-3 font-medium">Joined</th>
+              <th className="whitespace-nowrap px-4 py-3 font-medium">View</th>
               <th className="whitespace-nowrap px-4 py-3 font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
+                <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
                   Loading...
                 </td>
               </tr>
             ) : users.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-muted-foreground">
+                <td colSpan={9} className="px-4 py-10 text-center text-muted-foreground">
                   No users found.
                 </td>
               </tr>
@@ -180,7 +192,9 @@ export default function DashboardUsersPage() {
                   key={u.id}
                   className="border-b last:border-0 hover:bg-muted/40 dark:hover:bg-zinc-800/30"
                 >
-                  <td className="whitespace-nowrap px-4 py-3 tabular-nums">{u.id}</td>
+                  <td className="whitespace-nowrap px-4 py-3 font-mono text-xs">
+                    {u.user_code ?? `LV${String(u.id).padStart(7, "0")}`}
+                  </td>
                   <td className="whitespace-nowrap px-4 py-3 font-mono text-xs">{u.phone}</td>
                   <td className="max-w-[8rem] truncate px-4 py-3">{u.profile?.display_name ?? "—"}</td>
                   <td className="max-w-[10rem] truncate px-4 py-3 text-xs">{u.email ?? "—"}</td>
@@ -198,6 +212,14 @@ export default function DashboardUsersPage() {
                   <td className="whitespace-nowrap px-4 py-3 text-xs">{u.status}</td>
                   <td className="whitespace-nowrap px-4 py-3 text-xs tabular-nums">
                     {new Date(u.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3">
+                    <Link
+                      href={`/dashboard/users/${u.id}`}
+                      className="text-xs font-medium text-primary underline-offset-4 hover:underline"
+                    >
+                      Details
+                    </Link>
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">
                     <Button

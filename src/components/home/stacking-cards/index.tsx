@@ -14,38 +14,35 @@ import { CardData } from "./types";
 import { useStackScroll } from "./use-stack-scroll";
 
 export function HomeStackingCards() {
-  const m = useMessages();
-  const { currentIndex } = useStackScroll(9); // Updated to 9 cards
-
   const CARDS: CardData[] = [
     {
       id: "hero",
       component: <CardOne />,
-      bgColor: "bg-black",
-      textColor: "text-white",
+      bgColor: "bg-zinc-100",
+      textColor: "text-zinc-900",
     },
     {
       id: "collection-wolves",
       component: <CardTwo />,
-      bgColor: "bg-[#E5E7EB]",
+      bgColor: "bg-zinc-100",
       textColor: "text-zinc-900",
     },
     {
       id: "collection-rings",
       component: <CardThree />,
-      bgColor: "bg-white",
+      bgColor: "bg-zinc-100",
       textColor: "text-zinc-900",
     },
     {
       id: "feature-side-by-side",
       component: <CardFour />,
-      bgColor: "bg-white",
+      bgColor: "bg-zinc-100",
       textColor: "text-zinc-900",
     },
     {
       id: "feature-cinematic-triptych",
       component: <CardFive />,
-      bgColor: "bg-white",
+      bgColor: "bg-zinc-100",
       textColor: "text-zinc-900",
     },
     {
@@ -57,25 +54,35 @@ export function HomeStackingCards() {
     {
       id: "feature-dual-symmetric",
       component: <CardSeven />,
-      bgColor: "bg-white",
+      bgColor: "bg-zinc-100",
       textColor: "text-zinc-900",
     }
   ];
 
+  const { currentIndex, enteringIndex, exitingIndex } = useStackScroll(
+    CARDS.length,
+  );
+
   return (
-    <div className="relative w-full min-w-0 max-w-full touch-pan-y overflow-x-hidden [overscroll-behavior-x:none]">
+    <div className="relative w-full min-w-0 max-w-full touch-pan-y overflow-x-clip [overscroll-behavior-x:none]">
       {CARDS.map((card, index) => (
         <CardItem
           key={card.id}
-          id={card.id}
           index={index}
-          isActive={index === currentIndex}
+          activeIndex={currentIndex}
+          enteringIndex={enteringIndex}
+          exitingIndex={exitingIndex}
           bgColor={card.bgColor}
           textColor={card.textColor}
         >
           {card.component}
         </CardItem>
       ))}
+      <div
+        className="pointer-events-none w-full shrink-0"
+        style={{ height: `${CARDS.length * 100}vh` }}
+        aria-hidden
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createCsrApiClient } from "@/lib/client";
 import * as adminService from "@/services/admin.service";
 import type { AdminOrderResponse } from "@/types";
@@ -29,7 +30,12 @@ const STATUS_COLORS: Record<string, string> = {
   refunded: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
 };
 
+function isUnauthorized(err: unknown): boolean {
+  return typeof err === "object" && err !== null && "status" in err && (err as { status: number }).status === 401;
+}
+
 export default function DashboardOrdersPage() {
+  const router = useRouter();
   const client = useMemo(() => createCsrApiClient(), []);
   const [orders, setOrders] = useState<AdminOrderResponse[]>([]);
   const [total, setTotal] = useState(0);
@@ -51,9 +57,12 @@ export default function DashboardOrdersPage() {
             setTotalPages(res.data.total_pages);
           }
         })
+        .catch((err: unknown) => {
+          if (isUnauthorized(err)) router.replace("/auth/login");
+        })
         .finally(() => setLoading(false));
     },
-    [client],
+    [client, router],
   );
 
   useEffect(() => {

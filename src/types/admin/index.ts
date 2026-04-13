@@ -209,3 +209,43 @@ export type SessionOverviewResponse = {
   by_hour_of_day: SessionHourOfDayPoint[];
   by_category: SessionCategoryShare[];
 };
+
+export type SessionGeoMapPoint = {
+  lat: number;
+  lon: number;
+  weight: number;
+  label: string;
+};
+
+export type SessionGeoCountryBucket = {
+  country_code: string;
+  country_name: string;
+  events: number;
+  unique_users: number;
+};
+
+export type SessionGeoRegionBucket = {
+  country_code: string;
+  region_name: string;
+  events: number;
+  unique_users: number;
+};
+
+export type SessionGeoCityRow = {
+  city: string;
+  region_name?: string;
+  country_code: string;
+  events: number;
+};
+
+export type SessionGeoOverviewResponse = {
+  period_days: number;
+  total_events: number;
+  with_coordinates: number;
+  without_coordinates: number;
+  unique_users: number;
+  map_points: SessionGeoMapPoint[];
+  by_country: SessionGeoCountryBucket[];
+  by_region_india: SessionGeoRegionBucket[];
+  top_cities: SessionGeoCityRow[];
+};

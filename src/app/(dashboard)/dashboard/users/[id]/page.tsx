@@ -15,6 +15,14 @@ function isUnauthorized(err: unknown): boolean {
   return typeof err === "object" && err !== null && "status" in err && (err as { status: number }).status === 401;
 }
 
+function httpStatus(err: unknown): number {
+  if (typeof err === "object" && err !== null && "status" in err) {
+    const s = (err as { status: number }).status;
+    return typeof s === "number" ? s : 0;
+  }
+  return 0;
+}
+
 export default function DashboardUserDetailPage() {
   const { id } = useParams<{ id: string }>();
   const pathname = usePathname();
@@ -25,6 +33,7 @@ export default function DashboardUserDetailPage() {
   const [logPage, setLogPage] = useState(1);
   const [logTotalPages, setLogTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [logsLoading, setLogsLoading] = useState(false);
 
   const userId = Number(id);
@@ -50,19 +59,46 @@ export default function DashboardUserDetailPage() {
   useEffect(() => {
     if (!id || Number.isNaN(userId)) return;
     setLoading(true);
+    setLoadError(null);
     adminService
       .getUserInsights(client, userId)
       .then((res) => {
         if (res.success && res.data) setData(res.data);
+        else setLoadError("Unexpected response from server.");
       })
       .catch((err: unknown) => {
         if (isUnauthorized(err)) router.replace(buildLoginHref(pathname || "/dashboard/users"));
+        else if (httpStatus(err) === 404) {
+          const msg = err instanceof Error ? err.message : "Not found.";
+          setLoadError(
+            msg.toLowerCase().includes("endpoint not found")
+              ? "This route is not registered on the API process you are hitting. Rebuild and restart the Louve backend, then try again."
+              : msg,
+          );
+        } else {
+          setLoadError(err instanceof Error ? err.message : "Could not load user.");
+        }
       })
       .finally(() => setLoading(false));
     loadLogs(1);
   }, [client, id, userId, pathname, router]);
 
-  if (loading || !data) {
+  if (!id || Number.isNaN(userId)) {
+    return (
+      <div className="space-y-4">
+        <Link
+          href="/dashboard/users"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="size-4" />
+          Back to users
+        </Link>
+        <p className="text-sm text-muted-foreground">Invalid user id in URL.</p>
+      </div>
+    );
+  }
+
+  if (loading) {
     return (
       <div className="space-y-4">
         <div className="h-8 w-56 animate-pulse rounded-md bg-zinc-200/80 dark:bg-zinc-800" />
@@ -71,6 +107,34 @@ export default function DashboardUserDetailPage() {
             <div key={i} className="h-24 animate-pulse rounded-xl bg-zinc-200/80 dark:bg-zinc-800" />
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (loadError || !data) {
+    return (
+      <div className="space-y-4">
+        <Link
+          href="/dashboard/users"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="size-4" />
+          Back to users
+        </Link>
+        <Card className="shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-base">Could not load user</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-muted-foreground">
+            <p>{loadError ?? "No data returned."}</p>
+            <Link
+              href="/dashboard/users"
+              className="inline-flex h-9 items-center rounded-md border border-input bg-background px-3 text-sm font-medium shadow-sm hover:bg-muted"
+            >
+              Return to user list
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     );
   }

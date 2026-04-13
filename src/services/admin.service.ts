@@ -12,6 +12,7 @@ import type {
   UserInsightsResponse,
   UserSessionLogsResponse,
   SessionOverviewResponse,
+  SessionGeoOverviewResponse,
 } from "@/types";
 
 export async function getDashboardStats(client: ApiClient) {
@@ -94,6 +95,13 @@ export async function getSessionOverview(client: ApiClient, days = 7) {
   const d = Math.min(90, Math.max(1, days));
   return client.get<ApiResponse<SessionOverviewResponse>>(
     `/api/v1/admin/analytics/sessions?days=${d}`,
+  );
+}
+
+export async function getSessionGeoOverview(client: ApiClient, days = 7) {
+  const d = Math.min(90, Math.max(1, days));
+  return client.get<ApiResponse<SessionGeoOverviewResponse>>(
+    `/api/v1/admin/analytics/session-geo?days=${d}`,
   );
 }
 

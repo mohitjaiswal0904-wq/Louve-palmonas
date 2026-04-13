@@ -18,7 +18,7 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { Globe2, MousePointerClick, UserCheck, Users } from "lucide-react";
+import { Globe2, MapPinned, MousePointerClick, UserCheck, Users } from "lucide-react";
 
 import { createCsrApiClient } from "@/lib/client";
 import { buildLoginHref } from "@/lib/auth/return-url";
@@ -26,6 +26,8 @@ import * as adminService from "@/services/admin.service";
 import type { SessionOverviewResponse } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SessionGeoPanel } from "./session-geo-panel";
+
 const PERIOD_OPTIONS = [7, 14, 30, 90] as const;
 
 const CATEGORY_COLORS = [
@@ -56,6 +58,7 @@ export default function DashboardSessionsPage() {
   const [days, setDays] = useState<number>(7);
   const [data, setData] = useState<SessionOverviewResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<"traffic" | "geo">("traffic");
 
   const load = useCallback(
     (d: number) => {
@@ -77,7 +80,7 @@ export default function DashboardSessionsPage() {
     load(days);
   }, [load, days]);
 
-  if (loading && !data) {
+  if (loading && !data && view === "traffic") {
     return (
       <div className="space-y-6">
         <div className="h-8 w-64 animate-pulse rounded-md bg-zinc-200/80 dark:bg-zinc-800" />
@@ -87,6 +90,38 @@ export default function DashboardSessionsPage() {
           ))}
         </div>
         <div className="h-80 animate-pulse rounded-xl bg-zinc-200/80 dark:bg-zinc-800" />
+      </div>
+    );
+  }
+
+  if (view === "geo") {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Sessions</h2>
+            <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+              API traffic charts and signed-in geography from stored session activity.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="gap-1.5"
+              onClick={() => setView("traffic")}
+            >
+              <MousePointerClick className="size-3.5" aria-hidden />
+              API traffic
+            </Button>
+            <Button type="button" size="sm" variant="default" className="gap-1.5">
+              <MapPinned className="size-3.5" aria-hidden />
+              Geography
+            </Button>
+          </div>
+        </div>
+        <SessionGeoPanel days={days} onDaysChange={setDays} />
       </div>
     );
   }
@@ -118,19 +153,37 @@ export default function DashboardSessionsPage() {
             logs). Compare volume, unique IPs, and signed-in activity—similar to Shopify admin analytics.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {PERIOD_OPTIONS.map((d) => (
+        <div className="flex flex-col items-stretch gap-2 sm:items-end">
+          <div className="flex flex-wrap justify-end gap-2">
+            <Button type="button" size="sm" variant="default" className="gap-1.5">
+              <MousePointerClick className="size-3.5" aria-hidden />
+              API traffic
+            </Button>
             <Button
-              key={d}
               type="button"
               size="sm"
-              variant={days === d ? "default" : "outline"}
-              className="min-h-9"
-              onClick={() => setDays(d)}
+              variant="outline"
+              className="gap-1.5"
+              onClick={() => setView("geo")}
             >
-              {d}d
+              <MapPinned className="size-3.5" aria-hidden />
+              Geography
             </Button>
-          ))}
+          </div>
+          <div className="flex flex-wrap justify-end gap-2">
+            {PERIOD_OPTIONS.map((d) => (
+              <Button
+                key={d}
+                type="button"
+                size="sm"
+                variant={days === d ? "default" : "outline"}
+                className="min-h-9"
+                onClick={() => setDays(d)}
+              >
+                {d}d
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 

@@ -37,3 +37,8 @@ export function getServerApiBaseUrl(): string {
 export function getRazorpayKeyId(): string {
   return process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? "";
 }
+
+/** Mapbox GL token for admin session geography map (public token, URL-restricted in Mapbox). */
+export function getMapboxAccessToken(): string {
+  return process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN?.trim() ?? "";
+}

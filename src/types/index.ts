@@ -139,4 +139,9 @@ export type {
   SessionTrafficPoint,
   SessionCategoryShare,
   SessionHourOfDayPoint,
+  SessionGeoOverviewResponse,
+  SessionGeoMapPoint,
+  SessionGeoCountryBucket,
+  SessionGeoRegionBucket,
+  SessionGeoCityRow,
 } from "./admin";

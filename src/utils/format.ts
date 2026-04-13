@@ -1,6 +1,8 @@
 import type { AppLocale } from "@/types/config";
 import type { Money } from "@/types";
 
+import { APP_TIME_ZONE } from "@/lib/datetime";
+
 import { CURRENCY_DECIMALS, parseMoneyAmount } from "./money-core";
 import { resolveIntlLocale } from "./locale";
 
@@ -75,7 +77,10 @@ export function formatDate(
 ): string {
   const d = input instanceof Date ? input : new Date(input);
   if (Number.isNaN(d.getTime())) return "";
-  return new Intl.DateTimeFormat(resolveIntlLocale(locale), options).format(d);
+  return new Intl.DateTimeFormat(resolveIntlLocale(locale), {
+    timeZone: APP_TIME_ZONE,
+    ...options,
+  }).format(d);
 }
 
 export function formatTime(
@@ -86,7 +91,12 @@ export function formatTime(
     minute: "2-digit",
   },
 ): string {
-  return formatDate(input, locale, options);
+  const d = input instanceof Date ? input : new Date(input);
+  if (Number.isNaN(d.getTime())) return "";
+  return new Intl.DateTimeFormat(resolveIntlLocale(locale), {
+    timeZone: APP_TIME_ZONE,
+    ...options,
+  }).format(d);
 }
 
 const UNITS: { unit: Intl.RelativeTimeFormatUnit; ms: number }[] = [

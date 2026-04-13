@@ -8,6 +8,7 @@ import type { AdminOrderResponse } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
+import { formatDate } from "@/utils/format";
 
 const ALL_STATUSES = [
   "pending",
@@ -110,7 +111,7 @@ export default function DashboardOrderDetailPage() {
             {order.user_id != null ? ` · customer #${order.user_id}` : ""}
           </p>
           <p className="mt-0.5 text-sm text-muted-foreground">
-            Placed {new Date(order.created_at).toLocaleString()}
+            Placed {formatDate(order.created_at, "en-IN", { dateStyle: "medium", timeStyle: "short" })}
           </p>
         </div>
       </div>

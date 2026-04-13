@@ -140,6 +140,11 @@ export const messages = {
     searching: "검색 중…",
     productNotFound: "제품을 찾을 수 없습니다.",
     similarProducts: "이런 상품은 어떠세요",
+    addToCart: "장바구니에 담기",
+    addingToCart: "담는 중…",
+    buyNow: "바로 구매",
+    signInToAddToCart: "장바구니에 담으려면 로그인하세요",
+    variantUnavailable: "이 옵션은 사용할 수 없습니다.",
   },
   errors: {
     errorTitle: "문제가 발생했습니다",

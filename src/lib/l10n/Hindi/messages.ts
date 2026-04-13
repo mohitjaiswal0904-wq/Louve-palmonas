@@ -140,6 +140,11 @@ export const messages = {
     searching: "खोज रहे हैं…",
     productNotFound: "उत्पाद नहीं मिला।",
     similarProducts: "आपको यह भी पसंद आ सकता है",
+    addToCart: "कार्ट में जोड़ें",
+    addingToCart: "जोड़ा जा रहा है…",
+    buyNow: "अभी खरीदें",
+    signInToAddToCart: "कार्ट में जोड़ने के लिए साइन इन करें",
+    variantUnavailable: "यह विकल्प उपलब्ध नहीं है।",
   },
   errors: {
     errorTitle: "कुछ गलत हो गया",

@@ -2,10 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ShoppingBag } from "lucide-react";
 
-import { useMessages } from "@/hooks";
+import { Button } from "@/components/ui/button";
+import { useAuth, useCart, useMessages } from "@/hooks";
 import { cn } from "@/lib/utils";
-import type { ProductDTO } from "@/types";
+import type { ProductDTO, VariantDTO } from "@/types";
 
 export type CardSize = "sm" | "md" | "lg" | "showcase";
 
@@ -72,6 +76,36 @@ const priceSize: Record<Exclude<CardSize, "showcase">, string> = {
 
 export function ProductCard({ product, size = "lg", inGrid = true }: ProductCardProps) {
   const m = useMessages();
+  const router = useRouter();
+  const { user } = useAuth();
+  const { addToCart } = useCart();
+  const [adding, setAdding] = useState(false);
+
+  const cartVariant = useMemo(() => pickVariantForCart(product), [product]);
+
+  const handleAddClick = useCallback(
+    async (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (!cartVariant || adding) return;
+      if (!user) {
+        router.push("/auth/login");
+        return;
+      }
+      setAdding(true);
+      try {
+        await addToCart({
+          product_id: product.id,
+          variant_id: cartVariant.id,
+          quantity: 1,
+        });
+      } catch {
+        /* API client throws; cart count unchanged */
+      } finally {
+        setAdding(false);
+      }
+    },
+    [addToCart, adding, cartVariant, product.id, router, user],
+  );
 
   const hasDiscount =
     product.compare_at_price &&
@@ -84,11 +118,12 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
   const tSz = size === "showcase" ? showcaseTitle : titleSize[size];
   const pSz = size === "showcase" ? showcasePrice : priceSize[size];
 
+  const productHref = `/products/${product.handle}`;
+
   return (
-    <Link
-      href={`/products/${product.handle}`}
+    <article
       className={cn(
-        "group flex min-w-0 flex-col bg-white outline-none transition-[box-shadow,background-color] duration-300",
+        "group flex min-w-0 flex-col bg-white transition-[box-shadow,background-color] duration-300",
         "hover:bg-zinc-50/80 dark:bg-zinc-950 dark:hover:bg-zinc-900/40",
         inGrid ? "h-full" : "overflow-hidden rounded-md border border-[#F6F1E9] dark:border-zinc-800",
       )}
@@ -99,28 +134,51 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
           imgPad,
         )}
       >
-        {product.image ? (
-          <Image
-            src={product.image.src}
-            alt={product.image.alt || product.title}
-            fill
-            sizes={imgSz}
-            className="object-contain object-center drop-shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-transform duration-500 ease-out dark:drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
-            {m.catalog.noImage}
-          </div>
-        )}
-        {/* {hasDiscount && (
-          <span className="absolute left-2 top-2 bg-[var(--louve-primal-rouge)] px-1.5 py-0.5 text-[9px] font-medium tracking-[0.12em] text-white">
-            {m.catalog.sale}
-          </span>
-        )} */}
-        {/* Wishlist heart hidden — /wishlist redirects to /cart */}
+        <Link
+          href={productHref}
+          className="absolute inset-0 block outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          {product.image ? (
+            <Image
+              src={product.image.src}
+              alt={product.image.alt || product.title}
+              fill
+              sizes={imgSz}
+              className="object-contain object-center drop-shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-transform duration-500 ease-out group-hover:scale-[1.02] dark:drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
+            />
+          ) : (
+            <span className="flex h-full items-center justify-center text-xs text-muted-foreground">
+              {m.catalog.noImage}
+            </span>
+          )}
+        </Link>
+        {cartVariant ? (
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            className={cn(
+              "absolute bottom-2 right-2 z-10 h-9 w-9 rounded-full border border-zinc-200/90 bg-white/95 shadow-md backdrop-blur-sm",
+              "hover:bg-white dark:border-zinc-600 dark:bg-zinc-900/95 dark:hover:bg-zinc-800",
+              size === "showcase" && "bottom-3 right-3 h-10 w-10 sm:bottom-4 sm:right-4",
+            )}
+            disabled={adding}
+            aria-label={m.catalog.addToCart}
+            title={user ? m.catalog.addToCart : m.catalog.signInToAddToCart}
+            onClick={handleAddClick}
+          >
+            <ShoppingBag className="size-4" aria-hidden />
+          </Button>
+        ) : null}
       </div>
 
-      <div className={cn("flex flex-1 flex-col border-t border-[#F6F1E9] bg-white dark:border-zinc-800 dark:bg-zinc-950", cpPad)}>
+      <Link
+        href={productHref}
+        className={cn(
+          "flex min-h-0 flex-1 flex-col border-t border-[#F6F1E9] bg-white outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 dark:border-zinc-800 dark:bg-zinc-950",
+          cpPad,
+        )}
+      >
         <p className={cn("mb-1 font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500", vSz)}>
           {product.vendor}
         </p>
@@ -137,9 +195,15 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
             </span>
           )}
         </div>
-      </div>
-    </Link>
+      </Link>
+    </article>
   );
+}
+
+/** First in-stock variant for quick add from listing cards (requires `variants` on product). */
+function pickVariantForCart(product: ProductDTO): VariantDTO | null {
+  const variants = product.variants ?? [];
+  return variants.find((v) => v.available) ?? null;
 }
 
 function formatMoney(amount: string, currency: string): string {

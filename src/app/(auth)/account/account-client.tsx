@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { ProfileView } from "@/components/auth";
 import { useAuth } from "@/hooks";
+import { buildLoginHref } from "@/lib/auth/return-url";
 
 export default function AccountClient() {
   const { user, loading } = useAuth();
@@ -12,7 +13,7 @@ export default function AccountClient() {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.replace("/auth/login");
+      router.replace(buildLoginHref("/account"));
     }
   }, [loading, user, router]);
 

@@ -2,14 +2,22 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { createCsrApiClient } from "@/lib/client";
+import { buildLoginHref } from "@/lib/auth/return-url";
 import * as adminService from "@/services/admin.service";
 import type { AdminUserResponse } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
+function isUnauthorized(err: unknown): boolean {
+  return typeof err === "object" && err !== null && "status" in err && (err as { status: number }).status === 401;
+}
+
 export default function DashboardUsersPage() {
+  const pathname = usePathname();
+  const router = useRouter();
   const client = useMemo(() => createCsrApiClient(), []);
   const [users, setUsers] = useState<AdminUserResponse[]>([]);
   const [total, setTotal] = useState(0);
@@ -31,9 +39,12 @@ export default function DashboardUsersPage() {
             setTotalPages(res.data.total_pages);
           }
         })
+        .catch((err: unknown) => {
+          if (isUnauthorized(err)) router.replace(buildLoginHref(pathname || "/dashboard/users"));
+        })
         .finally(() => setLoading(false));
     },
-    [client],
+    [client, router, pathname],
   );
 
   useEffect(() => {
@@ -47,11 +58,15 @@ export default function DashboardUsersPage() {
 
   async function handleRoleToggle(userRow: AdminUserResponse) {
     const newRole = userRow.role === "admin" ? "customer" : "admin";
-    const res = await adminService.updateUserRole(client, userRow.id, newRole);
-    if (res.success) {
-      setUsers((prev) =>
-        prev.map((u) => (u.id === userRow.id ? { ...u, role: newRole } : u)),
-      );
+    try {
+      const res = await adminService.updateUserRole(client, userRow.id, newRole);
+      if (res.success) {
+        setUsers((prev) =>
+          prev.map((u) => (u.id === userRow.id ? { ...u, role: newRole } : u)),
+        );
+      }
+    } catch (err: unknown) {
+      if (isUnauthorized(err)) router.replace(buildLoginHref(pathname || "/dashboard/users"));
     }
   }
 

@@ -1,14 +1,17 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks";
+import { peekReturnUrlFromWindow } from "@/lib/auth/return-url";
 
 import { AuthCard } from "./auth-card";
 
 export function ProfileCompleteForm() {
+  const router = useRouter();
   const { updateProfile, clearNewUser } = useAuth();
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,10 +23,13 @@ export function ProfileCompleteForm() {
     setError("");
     setSubmitting(true);
     try {
-      await updateProfile({
-        display_name: displayName || undefined,
-        email: email || undefined,
-      });
+      await updateProfile(
+        {
+          display_name: displayName || undefined,
+          email: email || undefined,
+        },
+        { returnTo: peekReturnUrlFromWindow() },
+      );
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -84,7 +90,12 @@ export function ProfileCompleteForm() {
         <div className="text-center">
           <button
             type="button"
-            onClick={() => { clearNewUser(); window.location.href = "/"; }}
+            onClick={() => {
+              clearNewUser();
+              const dest = peekReturnUrlFromWindow() ?? "/";
+              router.push(dest);
+              router.refresh();
+            }}
             className="text-xs text-muted-foreground hover:text-zinc-900 dark:hover:text-zinc-50"
           >
             Skip for now

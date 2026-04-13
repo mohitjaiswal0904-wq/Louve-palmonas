@@ -184,6 +184,11 @@ export type AppMessages = {
     searching: string;
     productNotFound: string;
     similarProducts: string;
+    addToCart: string;
+    addingToCart: string;
+    buyNow: string;
+    signInToAddToCart: string;
+    variantUnavailable: string;
   };
   pages: PagesMessages;
   homeFeature: HomeFeatureMessages;

@@ -140,6 +140,11 @@ export const messages = {
     searching: "Suche läuft …",
     productNotFound: "Produkt nicht gefunden.",
     similarProducts: "Das könnte Ihnen auch gefallen",
+    addToCart: "In den Warenkorb",
+    addingToCart: "Wird hinzugefügt…",
+    buyNow: "Jetzt kaufen",
+    signInToAddToCart: "Melden Sie sich an, um Artikel in den Warenkorb zu legen",
+    variantUnavailable: "Diese Option ist nicht verfügbar.",
   },
   errors: {
     errorTitle: "Etwas ist schiefgelaufen",

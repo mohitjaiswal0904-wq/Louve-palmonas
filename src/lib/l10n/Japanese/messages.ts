@@ -140,6 +140,11 @@ export const messages = {
     searching: "検索中…",
     productNotFound: "商品が見つかりません。",
     similarProducts: "こちらもおすすめ",
+    addToCart: "カートに追加",
+    addingToCart: "追加中…",
+    buyNow: "今すぐ購入",
+    signInToAddToCart: "カートに追加するにはログインしてください",
+    variantUnavailable: "このオプションは利用できません。",
   },
   errors: {
     errorTitle: "問題が発生しました",

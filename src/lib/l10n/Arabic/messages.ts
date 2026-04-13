@@ -140,6 +140,11 @@ export const messages = {
     searching: "جاري البحث…",
     productNotFound: "المنتج غير موجود.",
     similarProducts: "قد يعجبك أيضاً",
+    addToCart: "أضف إلى السلة",
+    addingToCart: "جارٍ الإضافة…",
+    buyNow: "اشترِ الآن",
+    signInToAddToCart: "سجّل الدخول لإضافة منتجات إلى السلة",
+    variantUnavailable: "هذا الخيار غير متوفر.",
   },
   errors: {
     errorTitle: "حدث خطأ ما",

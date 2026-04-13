@@ -9,7 +9,7 @@ import { ShieldCheck, Truck, RefreshCw, Award } from "lucide-react";
 import { ProductGrid } from "@/components/catalog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useCatalog, useMessages, useCart } from "@/hooks";
+import { useAuth, useCatalog, useMessages, useCart } from "@/hooks";
 import { cn } from "@/lib/utils";
 import type { ProductDetailDTO, ProductDTO } from "@/types";
 
@@ -17,12 +17,14 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
   const m = useMessages();
   const catalog = useCatalog();
   const cart = useCart();
+  const { user } = useAuth();
   const router = useRouter();
 
   const [product, setProduct] = useState<ProductDetailDTO | null>(null);
   const [similar, setSimilar] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAdding, setIsAdding] = useState(false);
+  const [cartBusy, setCartBusy] = useState<null | "add" | "buy">(null);
+  const [cartError, setCartError] = useState<string | null>(null);
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [selectedSize, setSelectedSize] = useState("7");
   const [activeTab, setActiveTab] = useState(0);
@@ -45,6 +47,12 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
       }
     }).catch(() => { }).finally(() => setLoading(false));
   }, [catalog, handle]);
+
+  useEffect(() => {
+    if (!product?.variants.length) return;
+    const idx = product.variants.findIndex((v) => v.available);
+    setSelectedVariant(idx !== -1 ? idx : 0);
+  }, [product?.id]);
 
   if (loading) {
     return (
@@ -72,20 +80,25 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
 
   const tabs = buildTabs(product, variant);
 
-  const handleBuyNow = async () => {
-    if (!variant || isAdding) return;
-    setIsAdding(true);
+  const runAddToCart = async (mode: "add" | "buy") => {
+    if (!variant?.available || cartBusy) return;
+    if (!user) {
+      router.push("/auth/login");
+      return;
+    }
+    setCartError(null);
+    setCartBusy(mode);
     try {
       await cart.addToCart({
         product_id: product.id,
         variant_id: variant.id,
         quantity: 1,
       });
-      router.push("/cart");
-    } catch (error) {
-      console.error("Failed to add to cart:", error);
+      if (mode === "buy") router.push("/cart");
+    } catch (err: unknown) {
+      setCartError(err instanceof Error ? err.message : "Could not update cart");
     } finally {
-      setIsAdding(false);
+      setCartBusy(null);
     }
   };
 
@@ -181,18 +194,38 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
             </div>
 
             {/* CTAs */}
-            <div className="flex flex-col gap-3 pt-4 sm:flex-row">
+            {variant && !variant.available ? (
+              <p className="text-sm text-destructive" role="status">
+                {m.catalog.variantUnavailable}
+              </p>
+            ) : null}
+            {cartError ? (
+              <p className="text-sm text-destructive" role="alert">
+                {cartError}
+              </p>
+            ) : null}
+            <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:flex-wrap">
               <Button
-                onClick={handleBuyNow}
-                disabled={isAdding}
+                type="button"
+                onClick={() => void runAddToCart("add")}
+                disabled={cartBusy !== null || !variant?.available}
+                variant="outline"
+                className="h-14 flex-1 rounded-none border-zinc-900 text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-900"
+              >
+                {cartBusy === "add" ? m.catalog.addingToCart : m.catalog.addToCart}
+              </Button>
+              <Button
+                type="button"
+                onClick={() => void runAddToCart("buy")}
+                disabled={cartBusy !== null || !variant?.available}
                 className="h-14 flex-1 rounded-none bg-[#1A1A1A] text-sm font-medium text-white hover:bg-black"
               >
-                {isAdding ? "Processing..." : "Buy Now"}
+                {cartBusy === "buy" ? m.catalog.addingToCart : m.catalog.buyNow}
               </Button>
-              <Button className="h-14 flex-1 rounded-none bg-[#E5C16C] text-sm font-medium text-black hover:bg-[#D4B05B]">
+              <Button type="button" className="h-14 flex-1 rounded-none bg-[#E5C16C] text-sm font-medium text-black hover:bg-[#D4B05B]">
                 Visit Store
               </Button>
-              <Button variant="outline" className="h-14 flex-1 rounded-none border-zinc-900 text-sm font-medium text-black hover:bg-zinc-50">
+              <Button type="button" variant="outline" className="h-14 flex-1 rounded-none border-zinc-900 text-sm font-medium text-black hover:bg-zinc-50">
                 Talk To An Expert
               </Button>
             </div>

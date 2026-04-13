@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createCsrApiClient } from "@/lib/client";
 import * as adminService from "@/services/admin.service";
 import type { AnalyticsOverviewResponse, DashboardStatsResponse } from "@/types";
@@ -41,7 +42,12 @@ const STATUS_COLORS: Record<string, string> = {
 };
 const PIE_COLORS = ["#3b82f6", "#22c55e", "#eab308", "#a855f7", "#ef4444", "#6366f1", "#71717a"];
 
+function isUnauthorized(err: unknown): boolean {
+  return typeof err === "object" && err !== null && "status" in err && (err as { status: number }).status === 401;
+}
+
 export default function DashboardPage() {
+  const router = useRouter();
   const client = useMemo(() => createCsrApiClient(), []);
   const [stats, setStats] = useState<DashboardStatsResponse | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsOverviewResponse | null>(null);
@@ -56,8 +62,11 @@ export default function DashboardPage() {
         if (statsRes.success && statsRes.data) setStats(statsRes.data);
         if (analyticsRes.success && analyticsRes.data) setAnalytics(analyticsRes.data);
       })
+      .catch((err: unknown) => {
+        if (isUnauthorized(err)) router.replace("/auth/login");
+      })
       .finally(() => setLoading(false));
-  }, [client]);
+  }, [client, router]);
 
   if (loading) {
     return (

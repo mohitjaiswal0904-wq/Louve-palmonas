@@ -22,6 +22,46 @@ const LOGOUT_PATHS = new Set([
 
 const isSecure = process.env.NODE_ENV === "production";
 
+/** BFF must run per-request with real cookies; otherwise `cookies()` can be empty (static/prerender) and upstream gets no Bearer token. */
+export const dynamic = "force-dynamic";
+
+function parseCookieHeader(header: string, name: string): string | undefined {
+  const parts = header.split(";");
+  for (const part of parts) {
+    const idx = part.indexOf("=");
+    if (idx === -1) continue;
+    const key = part.slice(0, idx).trim();
+    if (key !== name) continue;
+    let val = part.slice(idx + 1).trim();
+    try {
+      val = decodeURIComponent(val);
+    } catch {
+      /* keep raw */
+    }
+    return val;
+  }
+  return undefined;
+}
+
+/**
+ * Prefer the raw Cookie header / NextRequest cookies — matches what the browser sent.
+ * Fall back to `cookies()` for parity with Next's mutable response cookie jar.
+ */
+function readAuthCookie(
+  req: NextRequest,
+  jar: Awaited<ReturnType<typeof cookies>>,
+  name: string,
+): string | undefined {
+  const raw = req.headers.get("cookie");
+  if (raw) {
+    const fromHeader = parseCookieHeader(raw, name);
+    if (fromHeader) return fromHeader;
+  }
+  const fromReq = req.cookies.get(name)?.value;
+  if (fromReq) return fromReq;
+  return jar.get(name)?.value;
+}
+
 function upstreamUnavailableResponse() {
   return NextResponse.json(
     {
@@ -51,9 +91,9 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
   // Forward ?query=params — required for catalog filters, search `q`, pagination, etc.
   const search = req.nextUrl.search;
   const backendUrl = `${getServerApiBaseUrl()}${backendPath}${search}`;
-  const store = await cookies();
-  const accessToken = store.get(ACCESS_TOKEN_COOKIE)?.value;
-  const refreshToken = store.get(REFRESH_TOKEN_COOKIE)?.value;
+  const cookieJar = await cookies();
+  const accessToken = readAuthCookie(req, cookieJar, ACCESS_TOKEN_COOKIE);
+  const refreshToken = readAuthCookie(req, cookieJar, REFRESH_TOKEN_COOKIE);
 
   const headers: Record<string, string> = {
     Accept: "application/json",
@@ -95,10 +135,10 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
     if (refreshRes.ok) {
       const refreshJson: ApiResponse<AuthResponse> = await refreshRes.json();
       if (refreshJson.success && refreshJson.data) {
-        store.set(ACCESS_TOKEN_COOKIE, refreshJson.data.access_token, {
+        cookieJar.set(ACCESS_TOKEN_COOKIE, refreshJson.data.access_token, {
           httpOnly: true, secure: isSecure, sameSite: "lax", path: "/", maxAge: ACCESS_TOKEN_MAX_AGE,
         });
-        store.set(REFRESH_TOKEN_COOKIE, refreshJson.data.refresh_token, {
+        cookieJar.set(REFRESH_TOKEN_COOKIE, refreshJson.data.refresh_token, {
           httpOnly: true, secure: isSecure, sameSite: "lax", path: "/", maxAge: REFRESH_TOKEN_MAX_AGE,
         });
 
@@ -110,8 +150,8 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
         res = retry;
       }
     } else {
-      store.delete(ACCESS_TOKEN_COOKIE);
-      store.delete(REFRESH_TOKEN_COOKIE);
+      cookieJar.delete(ACCESS_TOKEN_COOKIE);
+      cookieJar.delete(REFRESH_TOKEN_COOKIE);
     }
   }
 
@@ -120,10 +160,10 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
   if (AUTH_TOKEN_PATHS.has(backendPath) && res.ok) {
     const json: ApiResponse<AuthResponse> = JSON.parse(text);
     if (json.success && json.data) {
-      store.set(ACCESS_TOKEN_COOKIE, json.data.access_token, {
+      cookieJar.set(ACCESS_TOKEN_COOKIE, json.data.access_token, {
         httpOnly: true, secure: isSecure, sameSite: "lax", path: "/", maxAge: ACCESS_TOKEN_MAX_AGE,
       });
-      store.set(REFRESH_TOKEN_COOKIE, json.data.refresh_token, {
+      cookieJar.set(REFRESH_TOKEN_COOKIE, json.data.refresh_token, {
         httpOnly: true, secure: isSecure, sameSite: "lax", path: "/", maxAge: REFRESH_TOKEN_MAX_AGE,
       });
 
@@ -136,8 +176,8 @@ async function proxy(req: NextRequest, { params }: { params: Promise<{ path: str
   }
 
   if (LOGOUT_PATHS.has(backendPath)) {
-    store.delete(ACCESS_TOKEN_COOKIE);
-    store.delete(REFRESH_TOKEN_COOKIE);
+    cookieJar.delete(ACCESS_TOKEN_COOKIE);
+    cookieJar.delete(REFRESH_TOKEN_COOKIE);
   }
 
   return new NextResponse(text || null, {

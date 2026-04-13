@@ -9,10 +9,11 @@ import {
 
 import { createCsrApiClient } from "@/lib/client";
 import * as healthService from "@/services/health.service";
-import type { HealthLiveResult } from "@/types";
+import type { ApiResponse } from "@/types";
+import type { HealthLiveResponse } from "@/types/health";
 
 export type HealthStateValue = {
-  checkLive: () => Promise<HealthLiveResult>;
+  checkLive: () => Promise<ApiResponse<HealthLiveResponse>>;
 };
 
 const HealthStateContext = createContext<HealthStateValue | null>(null);
@@ -22,7 +23,7 @@ export function HealthProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<HealthStateValue>(
     () => ({
-      checkLive: () => healthService.healthCheck(client),
+      checkLive: () => healthService.healthCheckLive(client),
     }),
     [client],
   );

@@ -7,6 +7,7 @@ export type DashboardStatsResponse = {
 
 export type AdminUserResponse = {
   id: number;
+  user_code?: string;
   phone: string;
   email?: string;
   status: string;
@@ -24,6 +25,7 @@ export type AdminUserListResponse = {
 
 export type AdminOrderItemResp = {
   id: number;
+  line_code?: string;
   product_id: number;
   variant_id: number;
   product_title: string;
@@ -49,6 +51,8 @@ export type AdminShippingResponse = {
 
 export type AdminOrderResponse = {
   id: number;
+  order_code?: string;
+  user_code?: string;
   user_id: number;
   order_number: string;
   status: string;
@@ -137,4 +141,71 @@ export type SQLQueryResponse = {
   columns: string[];
   rows: Record<string, unknown>[];
   count: number;
+};
+
+export type SessionLogEntry = {
+  created_at: string;
+  method: string;
+  path: string;
+  query?: string;
+  category: string;
+  client_ip: string;
+  user_code?: string;
+  is_guest: boolean;
+  status_code: number;
+  latency_ms: number;
+  correlation_id?: string;
+};
+
+export type UserSessionLogsResponse = {
+  logs: SessionLogEntry[];
+  total: number;
+  page: number;
+  total_pages: number;
+};
+
+export type UserInsightsResponse = {
+  user: AdminUserResponse;
+  orders_count: number;
+  cart_line_count: number;
+  cart_total_qty: number;
+  wishlist_count: number;
+  address_count: number;
+  api_catalog_product_hits: number;
+  api_collection_hits: number;
+  session_events_count: number;
+  recent_orders: AdminOrderResponse[];
+};
+
+export type SessionTrafficPoint = {
+  bucket: string;
+  label: string;
+  requests: number;
+  unique_ips: number;
+  authenticated_requests?: number;
+  guest_requests?: number;
+};
+
+export type SessionCategoryShare = {
+  category: string;
+  requests: number;
+  percent: number;
+};
+
+export type SessionHourOfDayPoint = {
+  hour: number;
+  requests: number;
+};
+
+export type SessionOverviewResponse = {
+  period_days: number;
+  total_requests: number;
+  unique_ips: number;
+  distinct_users: number;
+  guest_requests: number;
+  avg_requests_per_day: number;
+  by_day: SessionTrafficPoint[];
+  by_hour_recent: SessionTrafficPoint[];
+  by_hour_of_day: SessionHourOfDayPoint[];
+  by_category: SessionCategoryShare[];
 };

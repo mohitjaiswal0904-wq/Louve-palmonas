@@ -9,6 +9,9 @@ import type {
   AnalyticsOverviewResponse,
   CartInsightsResponse,
   SQLQueryResponse,
+  UserInsightsResponse,
+  UserSessionLogsResponse,
+  SessionOverviewResponse,
 } from "@/types";
 
 export async function getDashboardStats(client: ApiClient) {
@@ -28,6 +31,24 @@ export async function updateUserRole(client: ApiClient, userId: number, role: st
   return client.put<ApiResponse<null>>(`/api/v1/admin/users/${userId}/role`, { role });
 }
 
+export async function getUserInsights(client: ApiClient, userId: number) {
+  return client.get<ApiResponse<UserInsightsResponse>>(`/api/v1/admin/users/${userId}/insights`);
+}
+
+export async function getUserSessionLogs(
+  client: ApiClient,
+  userId: number,
+  params: { page?: number; limit?: number } = {},
+) {
+  const qs = new URLSearchParams();
+  if (params.page) qs.set("page", String(params.page));
+  if (params.limit) qs.set("limit", String(params.limit));
+  const q = qs.toString();
+  return client.get<ApiResponse<UserSessionLogsResponse>>(
+    `/api/v1/admin/users/${userId}/session-logs${q ? `?${q}` : ""}`,
+  );
+}
+
 export async function listOrders(client: ApiClient, params: { page?: number; limit?: number; status?: string } = {}) {
   const qs = new URLSearchParams();
   if (params.page) qs.set("page", String(params.page));
@@ -45,6 +66,14 @@ export async function updateOrderStatus(client: ApiClient, orderId: number, stat
   return client.put<ApiResponse<null>>(`/api/v1/admin/orders/${orderId}/status`, { status });
 }
 
+export async function patchOrder(
+  client: ApiClient,
+  orderId: number,
+  body: { status?: string; payment_status?: string },
+) {
+  return client.put<ApiResponse<null>>(`/api/v1/admin/orders/${orderId}`, body);
+}
+
 export async function listProducts(client: ApiClient, params: { page?: number; limit?: number } = {}) {
   const qs = new URLSearchParams();
   if (params.page) qs.set("page", String(params.page));
@@ -59,6 +88,13 @@ export async function getAnalyticsOverview(client: ApiClient, days = 30) {
 
 export async function getCartInsights(client: ApiClient) {
   return client.get<ApiResponse<CartInsightsResponse>>("/api/v1/admin/analytics/cart");
+}
+
+export async function getSessionOverview(client: ApiClient, days = 7) {
+  const d = Math.min(90, Math.max(1, days));
+  return client.get<ApiResponse<SessionOverviewResponse>>(
+    `/api/v1/admin/analytics/sessions?days=${d}`,
+  );
 }
 
 export async function executeQuery(client: ApiClient, query: string) {

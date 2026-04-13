@@ -1,5 +1,8 @@
 export type PaymentDTO = {
   id: number;
+  payment_code?: string;
+  order_code?: string;
+  user_code?: string;
   order_id: number;
   user_id: number;
   method: string;
@@ -15,6 +18,10 @@ export type PaymentDTO = {
 
 export type RefundDTO = {
   id: number;
+  refund_code?: string;
+  payment_code?: string;
+  order_code?: string;
+  user_code?: string;
   payment_id: number;
   order_id: number;
   user_id: number;

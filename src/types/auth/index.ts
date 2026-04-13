@@ -32,6 +32,8 @@ export type AuthResponse = {
 
 export type UserResponse = {
   id: number;
+  /** Louve ops code, e.g. LV0000001 */
+  user_code?: string;
   phone: string;
   email?: string;
   status: string;

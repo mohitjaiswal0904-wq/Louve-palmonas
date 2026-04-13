@@ -113,8 +113,8 @@ export default function DashboardOrdersPage() {
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <p className="font-mono text-xs text-muted-foreground">{o.order_number}</p>
-                    <p className="mt-0.5 text-xs tabular-nums text-muted-foreground">
-                      User #{o.user_id}
+                    <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
+                      {[o.order_code, o.user_code].filter(Boolean).join(" · ") || `User #${o.user_id}`}
                     </p>
                   </div>
                   <span
@@ -158,7 +158,7 @@ export default function DashboardOrdersPage() {
           <thead>
             <tr className="border-b text-left text-xs uppercase tracking-wide text-muted-foreground">
               <th className="whitespace-nowrap px-4 py-3 font-medium">Order #</th>
-              <th className="whitespace-nowrap px-4 py-3 font-medium">User ID</th>
+              <th className="whitespace-nowrap px-4 py-3 font-medium">User</th>
               <th className="whitespace-nowrap px-4 py-3 font-medium">Status</th>
               <th className="whitespace-nowrap px-4 py-3 font-medium">Payment</th>
               <th className="whitespace-nowrap px-4 py-3 font-medium">Items</th>
@@ -187,7 +187,9 @@ export default function DashboardOrdersPage() {
                   className="border-b last:border-0 hover:bg-muted/40 dark:hover:bg-zinc-800/30"
                 >
                   <td className="whitespace-nowrap px-4 py-3 font-mono text-xs">{o.order_number}</td>
-                  <td className="whitespace-nowrap px-4 py-3 tabular-nums">{o.user_id}</td>
+                  <td className="whitespace-nowrap px-4 py-3 font-mono text-xs">
+                    {o.user_code ?? `— (${o.user_id})`}
+                  </td>
                   <td className="whitespace-nowrap px-4 py-3">
                     <span
                       className={`inline-block rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${STATUS_COLORS[o.status] ?? ""}`}

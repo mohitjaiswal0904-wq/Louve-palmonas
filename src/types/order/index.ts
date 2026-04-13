@@ -25,6 +25,7 @@ export type OrderMoneyInfo = {
 
 export type OrderItemDTO = {
   id: number;
+  line_code?: string;
   product_id: number;
   variant_id: number;
   product_title: string;
@@ -38,6 +39,8 @@ export type OrderItemDTO = {
 
 export type OrderDTO = {
   id: number;
+  order_code?: string;
+  user_code?: string;
   order_number: string;
   status: string;
   payment_status: string;
@@ -65,6 +68,8 @@ export type OrderDTO = {
 
 export type OrderSummaryDTO = {
   id: number;
+  order_code?: string;
+  user_code?: string;
   order_number: string;
   status: string;
   payment_status: string;

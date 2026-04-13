@@ -53,7 +53,15 @@ export type {
   VendorDTO,
 } from "./catalog";
 
-export type { HealthLiveResult } from "./health";
+export type {
+  BackendHealthData,
+  FrontendHealthData,
+  HealthComponentHealth,
+  HealthDiskInfo,
+  HealthLiveResponse,
+  HealthLiveResult,
+  HealthSystemInfo,
+} from "./health";
 
 export type {
   AddToWishlistRequest,

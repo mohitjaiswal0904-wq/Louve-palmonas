@@ -1,4 +1,4 @@
-export { healthCheck } from "./health.service";
+export { healthCheckLive, fetchBackendHealth } from "./health.service";
 
 export {
   sendOTP,

@@ -2,7 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, Box, Database, LayoutDashboard, ShoppingCart, TrendingUp, Users } from "lucide-react";
+import {
+  Activity,
+  BarChart3,
+  Box,
+  Database,
+  LayoutDashboard,
+  ShoppingCart,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -14,6 +23,7 @@ export const DASHBOARD_NAV = [
   { label: "Products", href: "/dashboard/products", icon: Box },
   { label: "Cart Insights", href: "/dashboard/cart-insights", icon: BarChart3 },
   { label: "SQL Explorer", href: "/dashboard/sql-explorer", icon: Database },
+  { label: "Health", href: "/dashboard/health", icon: Activity },
 ] as const;
 
 export function getDashboardSectionTitle(pathname: string): string {

@@ -142,6 +142,8 @@ export type AppMessages = {
     language: string;
     brandAlt: string;
     loading: string;
+    /** Heading above the site-wide popular search link block (above the footer). */
+    popularSearchesHeading: string;
   };
   errors: {
     errorTitle: string;

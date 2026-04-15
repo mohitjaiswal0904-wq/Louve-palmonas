@@ -116,3 +116,7 @@ export type CollectionDetailDTO = CollectionDTO & {
 };
 
 export type { Collection, Currency, Money, Product } from "./commerce";
+export type {
+  PopularSearchCategoryDTO,
+  PopularSearchLinkDTO,
+} from "./popular-searches";

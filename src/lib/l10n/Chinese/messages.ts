@@ -110,6 +110,7 @@ export const messages = {
     language: "语言",
     brandAlt: "Louve",
     loading: "加载中",
+    popularSearchesHeading: "热门搜索",
   },
   catalog: {
     products: "产品",

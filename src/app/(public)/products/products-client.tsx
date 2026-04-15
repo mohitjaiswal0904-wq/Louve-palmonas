@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 import { ProductGrid, PaginationBar } from "@/components/catalog";
+import { PopularSearchesSection } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { useCatalog, useMessages } from "@/hooks";
 import type { ProductDTO, Pagination, FiltersDTO } from "@/types";
@@ -153,6 +154,8 @@ export default function ProductsClient() {
           )}
         </>
       )}
+
+      <PopularSearchesSection />
     </div>
   );
 }

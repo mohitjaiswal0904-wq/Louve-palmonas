@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ShieldCheck, Truck, RefreshCw, Award } from "lucide-react";
+
 import { ProductGrid } from "@/components/catalog";
-import { PopularSearchesSection } from "@/components/layout";
-import {
-  TrustBisHallmarkIcon,
-  TrustBuybackIcon,
-  TrustCertifiedIcon,
-  TrustReturnExchangeIcon,
-} from "@/components/icons/product-trust-icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth, useCatalog, useCart, useLoginGate, useMessages } from "@/hooks";
@@ -239,16 +234,16 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
             {/* Trust Badges */}
             <div className="grid grid-cols-4 gap-4 pt-10">
               {[
-                { label: "BIS Hallmark", Icon: TrustBisHallmarkIcon },
-                { label: "SGL/IGI Certified", Icon: TrustCertifiedIcon },
-                { label: "Lifetime Buyback", Icon: TrustBuybackIcon },
-                { label: "Easy Return/Exchange", Icon: TrustReturnExchangeIcon },
-              ].map((item) => (
-                <div key={item.label} className="flex flex-col items-center gap-3 text-center">
-                  <div className="flex h-[40.32px] w-[40.32px] items-center justify-center">
-                    <item.Icon className="h-8 w-8 shrink-0" />
+                { label: "BIS Hallmark", icon: Award },
+                { label: "SGL/IGI Certified", icon: ShieldCheck },
+                { label: "Lifetime Buyback", icon: RefreshCw },
+                { label: "Easy Return/Exchange", icon: Truck },
+              ].map((item, i) => (
+                <div key={i} className="flex flex-col items-center gap-3 text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E5C16C]/10">
+                    <item.icon className="h-6 w-6 text-[#E5C16C]" strokeWidth={1.5} />
                   </div>
-                  <span className="text-[10px] font-[400] leading-tight text-[#3E3E3E">
+                  <span className="text-[8px] font-medium leading-tight text-zinc-500">
                     {item.label}
                   </span>
                 </div>
@@ -318,13 +313,11 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
           <ProductGrid products={similar} size="sm" columns="grid-cols-2 lg:grid-cols-4" />
         </section>
       )}
-
-      <PopularSearchesSection />
     </div>
   );
 }
 
-type Tab = { label: string; content: ReactNode };
+type Tab = { label: string; content: React.ReactNode };
 
 function buildTabs(
   product: ProductDetailDTO,

@@ -110,7 +110,6 @@ export const messages = {
     language: "言語",
     brandAlt: "Louve",
     loading: "読み込み中",
-    popularSearchesHeading: "人気の検索",
   },
   catalog: {
     products: "商品",

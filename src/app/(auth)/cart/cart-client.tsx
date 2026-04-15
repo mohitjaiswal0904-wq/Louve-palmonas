@@ -16,9 +16,11 @@ import {
   Plus,
   Minus,
   ArrowLeft,
+  ShieldCheck,
+  RotateCcw,
   CheckCircle2,
-  Tag,
-  Check,
+  CreditCard,
+  Truck,
 } from "lucide-react";
 
 import { PopularSearches } from "@/components/common";
@@ -35,7 +37,31 @@ declare global {
   }
 }
 
+type PaymentMethod = "razorpay" | "cod";
+
+type CodAddress = {
+  full_name: string;
+  phone: string;
+  line1: string;
+  line2: string;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+};
+
 const TAX_RATE = 0.08;
+
+const EMPTY_COD_ADDRESS: CodAddress = {
+  full_name: "",
+  phone: "",
+  line1: "",
+  line2: "",
+  city: "",
+  state: "",
+  postal_code: "",
+  country: "India",
+};
 
 function formatMoney(amount: string, currency: string): string {
   const num = parseFloat(amount);
@@ -69,7 +95,8 @@ export default function CartClient() {
   const order = useOrder();
   const { payOrder, verifyRazorpay } = usePayment();
 
-  const [promoCode, setPromoCode] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("razorpay");
+  const [codAddress, setCodAddress] = useState<CodAddress>(EMPTY_COD_ADDRESS);
   const [actionLoading, setActionLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [successOrder, setSuccessOrder] = useState<OrderDTO | null>(null);
@@ -112,14 +139,47 @@ export default function CartClient() {
     [updateItem, removeItem],
   );
 
+  const codFormValid = useMemo(() => {
+    const { full_name, phone, line1, city, state, postal_code } = codAddress;
+    return !!(
+      full_name.trim() &&
+      phone.trim() &&
+      line1.trim() &&
+      city.trim() &&
+      state.trim() &&
+      postal_code.trim()
+    );
+  }, [codAddress]);
+
+  const canPlaceOrder =
+    paymentMethod === "razorpay" || (paymentMethod === "cod" && codFormValid);
+
   const handlePlaceOrder = useCallback(async () => {
+    if (paymentMethod === "cod" && !codFormValid) return;
     setCheckoutError(null);
     setActionLoading(true);
 
     try {
-      const createRes = await order.createOrder({
-        payment_method: "razorpay",
-      } as Parameters<typeof order.createOrder>[0]);
+      const createPayload: Record<string, unknown> =
+        paymentMethod === "cod"
+          ? {
+              payment_method: "cod",
+              shipping_address: {
+                full_name: codAddress.full_name,
+                phone: codAddress.phone,
+                line1: codAddress.line1,
+                line2: codAddress.line2,
+                city: codAddress.city,
+                state: codAddress.state,
+                postal_code: codAddress.postal_code,
+                country: codAddress.country || "India",
+              },
+            }
+          : { payment_method: "razorpay" };
+
+      const createRes = await order.createOrder(
+        createPayload as Parameters<typeof order.createOrder>[0],
+      );
 
       if (!createRes.success || !createRes.data) {
         setCheckoutError(
@@ -139,6 +199,16 @@ export default function CartClient() {
       }
 
       const payData: PayOrderResponse = payRes.data;
+
+      if (paymentMethod === "cod") {
+        await refreshCart();
+        setSuccessOrder(createdOrder);
+        setActionLoading(false);
+        setTimeout(() => {
+          router.push(`/account/orders/${createdOrder.id}`);
+        }, 2200);
+        return;
+      }
 
       await loadRazorpayScript();
 
@@ -211,7 +281,18 @@ export default function CartClient() {
       );
       setActionLoading(false);
     }
-  }, [order, payOrder, verifyRazorpay, refreshCart, loadRazorpayScript, router, user]);
+  }, [
+    paymentMethod,
+    codFormValid,
+    codAddress,
+    order,
+    payOrder,
+    verifyRazorpay,
+    refreshCart,
+    loadRazorpayScript,
+    router,
+    user,
+  ]);
 
   if (authLoading) {
     return (
@@ -314,42 +395,126 @@ export default function CartClient() {
             </ul>
 
             {/* Checkout sidebar */}
-            <aside className="order-last overflow-hidden rounded-lg border border-zinc-200 bg-white lg:sticky lg:top-[calc(var(--site-header-offset,4rem)+0.5rem)] lg:max-h-[calc(100dvh-var(--site-header-offset,4rem)-1.5rem)] lg:overflow-y-auto">
+            <aside className="order-last space-y-0 rounded-sm border border-[#F6F1E9] bg-white lg:sticky lg:top-[calc(var(--site-header-offset,4rem)+0.5rem)] lg:max-h-[calc(100dvh-var(--site-header-offset,4rem)-1.5rem)] lg:overflow-y-auto">
+              {/* Step 1: Payment method */}
               <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
-                <h2 className="text-base font-semibold tracking-tight text-zinc-900">
-                  Order Summary
-                </h2>
-
-                <div className="mt-6">
-                  <p className="text-sm font-semibold text-zinc-900">
-                    Promo Code
-                  </p>
-                  <div className="mt-2 flex gap-2">
-                    <div className="relative min-w-0 flex-1">
-                      <Tag
-                        className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
-                        strokeWidth={1.5}
-                        aria-hidden
-                      />
-                      <input
-                        type="text"
-                        value={promoCode}
-                        onChange={(e) => setPromoCode(e.target.value)}
-                        placeholder="Enter code"
-                        className="h-11 w-full rounded-md border border-zinc-200 bg-zinc-100 py-2.5 pl-10 pr-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none focus:ring-1 focus:ring-zinc-400"
-                        autoComplete="off"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      className="h-11 shrink-0 rounded-md border border-zinc-200 bg-zinc-100 px-4 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-200 touch-manipulation"
-                    >
-                      Apply
-                    </button>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <CreditCard
+                    className="h-4 w-4 text-zinc-400"
+                    strokeWidth={1.5}
+                  />
+                  <h2 className="text-sm font-medium tracking-tight text-zinc-900">
+                    Payment Method
+                  </h2>
                 </div>
 
-                <div className="mt-6 space-y-3">
+                <div className="mt-4 space-y-2.5">
+                  <label
+                    className={cn(
+                      "flex min-h-[52px] cursor-pointer items-start gap-3 rounded-sm border p-3 transition-all touch-manipulation sm:p-4",
+                      paymentMethod === "razorpay"
+                        ? "border-zinc-900 bg-zinc-50"
+                        : "border-[#F6F1E9] hover:border-zinc-300",
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="payment"
+                      checked={paymentMethod === "razorpay"}
+                      onChange={() => setPaymentMethod("razorpay")}
+                      className="mt-1 size-4 shrink-0 accent-zinc-900"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <CreditCard
+                          className="h-4 w-4 text-zinc-500"
+                          strokeWidth={1.5}
+                        />
+                        <span className="text-sm font-medium text-zinc-900">
+                          Online Payment (Razorpay)
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-xs font-light text-zinc-400">
+                        Pay securely via UPI, cards, net banking
+                      </p>
+                    </div>
+                  </label>
+
+                  <label
+                    className={cn(
+                      "flex min-h-[52px] cursor-pointer items-start gap-3 rounded-sm border p-3 transition-all touch-manipulation sm:p-4",
+                      paymentMethod === "cod"
+                        ? "border-zinc-900 bg-zinc-50"
+                        : "border-[#F6F1E9] hover:border-zinc-300",
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="payment"
+                      checked={paymentMethod === "cod"}
+                      onChange={() => setPaymentMethod("cod")}
+                      className="mt-1 size-4 shrink-0 accent-zinc-900"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Truck
+                          className="h-4 w-4 text-zinc-500"
+                          strokeWidth={1.5}
+                        />
+                        <span className="text-sm font-medium text-zinc-900">
+                          Cash on Delivery
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-xs font-light text-zinc-400">
+                        Pay when your order arrives
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Step 2: COD address form or Place Order */}
+              <div className="border-t border-[#F6F1E9] px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+                {paymentMethod === "cod" && (
+                  <CodAddressForm
+                    address={codAddress}
+                    onChange={setCodAddress}
+                  />
+                )}
+
+                {paymentMethod === "razorpay" && (
+                  <p className="mb-4 text-xs font-light leading-relaxed text-zinc-400">
+                    Razorpay will securely collect your delivery address and
+                    payment details.
+                  </p>
+                )}
+
+                {checkoutError && (
+                  <p className="mb-4 text-sm text-[#77080E]" role="alert">
+                    {checkoutError}
+                  </p>
+                )}
+
+                <button
+                  type="button"
+                  disabled={actionLoading || !canPlaceOrder}
+                  onClick={handlePlaceOrder}
+                  className={cn(
+                    "flex min-h-[48px] w-full items-center justify-center gap-2 bg-zinc-900 py-3.5 text-[11px] font-medium uppercase tracking-[0.2em] text-white transition-all hover:bg-black touch-manipulation",
+                    "disabled:pointer-events-none disabled:opacity-40",
+                  )}
+                >
+                  <Lock className="h-3.5 w-3.5" />
+                  {actionLoading ? "Processing…" : "Place Order"}
+                </button>
+              </div>
+
+              {/* Order summary */}
+              <div className="border-t border-[#F6F1E9] px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+                <h3 className="text-[10px] font-medium uppercase tracking-[0.18em] text-zinc-400">
+                  Order Summary
+                </h3>
+                <div className="mt-4 space-y-3">
                   <div className="flex justify-between text-sm text-zinc-500">
                     <span>Subtotal</span>
                     <span className="font-medium text-zinc-900">
@@ -362,13 +527,13 @@ export default function CartClient() {
                       Free
                     </span>
                   </div>
-                  <div className="flex justify-between border-b border-zinc-200 pb-3 text-sm text-zinc-500">
-                    <span>Tax</span>
+                  <div className="flex justify-between border-b border-[#F6F1E9] pb-3 text-sm text-zinc-500">
+                    <span>Tax (8%)</span>
                     <span className="font-medium text-zinc-900">
                       {formatMoney(tax.toString(), currency)}
                     </span>
                   </div>
-                  <div className="flex justify-between pt-2">
+                  <div className="flex justify-between pt-1">
                     <span className="text-base font-semibold text-zinc-900">
                       Total
                     </span>
@@ -377,48 +542,22 @@ export default function CartClient() {
                     </span>
                   </div>
                 </div>
-
-                {checkoutError && (
-                  <p className="mt-5 text-sm text-[#77080E]" role="alert">
-                    {checkoutError}
-                  </p>
-                )}
-
-                <button
-                  type="button"
-                  disabled={actionLoading || loading || isEmpty}
-                  onClick={handlePlaceOrder}
-                  className={cn(
-                    "mt-5 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-md bg-zinc-900 py-3.5 text-sm font-medium text-white transition-colors hover:bg-black touch-manipulation",
-                    "disabled:pointer-events-none disabled:opacity-40",
-                  )}
-                >
-                  <Lock className="h-4 w-4 shrink-0" strokeWidth={1.75} />
-                  {actionLoading ? "Processing…" : "Proceed to Checkout"}
-                </button>
-
-                <p className="mt-4 text-center text-sm text-zinc-500">
-                  Secure checkout powered by Razorpay
-                </p>
               </div>
 
-              <div className="space-y-3 border-t border-zinc-200 px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
-                {[
-                  "Free returns within 30 days",
-                  "2-year warranty included",
-                  "Secure payment processing",
-                ].map((line) => (
-                  <div key={line} className="flex items-start gap-3">
-                    <Check
-                      className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400"
-                      strokeWidth={2}
-                      aria-hidden
-                    />
-                    <span className="text-sm font-normal leading-snug text-zinc-500">
-                      {line}
-                    </span>
-                  </div>
-                ))}
+              {/* Trust badges */}
+              <div className="space-y-3 border-t border-[#F6F1E9] px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+                <TrustBadge
+                  icon={RotateCcw}
+                  text="Free returns within 30 days"
+                />
+                <TrustBadge
+                  icon={ShieldCheck}
+                  text="2-year warranty included"
+                />
+                <TrustBadge
+                  icon={CheckCircle2}
+                  text="Secure payment processing"
+                />
               </div>
             </aside>
           </div>
@@ -429,6 +568,95 @@ export default function CartClient() {
           showLogo
           limit={12}
           title="Popular Searches"
+        />
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COD Address Form
+// ═══════════════════════════════════════════════════════════════
+
+function CodAddressForm({
+  address,
+  onChange,
+}: {
+  address: CodAddress;
+  onChange: (addr: CodAddress) => void;
+}) {
+  const set = (field: keyof CodAddress, value: string) =>
+    onChange({ ...address, [field]: value });
+
+  const inputCls =
+    "w-full border border-[#F6F1E9] bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-300 focus:border-zinc-400 focus:outline-none transition-colors";
+
+  return (
+    <div className="mb-5">
+      <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.15em] text-zinc-400">
+        Delivery Address
+      </p>
+      <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <input
+            required
+            placeholder="Full name *"
+            value={address.full_name}
+            onChange={(e) => set("full_name", e.target.value)}
+            className={cn(inputCls, "min-h-[44px] sm:min-h-0")}
+          />
+          <input
+            required
+            placeholder="Phone *"
+            inputMode="tel"
+            autoComplete="tel"
+            value={address.phone}
+            onChange={(e) => set("phone", e.target.value)}
+            className={cn(inputCls, "min-h-[44px] sm:min-h-0")}
+          />
+        </div>
+        <input
+          required
+          placeholder="Address line 1 *"
+          value={address.line1}
+          onChange={(e) => set("line1", e.target.value)}
+          className={inputCls}
+        />
+        <input
+          placeholder="Address line 2 (optional)"
+          value={address.line2}
+          onChange={(e) => set("line2", e.target.value)}
+          className={inputCls}
+        />
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <input
+            required
+            placeholder="City *"
+            value={address.city}
+            onChange={(e) => set("city", e.target.value)}
+            className={cn(inputCls, "min-h-[44px] sm:min-h-0")}
+          />
+          <input
+            required
+            placeholder="State *"
+            value={address.state}
+            onChange={(e) => set("state", e.target.value)}
+            className={cn(inputCls, "min-h-[44px] sm:min-h-0")}
+          />
+          <input
+            required
+            placeholder="PIN code *"
+            inputMode="numeric"
+            value={address.postal_code}
+            onChange={(e) => set("postal_code", e.target.value)}
+            className={cn(inputCls, "min-h-[44px] sm:min-h-0")}
+          />
+        </div>
+        <input
+          placeholder="Country"
+          value={address.country}
+          onChange={(e) => set("country", e.target.value)}
+          className={inputCls}
         />
       </div>
     </div>
@@ -480,22 +708,21 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
               {product?.title ?? "Product"}
             </Link>
 
-            <div className="space-y-2">
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-light text-zinc-400 sm:text-sm">
-                <p>
-                  Color: <span className="text-zinc-600">Gold</span>
-                </p>
-                <p>
-                  Karat: <span className="text-zinc-600">22k</span>
-                </p>
-                <p>
-                  Size: <span className="text-zinc-600">22</span>
-                </p>
-              </div>
-              <span className="inline-block rounded-sm bg-[#F6E9E9] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-[#77080E]/70">
-                TAGS
-              </span>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs font-light text-zinc-400 sm:text-sm">
+              <p>
+                Color: <span className="text-zinc-600">Gold</span>
+              </p>
+              <p>
+                Karat: <span className="text-zinc-600">22k</span>
+              </p>
+              <p>
+                Size: <span className="text-zinc-600">22</span>
+              </p>
             </div>
+
+            <span className="inline-block rounded-sm bg-[#F6E9E9] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-[#77080E]/70">
+              TAGS
+            </span>
 
             <div className="inline-flex items-center rounded-lg border border-zinc-100 bg-[#FDFDFD] px-1">
               <button
@@ -529,7 +756,7 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
               ? formatMoney(variant.price.amount, variant.price.currency)
               : "₹00.00"}
           </p>
-          <div className="flex items-center gap-3 sm:items-end sm:gap-2 mt-16">
+          <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:gap-2">
             <button
               type="button"
               className="hidden text-sm font-light text-zinc-400 transition-colors hover:text-zinc-900 md:inline"
@@ -551,5 +778,24 @@ function CartLine({ item, disabled, onQtyChange, onRemove }: CartLineProps) {
         </div>
       </div>
     </li>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Trust Badge
+// ═══════════════════════════════════════════════════════════════
+
+function TrustBadge({
+  icon: Icon,
+  text,
+}: {
+  icon: typeof CheckCircle2;
+  text: string;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" strokeWidth={1.5} />
+      <span className="text-sm font-normal leading-snug text-zinc-500">{text}</span>
+    </div>
   );
 }

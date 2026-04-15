@@ -110,7 +110,6 @@ export const messages = {
     language: "भाषा",
     brandAlt: "Louve",
     loading: "लोड हो रहा है",
-    popularSearchesHeading: "लोकप्रिय खोज",
   },
   catalog: {
     products: "उत्पाद",

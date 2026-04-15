@@ -2,12 +2,9 @@ import type { ReactNode } from "react";
 
 import { Header } from "./header";
 import { Footer } from "./footer";
-import { PopularSearchesSection } from "./popular-searches-section";
-import { SiteLayoutFooter } from "./site-layout-footer";
 
 export { Header } from "./header";
 export { Footer } from "./footer";
-export { PopularSearchesSection } from "./popular-searches-section";
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   return (
@@ -17,7 +14,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <main className="relative isolate min-w-0 flex-1 pt-[var(--site-header-offset,4rem)] pb-[env(safe-area-inset-bottom,0px)]">
         {children}
       </main>
-      <SiteLayoutFooter />
+      <Footer />
     </div>
   );
 }

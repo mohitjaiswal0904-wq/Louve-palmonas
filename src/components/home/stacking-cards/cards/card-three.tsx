@@ -18,14 +18,14 @@ export function CardThree({
   tagline = "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit",
   buttonText = "Explore More",
   buttonLink = "/products",
-  leftImageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-third-image-f00e6cb4.png",
+  leftImageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-third-image-2295b361.png",
   rightImageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-fourth-image-5d7a8ff1.png",
 }: CardThreeProps) {
   return (
     <div className="relative flex h-full max-h-full min-h-0 w-full min-w-0 max-w-full flex-col overflow-x-hidden overflow-y-hidden bg-white md:flex-row">
-      <div className="flex min-h-0 min-w-0 flex-[1.2] flex-col items-start justify-center overflow-y-auto overscroll-contain p-8 md:h-full md:max-h-full md:min-h-0 md:p-10 md:px-12 lg:items-center lg:p-20">
-        <div className="flex min-h-0 w-full max-w-lg flex-col space-y-6 md:space-y-8 lg:space-y-10">
-          <div className="relative aspect-[16/10] w-full min-h-0 shrink-0 overflow-hidden">
+      <div className="flex min-h-0 min-w-0 flex-[1] flex-col items-start justify-center overflow-y-auto overscroll-contain p-8 md:h-full md:max-h-full md:min-h-0 md:p-10 md:px-12 lg:items-center lg:p-20">
+        <div className="flex min-h-0 w-full max-w-2xl flex-col space-y-6 md:space-y-8 lg:space-y-10">
+          <div className="relative aspect-[4/3] w-full min-h-0 shrink-0 overflow-hidden">
             <Image
               src={leftImageUrl}
               alt="Feature Collection"

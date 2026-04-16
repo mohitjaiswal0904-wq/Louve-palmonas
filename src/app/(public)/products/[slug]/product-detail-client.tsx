@@ -151,9 +151,9 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
     <div className="flex flex-col bg-white">
       {/* ── Section 1: Hero Purchase Area ── */}
       <div className="w-full border-b border-[#F6F1E9]">
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          {/* Hero: mobile carousel + desktop static image */}
-          <div className="relative w-full bg-[#f9f9f9] md:border-r md:border-[#F6F1E9]">
+        <div className="grid grid-cols-1 xl:grid-cols-2">
+          {/* Hero: mobile carousel + iPad carousel + desktop static image */}
+          <div className="relative w-full bg-[#f9f9f9] xl:border-r xl:border-[#F6F1E9]">
             <div className="md:hidden">
               <div
                 className="relative aspect-square w-full overflow-hidden"
@@ -199,7 +199,54 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
               ) : null}
             </div>
 
-            <div className="relative hidden aspect-square w-full overflow-hidden md:block">
+            {/* iPad: carousel first (same order as mobile screenshot) */}
+            <div className="hidden md:block xl:hidden">
+              <div
+                className="relative aspect-square w-full overflow-hidden"
+                onTouchStart={onCarouselTouchStart}
+                onTouchEnd={onCarouselTouchEnd}
+              >
+                {product.images.length > 0 ? (
+                  <Image
+                    src={product.images[carouselIndex].src}
+                    alt={product.images[carouselIndex].alt || product.title}
+                    fill
+                    sizes="100vw"
+                    className="object-contain"
+                    priority
+                  />
+                ) : (
+                  <div className="flex h-full min-h-[min(100vw,520px)] items-center justify-center text-sm text-muted-foreground">
+                    {m.catalog.noImage}
+                  </div>
+                )}
+              </div>
+              {product.images.length > 1 ? (
+                <div
+                  className="flex justify-center gap-2 py-3"
+                  role="tablist"
+                  aria-label="Product images"
+                >
+                  {product.images.map((img, i) => (
+                    <button
+                      key={img.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={i === carouselIndex}
+                      aria-label={`Image ${i + 1} of ${product.images.length}`}
+                      onClick={() => setCarouselIndex(i)}
+                      className={cn(
+                        "h-2 w-2 rounded-full transition-colors",
+                        i === carouselIndex ? "bg-[#C9A88A]" : "bg-zinc-300",
+                      )}
+                    />
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
+            {/* Desktop (lg+): keep existing static hero image */}
+            <div className="relative hidden aspect-square w-full overflow-hidden xl:block">
               {product.images.length > 0 ? (
                 <Image
                   src={product.images[0].src}
@@ -425,28 +472,78 @@ export default function ProductDetailClient({ handle }: { handle: string }) {
         </div>
       </section>
 
-      {/* Tablet/Desktop: editorial gallery + sticky tabs (unchanged layout) */}
-      <div className="hidden border-t border-[#F6F1E9] md:block">
+      {/* iPad: images -> details (match screenshot order) */}
+      <div className="hidden border-t border-[#F6F1E9] md:block xl:hidden">
         <div className="w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:gap-0">
-            <div className="flex flex-col gap-12 border-r border-[#F6F1E9] py-16 md:py-24">
+          <div className="flex flex-col">
+            <div className="grid grid-cols-2 overflow-hidden">
               {product.images.map((img, i) => (
                 <div
                   key={img.id}
-                  className="group relative aspect-[3/4] w-full overflow-hidden rounded-sm bg-[#f9f9f9]"
+                  className="group relative aspect-[3/4] w-full overflow-hidden bg-[#f9f9f9]"
                 >
                   <Image
                     src={img.src}
                     alt={img.alt || `${product.title} view ${i + 1}`}
                     fill
-                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    sizes="(max-width: 1024px) 50vw, 25vw"
                     className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
                 </div>
               ))}
             </div>
 
-            <div className="px-4 py-16 lg:sticky lg:top-24 lg:h-fit lg:py-24 md:px-12 lg:px-24">
+            <div className="px-4 pb-16 md:px-12 md:pb-24">
+              <div className="space-y-12">
+                <div className="no-scrollbar flex items-center gap-8 overflow-x-auto border-b border-[#F6F1E9] pb-4">
+                  {tabs.map((tab, i) => (
+                    <button
+                      key={tab.label}
+                      type="button"
+                      onClick={() => setActiveTab(i)}
+                      className={cn(
+                        "relative whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.2em] transition-all",
+                        i === activeTab
+                          ? "text-zinc-900 after:absolute after:-bottom-[17px] after:left-0 after:h-[2px] after:w-full after:bg-[#77080E]"
+                          : "text-zinc-400 hover:text-zinc-600",
+                      )}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="animate-in fade-in duration-500">
+                  {tabs[activeTab]?.content}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop (lg+): editorial gallery + sticky tabs (unchanged layout) */}
+      <div className="hidden border-t border-[#F6F1E9] xl:block">
+        <div className="w-full">
+          <div className="flex flex-col">
+            <div className="grid grid-cols-2 overflow-hidden">
+              {product.images.map((img, i) => (
+                <div
+                  key={img.id}
+                  className="group relative aspect-[3/4] w-full overflow-hidden bg-[#f9f9f9]"
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt || `${product.title} view ${i + 1}`}
+                    fill
+                    sizes="50vw"
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="px-4 py-16 md:px-12 lg:px-24 lg:py-24">
               <div className="space-y-12">
                 <div className="no-scrollbar flex items-center gap-8 overflow-x-auto border-b border-[#F6F1E9] pb-4">
                   {tabs.map((tab, i) => (

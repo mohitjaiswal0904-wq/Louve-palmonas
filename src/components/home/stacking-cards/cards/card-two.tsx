@@ -17,7 +17,7 @@ export function CardTwo({
   tagline = "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit",
   buttonText = "Explore More",
   buttonLink = "/products",
-  imageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-second-image-661d3664.png",
+  imageUrl = "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-second-image-e383ae4b.png",
 }: CardTwoProps) {
   return (
     <div className="relative h-full max-h-full min-h-0 w-full min-w-0 max-w-full overflow-x-hidden overflow-y-hidden bg-white">
@@ -26,7 +26,7 @@ export function CardTwo({
         alt="Louve Cinematic Wolves"
         fill
         priority
-        className="object-cover object-left"
+        className="object-cover object-center"
         sizes="100vw"
       />
 

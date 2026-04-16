@@ -11,10 +11,9 @@ interface CardSixProps {
 
 export function CardSix({
   images = [
-    "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-sixth-image-bd333072.jpg",
-    "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-seventh-image-db258ca5.jpg",
-    "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-seventh-image-db258ca5.jpg",
-    "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-section-seventh-image-db258ca5.jpg",
+    "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-ninth-image-07a0e150.png",
+    "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-tenth-image-1f0a627c.png",
+    "https://d2ppgkj0vs05g5.cloudfront.net/cms/media/2026/04/louve-hero-eleventh-image-4ae60074.png",
   ],
   buttonLink = "/products",
 }: CardSixProps) {
@@ -23,7 +22,7 @@ export function CardSix({
       {images.map((img, idx) => (
         <div
           key={idx}
-          className="group relative h-1/4 min-h-0 min-w-0 flex-1 overflow-hidden border-b border-white last:border-none md:h-full md:flex-[1_1_0%] md:border-b-0 md:border-r md:last:border-r-0"
+          className="group relative h-1/4 min-h-0 min-w-0 flex-1 overflow-hidden last:border-none md:h-full md:flex-[1_1_0%] md:last:border-r-0"
         >
           <Image
             src={img}

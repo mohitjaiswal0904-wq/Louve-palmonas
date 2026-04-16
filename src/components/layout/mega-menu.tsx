@@ -81,7 +81,11 @@ function MegaMenuInner({ isOpen, onClose }: MegaMenuProps) {
           >
             <nav
               className={cn(
-                "flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] touch-pan-x lg:flex-col lg:space-y-2 lg:overflow-visible lg:pb-0 lg:touch-auto [&::-webkit-scrollbar]:hidden",
+                // Mobile: flat horizontal list (matches reference)
+                "flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] touch-pan-x [&::-webkit-scrollbar]:hidden",
+                // iPad/desktop: keep existing behavior
+                "md:gap-2 md:pb-1",
+                "lg:flex-col lg:space-y-2 lg:overflow-visible lg:pb-0 lg:touch-auto",
               )}
               aria-label={common.browse}
             >
@@ -94,11 +98,19 @@ function MegaMenuInner({ isOpen, onClose }: MegaMenuProps) {
                     onClick={onClose}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "shrink-0 rounded-md px-3 py-3 text-sm font-light tracking-[0.1em] transition-colors sm:px-4 lg:w-full lg:rounded-none lg:py-3 lg:pl-[46px] lg:pr-4",
-                      "min-h-[44px] min-w-[44px] items-center touch-manipulation lg:min-h-0 lg:min-w-0",
+                      // Mobile: flat tabs
+                      "shrink-0 whitespace-nowrap px-6 py-4 text-[15.43px] font-[400] tracking-tight transition-colors",
+                      active ? "bg-[#F6F1E9] text-[#1F1F1F]" : "text-[#1F1F1F] hover:text-[#1F1F1F]",
+
+                      // iPad: keep existing pill styles
+                      "md:rounded-md md:px-3 md:py-3 md:text-sm md:font-light md:tracking-[0.1em] sm:md:px-4",
+                      "md:min-h-[44px] md:min-w-[44px] md:items-center md:touch-manipulation",
                       active
-                        ? "bg-gradient-to-r from-[#F6F1E9] to-transparent font-medium text-[#77080E]"
-                        : "text-zinc-500 hover:text-[#77080E]",
+                        ? "md:bg-gradient-to-r md:from-[#F6F1E9] md:to-transparent md:font-medium md:text-[#77080E]"
+                        : "md:text-zinc-500 md:hover:text-[#77080E]",
+
+                      // Desktop: existing left-column styles
+                      "lg:w-full lg:rounded-none lg:py-3 lg:pl-[46px] lg:pr-4 lg:min-h-0 lg:min-w-0",
                     )}
                   >
                     {cat.label}
@@ -111,20 +123,32 @@ function MegaMenuInner({ isOpen, onClose }: MegaMenuProps) {
           {/* Gallery */}
           <div
             className={cn(
-              "flex min-h-[200px] flex-1 flex-row items-stretch justify-start gap-3 overflow-x-auto overflow-y-hidden px-0 py-4 snap-x snap-mandatory sm:gap-4 sm:py-6 lg:items-center lg:justify-center lg:gap-6 lg:overflow-hidden lg:px-12 lg:py-12 lg:snap-none",
+              // Mobile: 3-column grid like reference
+              "grid grid-cols-3 gap-4 px-0 py-6",
+              // iPad: keep current horizontal carousel
+              "md:flex md:min-h-[200px] md:flex-1 md:flex-row md:items-stretch md:justify-start md:gap-3 md:overflow-x-auto md:overflow-y-hidden md:py-4 md:snap-x md:snap-mandatory sm:md:gap-4 sm:md:py-6",
+              // Desktop
+              "lg:items-center lg:justify-center lg:gap-6 lg:overflow-hidden lg:px-12 lg:py-12 lg:snap-none",
             )}
           >
             {menuData.gallery.map((item, i) => (
               <div
                 key={i}
-                className="relative aspect-[3/4] h-[min(260px,42vh)] w-[40vw] shrink-0 snap-center overflow-hidden bg-zinc-50 grayscale transition-all duration-700 group hover:grayscale-0 sm:h-[min(280px,45vh)] sm:w-[34vw] lg:h-full lg:max-h-[400px] lg:w-auto lg:flex-1"
+                className={cn(
+                  // Mobile grid cell
+                  "group relative aspect-[3/4] w-full overflow-hidden bg-zinc-50 grayscale transition-all duration-700 hover:grayscale-0",
+                  // iPad carousel cell (existing)
+                  "md:h-[min(260px,42vh)] md:w-[40vw] md:shrink-0 md:snap-center sm:md:h-[min(280px,45vh)] sm:md:w-[34vw]",
+                  // Desktop sizing (existing)
+                  "lg:h-full lg:max-h-[400px] lg:w-auto lg:flex-1",
+                )}
               >
                 <Image
                   src={item.src}
                   alt={item.alt}
                   fill
                   className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                  sizes="(max-width:1024px) 40vw, 20vw"
+                  sizes="(max-width: 767px) 33vw, (max-width:1024px) 40vw, 20vw"
                 />
               </div>
             ))}
@@ -133,13 +157,26 @@ function MegaMenuInner({ isOpen, onClose }: MegaMenuProps) {
           {/* CTA */}
           <div
             className={cn(
-              "flex w-full shrink-0 items-stretch border-t border-zinc-100 pt-3 sm:pt-4 lg:w-[20%] lg:items-center lg:justify-end lg:border-l lg:border-t-0 lg:py-10 lg:pt-0",
+              // Mobile: centered button under grid
+              "flex w-full shrink-0 items-stretch justify-center pt-4",
+              // iPad/desktop: keep existing right panel
+              "md:border-t md:border-zinc-100 md:pt-3 sm:md:pt-4",
+              "lg:w-[20%] lg:items-center lg:justify-end lg:border-l lg:border-t-0 lg:py-10 lg:pt-0",
             )}
           >
-            <Link href={menuData.cta.href} onClick={onClose} className="w-full lg:w-auto">
+            <Link
+              href={menuData.cta.href}
+              onClick={onClose}
+              className="flex w-full justify-center md:block md:w-full lg:w-auto"
+            >
               <Button
                 variant="default"
-                className="h-12 min-h-[48px] w-full touch-manipulation rounded-none bg-[#77080E] px-6 text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-[#5A060A] hover:shadow-xl active:scale-95 lg:px-10"
+                className={cn(
+                  // Mobile: match reference button sizing
+                  "h-12 min-h-[48px] w-full max-w-[220px] touch-manipulation rounded-none bg-[#77080E] px-6 text-[14px] font-medium tracking-normal text-white transition-all hover:bg-[#5A060A] hover:shadow-xl active:scale-95",
+                  // iPad/desktop: existing styling
+                  "md:max-w-none md:w-full md:px-6 md:text-[10px] md:font-bold md:uppercase md:tracking-[0.2em] lg:px-10",
+                )}
               >
                 {menuData.cta.label}
               </Button>

@@ -22,7 +22,7 @@ type ProductCardProps = {
 export const SHOWCASE_IMAGE_PADDING =
   "p-8 sm:p-9 md:p-7 lg:p-12 xl:p-14";
 export const SHOWCASE_IMAGE_SIZES =
-  "(max-width: 767px) 100vw, (max-width: 1023px) 34vw, 33vw";
+  "(max-width: 767px) 50vw, (max-width: 1023px) 34vw, 33vw";
 export const SHOWCASE_COPY_PADDING =
   "px-4 py-3.5 sm:px-5 sm:py-4 md:px-4 md:py-3 lg:px-7 lg:py-5 xl:px-8 xl:py-5";
 const showcaseVendor =
@@ -44,7 +44,7 @@ const imagePadding: Record<Exclude<CardSize, "showcase">, string> = {
 const imageSizes: Record<Exclude<CardSize, "showcase">, string> = {
   sm: "(max-width: 640px) 50vw, 25vw",
   md: "(max-width: 640px) 50vw, 33vw",
-  lg: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
+  lg: "(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw",
 };
 
 const copyPadding: Record<Exclude<CardSize, "showcase">, string> = {
@@ -134,7 +134,7 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
               alt={product.image.alt || product.title}
               fill
               sizes={imgSz}
-              className="object-contain object-center drop-shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-transform duration-500 ease-out group-hover:scale-[1.02] dark:drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
+              className="object-contain object-center drop-shadow-[0_12px_24px_rgba(0,0,0,0.08)] dark:drop-shadow-[0_12px_28px_rgba(0,0,0,0.35)]"
             />
           ) : (
             <span className="flex h-full items-center justify-center text-xs text-muted-foreground">
@@ -172,11 +172,11 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
         {/* <p className={cn("mb-1 font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500", vSz)}>
           {product.vendor}
         </p> */}
-        <h3 className="line-clamp-1 text-[22px] font-normal leading-snug tracking-tight text-[#1F1F1F] dark:text-zinc-100">
+        <h3 className="line-clamp-1 text-[10px] font-normal leading-snug tracking-tight text-[#1F1F1F] md:text-[22px] dark:text-zinc-100">
           {product.title}
         </h3>
         <div className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-          <span className="font-[500] text-[22px] tabular-nums tracking-tight text-[#1F1F1F]">
+          <span className="font-[500] text-[12px] tabular-nums tracking-tight text-[#1F1F1F] md:text-[22px]">
             {formatMoney(product.price.amount, product.price.currency)}
           </span>
           {hasDiscount && (

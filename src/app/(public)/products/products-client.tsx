@@ -48,7 +48,15 @@ export default function ProductsClient() {
   }, [catalog, page, vendor, productType, sortBy, sortOrder]);
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts();        <>
+    <ProductGrid products={products} />
+    {pagination && (
+      <PaginationBar
+        pagination={pagination}
+        onPageChange={(p) => updateParams({ page: String(p) })}
+      />
+    )}
+  </>
   }, [fetchProducts]);
 
   useEffect(() => {

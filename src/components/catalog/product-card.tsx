@@ -27,8 +27,6 @@ export const SHOWCASE_COPY_PADDING =
   "px-4 py-3.5 sm:px-5 sm:py-4 md:px-4 md:py-3 lg:px-7 lg:py-5 xl:px-8 xl:py-5";
 const showcaseVendor =
   "text-[9px] md:text-[10px] lg:text-[10px] xl:text-[11px]";
-const showcaseTitle =
-  "text-sm md:text-[13px] lg:text-[15px]";
 const showcasePrice =
   "text-sm md:text-sm lg:text-[17px]";
 
@@ -59,12 +57,6 @@ const vendorSize: Record<Exclude<CardSize, "showcase">, string> = {
   sm: "text-[9px]",
   md: "text-[10px]",
   lg: "text-[10px] sm:text-[11px]",
-};
-
-const titleSize: Record<Exclude<CardSize, "showcase">, string> = {
-  sm: "text-xs",
-  md: "text-[13px]",
-  lg: "text-sm sm:text-[15px]",
 };
 
 const priceSize: Record<Exclude<CardSize, "showcase">, string> = {
@@ -114,7 +106,6 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
   const imgSz = size === "showcase" ? showcaseImageSizes : imageSizes[size];
   const cpPad = size === "showcase" ? showcaseCopyPadding : copyPadding[size];
   const vSz = size === "showcase" ? showcaseVendor : vendorSize[size];
-  const tSz = size === "showcase" ? showcaseTitle : titleSize[size];
   const pSz = size === "showcase" ? showcasePrice : priceSize[size];
 
   const productHref = `/products/${product.handle}`;
@@ -178,14 +169,14 @@ export function ProductCard({ product, size = "lg", inGrid = true }: ProductCard
           cpPad,
         )}
       >
-        <p className={cn("mb-1 font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500", vSz)}>
+        {/* <p className={cn("mb-1 font-medium uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-500", vSz)}>
           {product.vendor}
-        </p>
-        <h3 className={cn("line-clamp-1 font-normal leading-snug tracking-tight text-zinc-800 dark:text-zinc-100", tSz)}>
+        </p> */}
+        <h3 className="line-clamp-1 text-[22px] font-normal leading-snug tracking-tight text-[#1F1F1F] dark:text-zinc-100">
           {product.title}
         </h3>
         <div className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-          <span className={cn("font-semibold tabular-nums tracking-tight text-zinc-900 dark:text-zinc-50", pSz)}>
+          <span className="font-[500] text-[22px] tabular-nums tracking-tight text-[#1F1F1F]">
             {formatMoney(product.price.amount, product.price.currency)}
           </span>
           {hasDiscount && (

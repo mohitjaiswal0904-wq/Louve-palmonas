@@ -45,6 +45,8 @@ export type {
   ImageDTO,
   MoneyDTO,
   OptionDTO,
+  PopularSearchCategoryDTO,
+  PopularSearchLinkDTO,
   ProductDTO,
   ProductDetailDTO,
   ProductListParams,

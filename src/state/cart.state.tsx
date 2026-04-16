@@ -52,7 +52,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setSubtotal(s.subtotal);
   }, []);
 
-  const refreshCart = useCallback(async () => {
+  const applyLocalItems = useCallback(
+    (nextItems: CartItemDTO[]) => {
+      setItems(nextItems);
+      setUniqueItems(nextItems.length);
+      const nextItemCount = nextItems.reduce((sum, it) => sum + (it.quantity || 0), 0);
+      setItemCount(nextItemCount);
+      const nextSubtotalAmount = nextItems.reduce((sum, it) => {
+        const amt = parseFloat(it.line_total?.amount ?? "0");
+        return sum + (Number.isFinite(amt) ? amt : 0);
+      }, 0);
+      setSubtotal((s) => ({
+        amount: nextSubtotalAmount.toFixed(2),
+        currency: s.currency || "INR",
+      }));
+    },
+    [],
+  );
+
+  const refreshCart = useCallback(async (opts?: { silent?: boolean }) => {
     if (!user) {
       setItems([]);
       setItemCount(0);
@@ -60,7 +78,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setSubtotal({ amount: "0.00", currency: "INR" });
       return;
     }
-    setLoading(true);
+    if (!opts?.silent) setLoading(true);
     try {
       const res = await cartService.getCartSummary(client);
       if (res.success && res.data) {
@@ -69,7 +87,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } catch {
       /* noop */
     } finally {
-      setLoading(false);
+      if (!opts?.silent) setLoading(false);
     }
   }, [client, user, applySummary]);
 
@@ -87,18 +105,59 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const updateItem = useCallback(
     async (id: number, data: UpdateCartItemRequest) => {
-      await cartService.updateCartItem(client, id, data);
-      await refreshCart();
+      // Optimistic update (prevents "page refresh" feeling)
+      if (typeof data.quantity === "number") {
+        setItems((prev) => {
+          const next = prev.map((it) => {
+            if (it.id !== id) return it;
+            const nextQty = data.quantity ?? it.quantity;
+            const unit = parseFloat(it.variant?.price?.amount ?? "0");
+            const lineTotal =
+              Number.isFinite(unit) && unit > 0
+                ? (unit * nextQty).toFixed(2)
+                : it.line_total?.amount ?? "0.00";
+            return {
+              ...it,
+              quantity: nextQty,
+              line_total: { ...it.line_total, amount: lineTotal },
+            };
+          });
+          // Update derived totals right away
+          queueMicrotask(() => applyLocalItems(next));
+          return next;
+        });
+      }
+
+      try {
+        await cartService.updateCartItem(client, id, data);
+        // Sync with backend quietly
+        await refreshCart({ silent: true });
+      } catch {
+        // On failure, re-sync quietly to revert optimistic state
+        await refreshCart({ silent: true });
+        // Keep UI responsive; callers shouldn't crash on tap.
+      }
     },
-    [client, refreshCart],
+    [client, refreshCart, applyLocalItems],
   );
 
   const removeItem = useCallback(
     async (id: number) => {
-      await cartService.removeCartItem(client, id);
-      await refreshCart();
+      // Optimistic remove
+      setItems((prev) => {
+        const next = prev.filter((it) => it.id !== id);
+        queueMicrotask(() => applyLocalItems(next));
+        return next;
+      });
+      try {
+        await cartService.removeCartItem(client, id);
+        await refreshCart({ silent: true });
+      } catch {
+        await refreshCart({ silent: true });
+        // Keep UI responsive; callers shouldn't crash on tap.
+      }
     },
-    [client, refreshCart],
+    [client, refreshCart, applyLocalItems],
   );
 
   const removeMultiple = useCallback(

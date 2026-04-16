@@ -15,9 +15,10 @@ type Props = {
 const defaultCols: Record<CardSize, string> = {
   sm: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
   md: "grid-cols-2 sm:grid-cols-3",
-  lg: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
-  /** Phone: 1 col; tablet + desktop: max 3 — compact cards on tablet, large on desktop */
-  showcase: "grid-cols-1 md:grid-cols-3",
+  /** Phone: 2 cols; sm+ tablet and lg desktop unchanged */
+  lg: "grid-cols-2 lg:grid-cols-3",
+  /** Phone: 2 cols; md+ tablet/desktop unchanged */
+  showcase: "grid-cols-2 md:grid-cols-3",
 };
 
 export function ProductGrid({ products, size = "lg", columns }: Props) {

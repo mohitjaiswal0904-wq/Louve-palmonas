@@ -20,7 +20,7 @@ export function CardSeven({
       {columns.map((_, idx) => (
         <div
           key={idx}
-          className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-zinc-100 last:border-b-0 md:h-full md:max-h-full md:border-b-0 md:border-r md:last:border-r-0"
+          className="relative flex min-h-0 min-w-0 flex-1 flex-col last:border-b-0 md:h-full md:max-h-full md:last:border-r-0"
         >
           <div className="relative h-[55vh] min-h-0 w-full shrink-0 overflow-hidden md:h-[58%] md:max-h-[58%]">
             <Image

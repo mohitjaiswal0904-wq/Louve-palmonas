@@ -68,24 +68,30 @@ function MegaMenuInner({ isOpen, onClose }: MegaMenuProps) {
         <div
           className={cn(
             "flex w-full min-h-0 flex-col bg-white",
-            "max-h-[inherit] overflow-y-auto overscroll-y-contain lg:max-h-none lg:h-[min(480px,min(90vh,720px))] lg:flex-row lg:overflow-hidden",
-            "px-3 pb-6 pt-3 sm:px-4 sm:pt-4 lg:pl-[46px] lg:pr-[80px] lg:pb-0 lg:pt-0",
+            "max-h-[inherit] overflow-y-auto overscroll-y-contain",
+            "md:max-xl:max-h-none md:max-xl:h-[min(480px,min(90vh,720px))] md:max-xl:overflow-hidden",
+            "xl:max-h-none xl:h-[min(480px,min(90vh,720px))] xl:overflow-hidden",
+            "md:max-xl:flex-row",
+            "xl:flex-row",
+            "px-3 pb-6 pt-3 sm:px-4 sm:pt-4 md:max-xl:pb-0 md:max-xl:pt-0 xl:pb-0 xl:pt-0",
+            "md:max-xl:px-8 md:max-xl:pt-6",
+            "xl:pl-[46px] xl:pr-[80px]",
           )}
         >
-          {/* Categories: horizontal scroll phone/tablet; left column on large screens */}
+          {/* Categories: horizontal scroll phone; left column md–xl (iPad + iPad Pro) and xl+ (desktop) */}
           <div
             className={cn(
-              "flex shrink-0 flex-col border-zinc-100 lg:w-[20%] lg:justify-center lg:border-b-0 lg:border-r lg:py-10",
-              "border-b pb-3 sm:pb-4 lg:pb-0",
+              "flex shrink-0 flex-col border-zinc-100",
+              "border-b pb-3 sm:pb-4",
+              "md:max-xl:w-[28%] md:max-xl:justify-start md:max-xl:border-b-0 md:max-xl:border-r md:max-xl:py-8",
+              "xl:w-[20%] xl:justify-center xl:border-b-0 xl:border-r xl:py-10",
             )}
           >
             <nav
               className={cn(
-                // Mobile: flat horizontal list (matches reference)
-                "flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] touch-pan-x [&::-webkit-scrollbar]:hidden",
-                // iPad/desktop: keep existing behavior
-                "md:gap-2 md:pb-1",
-                "lg:flex-col lg:space-y-2 lg:overflow-visible lg:pb-0 lg:touch-auto",
+                "flex gap-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] touch-pan-x [&::-webkit-scrollbar]:hidden",
+                "max-md:overflow-x-auto",
+                "md:flex-col md:gap-2 md:space-y-2 md:overflow-visible md:pb-0 md:touch-auto",
               )}
               aria-label={common.browse}
             >
@@ -98,19 +104,17 @@ function MegaMenuInner({ isOpen, onClose }: MegaMenuProps) {
                     onClick={onClose}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      // Mobile: flat tabs
                       "shrink-0 whitespace-nowrap px-6 py-4 text-[15.43px] font-[400] tracking-tight transition-colors",
                       active ? "bg-[#F6F1E9] text-[#1F1F1F]" : "text-[#1F1F1F] hover:text-[#1F1F1F]",
-
-                      // iPad: keep existing pill styles
-                      "md:rounded-md md:px-3 md:py-3 md:text-sm md:font-light md:tracking-[0.1em] sm:md:px-4",
+                      "md:rounded-md md:px-3 md:py-3 md:text-sm md:font-light md:tracking-[0.1em] md:px-4",
                       "md:min-h-[44px] md:min-w-[44px] md:items-center md:touch-manipulation",
                       active
                         ? "md:bg-gradient-to-r md:from-[#F6F1E9] md:to-transparent md:font-medium md:text-[#77080E]"
                         : "md:text-zinc-500 md:hover:text-[#77080E]",
-
-                      // Desktop: existing left-column styles
-                      "lg:w-full lg:rounded-none lg:py-3 lg:pl-[46px] lg:pr-4 lg:min-h-0 lg:min-w-0",
+                      active &&
+                        "md:max-xl:!bg-[#F6F1E9] md:max-xl:text-[#1F1F1F]",
+                      "md:max-xl:w-full md:max-xl:rounded-md md:max-xl:px-4 md:max-xl:py-3",
+                      "xl:w-full xl:rounded-none xl:py-3 xl:pl-[46px] xl:pr-4 xl:min-h-0 xl:min-w-0",
                     )}
                   >
                     {cat.label}
@@ -120,67 +124,72 @@ function MegaMenuInner({ isOpen, onClose }: MegaMenuProps) {
             </nav>
           </div>
 
-          {/* Gallery */}
+          {/* Gallery + CTA: stacked on mobile; md–xl = iPad + iPad Pro row; xl:contents = desktop 3-column */}
           <div
             className={cn(
-              // Mobile: 3-column grid like reference
-              "grid grid-cols-3 gap-4 px-0 py-6",
-              // iPad: keep current horizontal carousel
-              "md:flex md:min-h-[200px] md:flex-1 md:flex-row md:items-stretch md:justify-start md:gap-3 md:overflow-x-auto md:overflow-y-hidden md:py-4 md:snap-x md:snap-mandatory sm:md:gap-4 sm:md:py-6",
-              // Desktop
-              "lg:items-center lg:justify-center lg:gap-6 lg:overflow-hidden lg:px-12 lg:py-12 lg:snap-none",
+              "flex min-h-0 w-full min-w-0 flex-col",
+              "md:max-xl:flex-1 md:max-xl:min-h-0",
+              "xl:contents",
             )}
           >
-            {menuData.gallery.map((item, i) => (
-              <div
-                key={i}
-                className={cn(
-                  // Mobile grid cell
-                  "group relative aspect-[3/4] w-full overflow-hidden bg-zinc-50 grayscale transition-all duration-700 hover:grayscale-0",
-                  // iPad carousel cell (existing)
-                  "md:h-[min(260px,42vh)] md:w-[40vw] md:shrink-0 md:snap-center sm:md:h-[min(280px,45vh)] sm:md:w-[34vw]",
-                  // Desktop sizing (existing)
-                  "lg:h-full lg:max-h-[400px] lg:w-auto lg:flex-1",
-                )}
-              >
-                <Image
-                  src={item.src}
-                  alt={item.alt}
-                  fill
-                  className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                  sizes="(max-width: 767px) 33vw, (max-width:1024px) 40vw, 20vw"
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div
-            className={cn(
-              // Mobile: centered button under grid
-              "flex w-full shrink-0 items-stretch justify-center pt-4",
-              // iPad/desktop: keep existing right panel
-              "md:border-t md:border-zinc-100 md:pt-3 sm:md:pt-4",
-              "lg:w-[20%] lg:items-center lg:justify-end lg:border-l lg:border-t-0 lg:py-10 lg:pt-0",
-            )}
-          >
-            <Link
-              href={menuData.cta.href}
-              onClick={onClose}
-              className="flex w-full justify-center md:block md:w-full lg:w-auto"
+            {/* Gallery */}
+            <div
+              className={cn(
+                "grid grid-cols-3 gap-4 px-0 py-6",
+                "md:max-xl:grid md:max-xl:flex-none md:max-xl:grid-cols-3 md:max-xl:gap-3 md:max-xl:overflow-visible md:max-xl:px-0 md:max-xl:py-4",
+                "xl:flex xl:flex-1 xl:flex-row xl:items-center xl:justify-center xl:gap-6 xl:overflow-hidden xl:px-12 xl:py-12 xl:snap-none",
+              )}
             >
-              <Button
-                variant="default"
+              {menuData.gallery.map((item, i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    "group relative aspect-[3/4] w-full overflow-hidden bg-zinc-50 grayscale transition-all duration-700 hover:grayscale-0",
+                    "md:max-xl:aspect-[3/4] md:max-xl:h-auto md:max-xl:max-h-[min(320px,36vh)] md:max-xl:w-full md:max-xl:min-h-0",
+                    "xl:h-full xl:max-h-[400px] xl:w-auto xl:flex-1",
+                  )}
+                >
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                    sizes="(max-width: 767px) 33vw, (max-width:1024px) 40vw, 20vw"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <div
+              className={cn(
+                "flex w-full shrink-0 items-stretch justify-center pt-4",
+                "md:max-xl:w-full md:max-xl:justify-center md:max-xl:border-0 md:max-xl:border-t md:max-xl:border-zinc-100 md:max-xl:pt-5",
+                "xl:w-[20%] xl:shrink-0 xl:items-center xl:justify-end xl:border-l xl:border-t-0 xl:border-zinc-100 xl:py-10 xl:pt-0",
+              )}
+            >
+              <Link
+                href={menuData.cta.href}
+                onClick={onClose}
                 className={cn(
-                  // Mobile: match reference button sizing
-                  "h-12 min-h-[48px] w-full max-w-[220px] touch-manipulation rounded-none bg-[#77080E] px-6 text-[14px] font-medium tracking-normal text-white transition-all hover:bg-[#5A060A] hover:shadow-xl active:scale-95",
-                  // iPad/desktop: existing styling
-                  "md:max-w-none md:w-full md:px-6 md:text-[10px] md:font-bold md:uppercase md:tracking-[0.2em] lg:px-10",
+                  "inline-flex w-auto justify-center",
+                  "md:flex md:w-full",
+                  "md:max-xl:justify-center",
+                  "xl:block xl:w-auto",
                 )}
               >
-                {menuData.cta.label}
-              </Button>
-            </Link>
+                <Button
+                  variant="default"
+                  className={cn(
+                    "h-12 min-h-[48px] w-auto max-w-[220px] touch-manipulation rounded-none bg-[#710B11] px-6 text-[14px] font-medium tracking-normal text-white transition-all hover:bg-[#5A060A] hover:shadow-xl active:scale-95",
+                    "md:max-xl:max-w-[220px] md:max-xl:px-8 md:max-xl:text-[10px] md:max-xl:font-bold md:max-xl:uppercase md:max-xl:tracking-[0.2em]",
+                    "xl:max-w-none xl:w-full xl:px-10",
+                  )}
+                >
+                  {menuData.cta.label}
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
 

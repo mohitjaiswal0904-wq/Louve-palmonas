@@ -261,7 +261,7 @@ export default function CartClient() {
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] pb-[max(6rem,env(safe-area-inset-bottom,0px))]">
-      <div className="mx-auto max-w-[1440px] px-3 py-6 sm:px-4 sm:py-8 md:px-6 md:py-12 lg:px-8 lg:py-16">
+      <div className="mx-auto max-w-[1440px] px-3 py-6 sm:px-4 sm:py-8 md:px-6 md:py-12 xl:px-8 xl:py-16">
         {/* Navigation & Header */}
         <div className="mb-8 space-y-4 sm:mb-10 sm:space-y-6 md:mb-12">
           <Link
@@ -307,7 +307,7 @@ export default function CartClient() {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-8 sm:gap-10 lg:grid-cols-[1fr_min(100%,420px)] lg:items-start lg:gap-12 xl:gap-16">
+          <div className="grid gap-8 sm:gap-10 xl:grid-cols-[1fr_min(100%,420px)] xl:items-start xl:gap-12 2xl:gap-16">
             {/* Cart items */}
             <ul className="min-w-0 space-y-4 sm:space-y-6">
               {items.map((item) => (
@@ -322,7 +322,7 @@ export default function CartClient() {
             </ul>
 
             {/* Checkout sidebar */}
-            <aside className="order-last overflow-hidden rounded-sm border border-[#E6E6E6] bg-white lg:sticky lg:top-[calc(var(--site-header-offset,4rem)+0.5rem)] lg:max-h-[calc(100dvh-var(--site-header-offset,4rem)-1.5rem)] lg:overflow-y-auto">
+            <aside className="order-last overflow-hidden rounded-sm border border-[#E6E6E6] bg-white xl:sticky xl:top-[calc(var(--site-header-offset,4rem)+0.5rem)] xl:max-h-[calc(100dvh-var(--site-header-offset,4rem)-1.5rem)] xl:overflow-y-auto">
               <div className="px-6 py-6">
                 <h2 className="text-[22px] font-medium tracking-tight text-zinc-900">
                   Order Summary

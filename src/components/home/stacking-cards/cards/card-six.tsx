@@ -48,7 +48,7 @@ export function CardSix({
               <Link href={buttonLink}>
                 <Button
                   size="sm"
-                  className="h-8 rounded-none bg-[#77080E] px-6 text-[9px] font-semibold uppercase tracking-[0.2em] text-white shadow-xl transition-all hover:bg-[#5A060A] active:scale-95"
+                  className="h-8 rounded-none bg-[#710B11] px-6 text-[9px] font-semibold uppercase tracking-[0.2em] text-white shadow-xl transition-all hover:bg-[#5A060A] active:scale-95"
                 >
                   Explore More
                 </Button>

@@ -45,7 +45,7 @@ export function CardTwo({
             <Link href={buttonLink}>
               <Button
                 size="lg"
-                className="h-12 rounded-none bg-[#77080E] px-10 text-xs font-bold uppercase tracking-[0.2em] text-white shadow-lg transition-all hover:bg-[#5A060A] active:scale-95 lg:h-10 lg:px-10 lg:text-[10px] lg:font-semibold lg:tracking-widest"
+                className="h-12 rounded-none bg-[#710B11] px-10 text-xs font-bold uppercase tracking-[0.2em] text-white shadow-lg transition-all hover:bg-[#5A060A] active:scale-95 lg:h-10 lg:px-10 lg:text-[10px] lg:font-semibold lg:tracking-widest"
               >
                 {buttonText}
               </Button>

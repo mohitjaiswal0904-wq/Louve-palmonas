@@ -22,17 +22,17 @@ export function CardSeven({
           key={idx}
           className="relative flex min-h-0 min-w-0 flex-1 flex-col last:border-b-0 md:h-full md:max-h-full md:last:border-r-0"
         >
-          <div className="relative h-[55vh] min-h-0 w-full shrink-0 overflow-hidden md:h-[58%] md:max-h-[58%]">
+          <div className="relative h-[80vh] min-h-0 w-full shrink-0 overflow-hidden md:h-[80%] md:max-h-[80%]">
             <Image
               src={imageUrl}
               alt={`Collection Item ${idx + 1}`}
               fill
-              className="object-cover transition-transform duration-700 hover:scale-105"
+              className="object-cover object-top transition-transform duration-700 hover:scale-105"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
 
-          <div className="flex min-h-0 flex-1 flex-col justify-center overflow-y-auto overflow-x-hidden overscroll-contain bg-white p-8 md:p-12 lg:p-16">
+          <div className="flex h-[20vh] min-h-0 shrink-0 flex-col justify-center overflow-y-auto overflow-x-hidden overscroll-contain bg-white p-6 md:h-[20%] md:max-h-[20%] md:p-8 lg:p-10">
             <div className="min-w-0 space-y-4">
               <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 md:text-3xl">
                 Collection Name
@@ -44,7 +44,7 @@ export function CardSeven({
                 <Link href={buttonLink}>
                   <Button
                     size="lg"
-                    className="h-10 rounded-none bg-[#77080E] px-10 text-[10px] font-semibold uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#5A060A] active:scale-95"
+                    className="h-10 rounded-none bg-[#710B11] px-10 text-[10px] font-semibold uppercase tracking-widest text-white shadow-md transition-all hover:bg-[#5A060A] active:scale-95"
                   >
                     Explore More
                   </Button>

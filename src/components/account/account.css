@@ -1,0 +1,350 @@
+.auth {
+  position: fixed;
+  inset: 0;
+  z-index: 290;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.auth__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(63, 21, 33, 0.28);
+  cursor: pointer;
+}
+
+.auth__panel {
+  position: relative;
+  z-index: 1;
+  width: min(420px, 100%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px 24px 32px;
+  background: #fff;
+  box-shadow: -16px 0 40px rgba(63, 21, 33, 0.12);
+  overflow: auto;
+}
+
+.auth__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.auth__eyebrow,
+.account-page__eyebrow {
+  margin: 0 0 4px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--serenity);
+}
+
+.auth__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--vintage-wine);
+}
+
+.auth__close {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(63, 21, 33, 0.12);
+  background: transparent;
+  color: var(--vintage-wine);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-form__switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.auth-form__tab {
+  height: 40px;
+  border: 1px solid rgba(63, 21, 33, 0.14);
+  background: transparent;
+  color: rgba(65, 65, 67, 0.7);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.auth-form__tab.is-active {
+  border-color: var(--vintage-wine);
+  color: var(--vintage-wine);
+  background: rgba(63, 21, 33, 0.04);
+}
+
+.auth-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vintage-wine);
+}
+
+.auth-form__field input {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid rgba(63, 21, 33, 0.16);
+  background: #fff;
+  color: #1f1f1f;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.auth-form__field input:focus {
+  outline: none;
+  border-color: var(--serenity);
+}
+
+.auth-form__field input[aria-invalid="true"] {
+  border-color: var(--vintage-wine);
+}
+
+.auth-form__password {
+  position: relative;
+  display: block;
+}
+
+.auth-form__password input {
+  padding-right: 72px;
+}
+
+.auth-form__reveal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 46px;
+  padding: 0 12px;
+  border: none;
+  background: transparent;
+  color: rgba(65, 65, 67, 0.65);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.auth-form__hint,
+.auth-form__error {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.auth-form__hint {
+  color: rgba(65, 65, 67, 0.65);
+}
+
+.auth-form__error {
+  color: var(--vintage-wine);
+}
+
+.auth-form__error button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.auth-form__submit,
+.account-page__signout {
+  height: 48px;
+  border: none;
+  background: var(--vintage-wine);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.auth-form__submit:disabled,
+.auth-form__demo:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.auth-form__demo {
+  height: 48px;
+  border: 1px solid rgba(63, 21, 33, 0.2);
+  background: transparent;
+  color: var(--vintage-wine);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.account-page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 28px var(--page-pad) 72px;
+  background: #fff;
+}
+
+.account-page__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.account-page__title {
+  margin: 0;
+  font-size: clamp(32px, 4vw, 48px);
+  color: var(--vintage-wine);
+}
+
+.account-page__email,
+.account-page__empty {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(65, 65, 67, 0.75);
+}
+
+.account-page__gate {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 420px;
+}
+
+.account-page__saved h2 {
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--vintage-wine);
+}
+
+.account-page__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.account-page__list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(63, 21, 33, 0.08);
+}
+
+.account-page__product {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+
+.account-page__product img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  background: #f4f1ed;
+}
+
+.account-page__product span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.account-page__name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--vintage-wine);
+}
+
+.account-page__line {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: rgba(65, 65, 67, 0.65);
+}
+
+.account-page__price {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: #1f1f1f;
+}
+
+.account-page__remove {
+  border: none;
+  background: transparent;
+  padding: 4px 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(65, 65, 67, 0.55);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.account-page__signout {
+  align-self: flex-start;
+  padding: 0 22px;
+  background: transparent;
+  color: var(--vintage-wine);
+  border: 1px solid rgba(63, 21, 33, 0.2);
+}

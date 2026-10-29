@@ -84,10 +84,6 @@
     width: min(520px, 100%);
   }
 
-  .collection__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .pdp-usps__list {
     grid-template-columns: 1fr 1fr;
     gap: 28px 12px;
@@ -116,10 +112,6 @@
   .pdp-usps__medallion {
     width: 72px;
     height: 72px;
-  }
-
-  .collection__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .collection-card__button {

@@ -17,7 +17,6 @@ export function PopularSearches() {
             height={120}
           />
           <div className="site-footer__brand-copy">
-            <p className="site-footer__eyebrow">Louve</p>
             <p className="site-footer__tagline">
               Fine jewellery shaped by instinct, light, and quiet craft.
             </p>

@@ -1,23 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { resolvePdpProduct } from "../../data/pdpProduct";
 import {
   PRODUCT,
   type ProductSize,
   type ProductTab,
 } from "../../data/product";
+import {
+  isInWishlist,
+  toggleWishlistItem,
+  WISHLIST_EVENT,
+} from "../../lib/wishlist";
 import { ExpertConsultModal } from "./ExpertConsultModal";
 import { PdpUsps } from "./PdpUsps";
 import "./pdp.css";
 
 export function PdpPage({
+  productId = null,
   onVisitStore,
 }: {
+  productId?: string | null;
   onVisitStore?: () => void;
 }) {
+  const product = resolvePdpProduct(productId);
+  const gallery =
+    product.id === PRODUCT.id ? PRODUCT.gallery : [product.image, ...PRODUCT.gallery.slice(1)];
   const [metal, setMetal] = useState(1);
   const [size, setSize] = useState<ProductSize>(7);
   const [tab, setTab] = useState<ProductTab>("Product Details");
   const [activeImage, setActiveImage] = useState<number | null>(null);
   const [expertOpen, setExpertOpen] = useState(false);
+  const [wishlisted, setWishlisted] = useState(() => isInWishlist(product.id));
+
+  useEffect(() => {
+    const sync = () => setWishlisted(isInWishlist(product.id));
+    sync();
+    window.addEventListener(WISHLIST_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(WISHLIST_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, [product.id]);
+
+  const onToggleWishlist = () => {
+    const saved = toggleWishlistItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      metalLabel: PRODUCT.metals[metal].label,
+      size,
+    });
+    setWishlisted(saved);
+  };
 
   return (
     <main className="pdp" id="product">
@@ -26,12 +61,12 @@ export function PdpPage({
         aria-label="Product gallery"
         onMouseLeave={() => setActiveImage(null)}
       >
-        {PRODUCT.gallery.map((src, i) => (
+        {gallery.map((src, i) => (
           <button
             key={src}
             type="button"
             className={`pdp-stage__item${activeImage === i ? " is-expanded" : ""}`}
-            aria-label={`${PRODUCT.name} view ${i + 1}`}
+            aria-label={`${product.name} view ${i + 1}`}
             onMouseEnter={() => setActiveImage(i)}
             onFocus={() => setActiveImage(i)}
             onClick={() =>
@@ -40,7 +75,7 @@ export function PdpPage({
           >
             <img
               src={src}
-              alt={`${PRODUCT.name} mangalsutra — view ${i + 1}`}
+              alt={`${product.name} — view ${i + 1}`}
               width={1000}
               height={1000}
             />
@@ -51,9 +86,11 @@ export function PdpPage({
       <section className="pdp-buy" aria-label="Product overview">
         <div className="pdp-buy__left">
           <h1 className="editorial-title pdp-title">
-            <span>{PRODUCT.name}</span>
-            <em>{PRODUCT.metalLine}</em>
-            <span className="pdp-title__sub">{PRODUCT.subtitle}</span>
+            <span>{product.name}</span>
+            {product.metalLine ? <em>{product.metalLine}</em> : null}
+            {product.subtitle ? (
+              <span className="pdp-title__sub">{product.subtitle}</span>
+            ) : null}
           </h1>
 
           <a className="pdp-more" href="#pdp-details">
@@ -107,11 +144,36 @@ export function PdpPage({
 
         <div className="pdp-buy__right">
           <div className="pdp-hero__price">
-            <span className="pdp-hero__amount">{PRODUCT.price}</span>
+            <span className="pdp-hero__amount">{product.price}</span>
             <span className="pdp-hero__tax">Inclusive of all taxes</span>
           </div>
 
           <div className="pdp-actions">
+            <button
+              type="button"
+              className={`pdp-wishlist${wishlisted ? " is-saved" : ""}`}
+              aria-pressed={wishlisted}
+              aria-label={
+                wishlisted ? "Remove from wishlist" : "Add to wishlist"
+              }
+              onClick={onToggleWishlist}
+            >
+              <svg
+                className="pdp-wishlist__icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+              </svg>
+            </button>
             <button
               type="button"
               className="pdp-actions__btn pdp-actions__btn--secondary"
@@ -225,11 +287,11 @@ export function PdpPage({
         onClose={() => setExpertOpen(false)}
         onVisitStore={onVisitStore}
         product={{
-          name: PRODUCT.name,
+          name: product.name,
           metalLabel: PRODUCT.metals[metal].label,
           size,
-          price: PRODUCT.price,
-          image: PRODUCT.hero,
+          price: product.price,
+          image: product.image,
         }}
       />
     </main>

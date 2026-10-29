@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   pathForView,
+  productIdFromLocation,
   storeCollectionFromLocation,
   storeIdFromLocation,
   viewFromLocation,
@@ -17,6 +18,9 @@ export function useLouveRouter() {
   const [storeCollectionOpen, setStoreCollectionOpen] = useState(() =>
     storeCollectionFromLocation(),
   );
+  const [productId, setProductId] = useState<string | null>(() =>
+    productIdFromLocation(),
+  );
 
   const navigate = useCallback(
     (next: View, options?: NavigateOptions) => {
@@ -28,6 +32,9 @@ export function useLouveRouter() {
             : storeId;
 
       setView(next);
+      if (next === "pdp") {
+        setProductId(options?.productId ?? productId);
+      }
       if (next === "store") {
         setStoreId(nextStoreId ?? null);
         setStoreCollectionOpen(!!options?.collection);
@@ -42,6 +49,8 @@ export function useLouveRouter() {
       const id = next === "store" ? nextStoreId : null;
       const nextPath = pathForView(next, id, {
         collection: next === "store" ? !!options?.collection : false,
+        productId:
+          next === "pdp" ? (options?.productId ?? productId) : null,
       });
       const current = `${window.location.pathname}${window.location.search}`;
       if (current !== nextPath) {
@@ -54,7 +63,7 @@ export function useLouveRouter() {
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    [storeId],
+    [storeId, productId],
   );
 
   useEffect(() => {
@@ -62,6 +71,7 @@ export function useLouveRouter() {
       setView(viewFromLocation());
       setStoreId(storeIdFromLocation());
       setStoreCollectionOpen(storeCollectionFromLocation());
+      setProductId(productIdFromLocation());
     };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
@@ -69,22 +79,29 @@ export function useLouveRouter() {
 
   const goHome = useCallback(() => navigate("home"), [navigate]);
   const goCollection = useCallback(() => navigate("collection"), [navigate]);
-  const goPdp = useCallback(() => navigate("pdp"), [navigate]);
+  const goPdp = useCallback(
+    (id?: string) => navigate("pdp", { productId: id ?? productId }),
+    [navigate, productId],
+  );
   const goStores = useCallback(() => navigate("stores"), [navigate]);
+  const goAccount = useCallback(() => navigate("account"), [navigate]);
   const goStore = useCallback(
     (id: string) => navigate("store", { storeId: id, collection: false }),
     [navigate],
   );
 
-  const goPdpFromStoreCollection = useCallback(() => {
-    const storePath = pathForView("store", storeId, { collection: true });
-    const current = `${window.location.pathname}${window.location.search}`;
-    if (current !== storePath) {
-      window.history.replaceState(null, "", storePath);
-    }
-    setStoreCollectionOpen(true);
-    navigate("pdp");
-  }, [navigate, storeId]);
+  const goPdpFromStoreCollection = useCallback(
+    (id?: string) => {
+      const storePath = pathForView("store", storeId, { collection: true });
+      const current = `${window.location.pathname}${window.location.search}`;
+      if (current !== storePath) {
+        window.history.replaceState(null, "", storePath);
+      }
+      setStoreCollectionOpen(true);
+      navigate("pdp", { productId: id ?? productId });
+    },
+    [navigate, storeId, productId],
+  );
 
   const syncStoreCollection = useCallback(
     (open: boolean) => {
@@ -101,11 +118,13 @@ export function useLouveRouter() {
   return {
     view,
     storeId,
+    productId,
     storeCollectionOpen,
     goHome,
     goCollection,
     goPdp,
     goStores,
+    goAccount,
     goStore,
     goPdpFromStoreCollection,
     syncStoreCollection,

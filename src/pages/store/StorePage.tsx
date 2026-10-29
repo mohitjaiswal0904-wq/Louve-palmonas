@@ -13,7 +13,7 @@ type StorePageProps = {
   collectionOpen: boolean;
   onCollectionOpenChange: (open: boolean) => void;
   onBackToStores: () => void;
-  onSelectProduct?: () => void;
+  onSelectProduct?: (productId: string) => void;
 };
 
 export function StorePage({

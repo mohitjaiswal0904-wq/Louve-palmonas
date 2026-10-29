@@ -2,7 +2,7 @@ import { STORE_PRODUCTS } from "../../data/storeProducts";
 
 type StoreCollectionPanelProps = {
   onClose: () => void;
-  onSelectProduct?: () => void;
+  onSelectProduct?: (productId: string) => void;
 };
 
 export function StoreCollectionPanel({
@@ -44,7 +44,7 @@ export function StoreCollectionPanel({
               <button
                 type="button"
                 className="store-collection__card"
-                onClick={() => onSelectProduct?.()}
+                onClick={() => onSelectProduct?.(product.id)}
               >
                 <span className="store-collection__media">
                   <img

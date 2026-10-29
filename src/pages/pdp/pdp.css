@@ -84,7 +84,7 @@
 
 .pdp-buy__right .pdp-actions {
   width: 100%;
-  grid-template-columns: 1fr 1.15fr;
+  grid-template-columns: 52px 1fr 1.15fr;
 }
 
 .pdp-title {
@@ -296,12 +296,55 @@
   text-decoration-color: var(--champagne-gold);
 }
 
+.pdp-wishlist {
+  flex-shrink: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 1px solid rgba(63, 21, 33, 0.16);
+  background: #fff;
+  color: var(--vintage-wine);
+  cursor: pointer;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease,
+    transform 0.2s ease;
+}
+
+.pdp-wishlist__icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.pdp-wishlist:hover {
+  color: var(--serenity);
+  border-color: var(--serenity);
+  background: rgba(147, 169, 209, 0.08);
+  transform: translateY(-1px);
+}
+
+.pdp-wishlist.is-saved {
+  color: var(--vintage-wine);
+  border-color: var(--vintage-wine);
+  background: rgba(63, 21, 33, 0.05);
+}
+
+.pdp-wishlist.is-saved .pdp-wishlist__icon {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
 .pdp-actions {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: 52px 1.15fr 0.85fr;
   gap: 12px;
   width: 100%;
   margin-top: 4px;
+  align-items: stretch;
 }
 
 .pdp-actions__btn {
@@ -1098,9 +1141,21 @@
   }
 
   .pdp-buy__right .pdp-actions {
-    grid-template-columns: 1fr 1.2fr;
+    grid-template-columns: 44px 1fr 1.2fr;
     width: 100%;
     gap: 8px;
+    align-items: stretch;
+  }
+
+  .pdp-wishlist {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .pdp-wishlist__icon {
+    width: 18px;
+    height: 18px;
   }
 
   .pdp-title {
@@ -1131,7 +1186,9 @@
   }
 
   .pdp-actions__btn {
+    height: 44px;
     min-height: 44px;
+    padding: 0 12px;
     font-size: 11px;
   }
 
@@ -1222,11 +1279,18 @@
   }
 
   .pdp-buy__right .pdp-actions {
-    grid-template-columns: 1fr 1.15fr;
+    grid-template-columns: 42px 1fr 1.15fr;
+  }
+
+  .pdp-wishlist {
+    width: 42px;
+    height: 42px;
+    min-height: 42px;
   }
 
   .pdp-actions__btn {
     width: 100%;
+    height: 42px;
     min-height: 42px;
   }
 

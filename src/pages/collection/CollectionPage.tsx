@@ -20,7 +20,7 @@ function CardSizer() {
 }
 
 type CollectionPageProps = {
-  onSelectProduct: () => void;
+  onSelectProduct: (productId: string) => void;
 };
 
 export function CollectionPage({ onSelectProduct }: CollectionPageProps) {
@@ -116,7 +116,7 @@ export function CollectionPage({ onSelectProduct }: CollectionPageProps) {
               <button
                 type="button"
                 className="collection-card__button"
-                onClick={onSelectProduct}
+                onClick={() => onSelectProduct(product.id)}
                 aria-label={`${product.name}, ${product.price}`}
               >
                 <div className="collection-card__media">

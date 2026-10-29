@@ -1,12 +1,23 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ASSETS } from "../../data/assets";
+import {
+  getWishlist,
+  getWishlistCount,
+  WISHLIST_EVENT,
+  type WishlistItem,
+} from "../../lib/wishlist";
+import { useAccount } from "../../lib/account";
+import { AuthPanel } from "../account/AuthPanel";
 import { NavOverlay } from "./NavOverlay";
+import { WishlistPanel } from "./WishlistPanel";
 
 export type HeaderScrolledFill = "transparent" | "white" | "pdp";
 
 type HeaderProps = {
   onGoHome: () => void;
   onExploreCollection: () => void;
+  onOpenProduct?: (productId: string) => void;
+  onOpenAccount?: () => void;
   /** Collection: glass white on scroll. PDP: white at top → clear glass while scrolling. */
   scrolledFill?: HeaderScrolledFill;
   /** PDP: slide header away while scrolling down; reveal on scroll up */
@@ -16,15 +27,37 @@ type HeaderProps = {
 export function Header({
   onGoHome,
   onExploreCollection,
+  onOpenProduct,
+  onOpenAccount,
   scrolledFill = "transparent",
   hideOnScrollDown = false,
 }: HeaderProps) {
+  const account = useAccount();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [wishlistOpen, setWishlistOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
+  const [wishlistCount, setWishlistCount] = useState(0);
   /** 0 at top → 1 after ~160px scroll; drives smooth header fade */
   const [scrollProgress, setScrollProgress] = useState(0);
   const [headerHidden, setHeaderHidden] = useState(false);
   const menuOpenRef = useRef(false);
   menuOpenRef.current = menuOpen;
+
+  const syncWishlist = () => {
+    setWishlistItems(getWishlist());
+    setWishlistCount(getWishlistCount());
+  };
+
+  useEffect(() => {
+    syncWishlist();
+    window.addEventListener(WISHLIST_EVENT, syncWishlist);
+    window.addEventListener("storage", syncWishlist);
+    return () => {
+      window.removeEventListener(WISHLIST_EVENT, syncWishlist);
+      window.removeEventListener("storage", syncWishlist);
+    };
+  }, []);
 
   useEffect(() => {
     let frame = 0;
@@ -180,15 +213,43 @@ export function Header({
             <button className="header__icon" type="button" aria-label="Search">
               <img src={ASSETS.search} alt="" width={22} height={22} />
             </button>
-            <button className="header__icon" type="button" aria-label="Wishlist">
+            <button
+              className="header__icon"
+              type="button"
+              aria-label={
+                wishlistCount > 0
+                  ? `Wishlist, ${wishlistCount} saved`
+                  : "Wishlist"
+              }
+              aria-expanded={wishlistOpen}
+              onClick={() => {
+                setAuthOpen(false);
+                setWishlistOpen(true);
+              }}
+            >
               <img src={ASSETS.heart} alt="" width={22} height={22} />
+              {wishlistCount > 0 ? (
+                <span className="header__badge" aria-hidden="true" />
+              ) : null}
             </button>
             <button
               className="header__icon header__icon--account"
               type="button"
-              aria-label="Account"
+              aria-label={account ? `Account, ${account.name}` : "Sign in"}
+              aria-expanded={authOpen}
+              onClick={() => {
+                setMenuOpen(false);
+                setWishlistOpen(false);
+                if (account) {
+                  setAuthOpen(false);
+                  onOpenAccount?.();
+                  return;
+                }
+                setAuthOpen(true);
+              }}
             >
               <img src={ASSETS.user} alt="" width={22} height={22} />
+              {account ? <span className="header__badge" aria-hidden="true" /> : null}
             </button>
           </div>
         </div>
@@ -206,6 +267,23 @@ export function Header({
           setMenuOpen(false);
           onExploreCollection();
         }}
+      />
+
+      <WishlistPanel
+        open={wishlistOpen}
+        items={wishlistItems}
+        onClose={() => setWishlistOpen(false)}
+        onChange={syncWishlist}
+        onSelectProduct={(id) => {
+          setWishlistOpen(false);
+          onOpenProduct?.(id);
+        }}
+      />
+
+      <AuthPanel
+        open={authOpen}
+        onClose={() => setAuthOpen(false)}
+        onSuccess={() => onOpenAccount?.()}
       />
     </>
   );

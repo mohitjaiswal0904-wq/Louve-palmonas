@@ -1,7 +1,9 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useLouveRouter } from "./app/useLouveRouter";
+import { ensureDemoAccount } from "./lib/account";
 import { Header } from "./components/layout/Header";
 import { PopularSearches } from "./components/layout/PopularSearches";
+import { AccountPage } from "./pages/account/AccountPage";
 import { CollectionPage } from "./pages/collection/CollectionPage";
 import { HomePage } from "./pages/home/HomePage";
 import { PdpPage } from "./pages/pdp/PdpPage";
@@ -19,11 +21,17 @@ export default function App() {
     goHome,
     goCollection,
     goPdp,
+    productId,
     goStores,
+    goAccount,
     goStore,
     goPdpFromStoreCollection,
     syncStoreCollection,
   } = useLouveRouter();
+
+  useEffect(() => {
+    void ensureDemoAccount();
+  }, []);
 
   const immersive = view === "store";
 
@@ -32,6 +40,8 @@ export default function App() {
       <Header
         onGoHome={goHome}
         onExploreCollection={goCollection}
+        onOpenProduct={goPdp}
+        onOpenAccount={goAccount}
         scrolledFill={view === "pdp" ? "pdp" : "white"}
         hideOnScrollDown={view === "pdp"}
       />
@@ -40,7 +50,7 @@ export default function App() {
       ) : view === "collection" ? (
         <CollectionPage onSelectProduct={goPdp} />
       ) : view === "stores" ? (
-        <StoreListPage onSelectStore={goStore} onBack={goPdp} />
+        <StoreListPage onSelectStore={goStore} onBack={() => goPdp()} />
       ) : view === "store" ? (
         <Suspense fallback={<div className="store-page" aria-busy="true" />}>
           <StorePage
@@ -51,8 +61,10 @@ export default function App() {
             onSelectProduct={goPdpFromStoreCollection}
           />
         </Suspense>
+      ) : view === "account" ? (
+        <AccountPage onOpenProduct={goPdp} />
       ) : (
-        <PdpPage onVisitStore={goStores} />
+        <PdpPage productId={productId} onVisitStore={goStores} />
       )}
       {immersive ? null : <PopularSearches />}
     </div>

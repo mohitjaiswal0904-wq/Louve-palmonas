@@ -1,4 +1,5 @@
 export const PRODUCT = {
+  id: "twist-wave",
   name: "Twist Wave",
   metalLine: "9KT Gold",
   subtitle: "Lab Grown Diamond Mangalsutra",

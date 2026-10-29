@@ -1,0 +1,27 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background:
+    radial-gradient(
+      ellipse 90% 40% at 50% 0%,
+      var(--accent-soft),
+      transparent 55%
+    ),
+    var(--color-white);
+  padding-bottom: 40px;
+  /* clip avoids creating a scrollport that breaks position: sticky */
+  overflow-x: clip;
+}
+
+.page--store {
+  padding-bottom: 0;
+  background: #f5f7fb;
+  min-height: 100vh;
+}
+
+.page--store .store-page {
+  min-height: calc(100vh - var(--header-height));
+  height: calc(100vh - var(--header-height));
+}
+

@@ -1,0 +1,116 @@
+/*
+  Display: Editorial New (self-hosted stand-in with italics for the editorial mix)
+  Sans: Neue Haas Grotesk (self-hosted grotesk stand-in)
+  Drop licensed .woff2 files into /public/fonts to replace the stand-ins.
+*/
+
+@font-face {
+  font-family: "Editorial New";
+  src:
+    local("Editorial New"),
+    local("EditorialNew-Regular"),
+    url("/fonts/editorial-new-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Editorial New";
+  src:
+    local("Editorial New Italic"),
+    local("EditorialNew-Italic"),
+    url("/fonts/editorial-new-400-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Editorial New";
+  src:
+    local("Editorial New Medium"),
+    local("EditorialNew-Medium"),
+    url("/fonts/editorial-new-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Editorial New";
+  src:
+    local("Editorial New Medium Italic"),
+    local("EditorialNew-MediumItalic"),
+    url("/fonts/editorial-new-500-italic.woff2") format("woff2");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Editorial New";
+  src:
+    local("Editorial New SemiBold"),
+    local("EditorialNew-SemiBold"),
+    url("/fonts/editorial-new-600-normal.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Editorial New";
+  src:
+    local("Editorial New SemiBold Italic"),
+    local("EditorialNew-SemiBoldItalic"),
+    url("/fonts/editorial-new-600-italic.woff2") format("woff2");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk";
+  src:
+    local("Neue Haas Grotesk Text"),
+    local("Neue Haas Grotesk"),
+    local("Helvetica Neue"),
+    url("/fonts/neue-haas-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk";
+  src:
+    local("Neue Haas Grotesk Text Medium"),
+    local("Helvetica Neue Medium"),
+    url("/fonts/neue-haas-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk";
+  src:
+    local("Neue Haas Grotesk Text Bold"),
+    local("Helvetica Neue Bold"),
+    url("/fonts/neue-haas-600-normal.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Haas Grotesk";
+  src:
+    local("Neue Haas Grotesk Text Bold"),
+    local("Helvetica Neue Bold"),
+    url("/fonts/neue-haas-700-normal.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

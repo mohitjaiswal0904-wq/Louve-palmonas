@@ -1,0 +1,259 @@
+/* —— Gold dial: metal temperaments —— */
+.gold-dial {
+  --gold-wash: rgba(220, 180, 80, 0.3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 5vw, 56px);
+  min-height: min(92vh, 920px);
+  padding: clamp(48px, 7vw, 88px) clamp(24px, 5vw, 72px)
+    clamp(40px, 5vw, 64px);
+  background: #fafbfc;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.gold-dial__wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(
+      ellipse 70% 55% at 78% 40%,
+      var(--gold-wash),
+      transparent 65%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 12% 90%,
+      rgba(147, 169, 209, 0.14),
+      transparent 60%
+    );
+  transition: background 0.7s ease;
+  pointer-events: none;
+}
+
+.gold-dial__header,
+.gold-dial__body {
+  position: relative;
+  z-index: 1;
+}
+
+.gold-dial__header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 720px;
+}
+
+.gold-dial__eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--serenity);
+}
+
+.gold-dial__heading {
+  display: grid;
+  gap: 16px;
+}
+
+.gold-dial__title {
+  align-items: flex-start;
+  font-size: clamp(36px, 5vw, 64px);
+  color: var(--vintage-wine);
+  line-height: 1.05;
+}
+
+.gold-dial__title em {
+  font-style: italic;
+  color: var(--serenity);
+}
+
+.gold-dial__lede {
+  max-width: 420px;
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.65;
+  color: var(--black-oyster);
+}
+
+.gold-dial__body {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.85fr) minmax(0, 1.4fr);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: end;
+}
+
+.gold-dial__nameplate {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 8px;
+  animation: gold-dial-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.gold-dial__name {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1.1;
+  color: var(--gold-name, var(--vintage-wine));
+  transition: color 0.45s ease;
+}
+
+.gold-dial__line {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--black-oyster);
+  max-width: 18em;
+}
+
+.gold-dial__gallery {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+
+.gold-dial__frame {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(147, 169, 209, 0.22);
+  aspect-ratio: 1 / 1;
+}
+
+.gold-dial__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.55s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gold-dial__frame:hover img {
+  transform: scale(1.04);
+}
+
+.gold-dial__chips {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.gold-dial__chips-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(65, 65, 67, 0.5);
+}
+
+.gold-dial__chip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gold-dial__chip {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid rgba(63, 21, 33, 0.12);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease,
+    border-color 0.25s ease;
+}
+
+.gold-dial__chip:hover {
+  transform: scale(1.12);
+}
+
+.gold-dial__chip.is-active {
+  transform: scale(1.18);
+  border-color: var(--vintage-wine);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 0 0 3px rgba(147, 169, 209, 0.35);
+}
+
+.gold-dial__nameplate .cta {
+  margin-top: 24px;
+}
+
+@keyframes gold-dial-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-dial__nameplate,
+  .gold-dial__frame img,
+  .gold-dial__wash,
+  .gold-dial__chip {
+    animation: none;
+    transition: none;
+  }
+
+  .gold-dial__frame:hover img,
+  .gold-dial__chip:hover,
+  .gold-dial__chip.is-active {
+    transform: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .gold-dial {
+    min-height: 0;
+    padding: clamp(36px, 8vw, 56px) clamp(20px, 5vw, 32px)
+      clamp(32px, 6vw, 48px);
+    gap: 28px;
+  }
+
+  .gold-dial__body {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 28px;
+  }
+
+  .gold-dial__title {
+    font-size: clamp(30px, 9vw, 44px);
+  }
+
+  .gold-dial__gallery {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .gold-dial__gallery {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .gold-dial__name {
+    font-size: clamp(24px, 7vw, 32px);
+  }
+
+  .gold-dial__line {
+    font-size: 16px;
+  }
+}

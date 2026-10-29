@@ -1,116 +1,212 @@
-"use client";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { ASSETS } from "../../data/assets";
+import { NavOverlay } from "./NavOverlay";
 
-import Image from "next/image";
-import Link from "next/link";
-import { Menu } from "lucide-react";
+export type HeaderScrolledFill = "transparent" | "white" | "pdp";
 
-import { useLayoutContext } from "@/providers/layout-context";
-import { Button } from "@/components/ui/button";
-import { useCart, useMessages } from "@/hooks";
-import { cn } from "@/lib/utils";
-import { HEADER_ACTION_ICONS } from "./header-actions";
-import { HeaderSearch } from "./header-search";
-import { LanguageSwitcher } from "./language-switcher";
-import { UserMenu } from "./user-menu";
-import { MegaMenu } from "./mega-menu";
+type HeaderProps = {
+  onGoHome: () => void;
+  onExploreCollection: () => void;
+  /** Collection: glass white on scroll. PDP: white at top → clear glass while scrolling. */
+  scrolledFill?: HeaderScrolledFill;
+  /** PDP: slide header away while scrolling down; reveal on scroll up */
+  hideOnScrollDown?: boolean;
+};
 
-function HeaderCountBadge({ count, className }: { count: number; className?: string }) {
-  if (count < 1) return null;
-  const label = count > 99 ? "99+" : String(count);
+export function Header({
+  onGoHome,
+  onExploreCollection,
+  scrolledFill = "transparent",
+  hideOnScrollDown = false,
+}: HeaderProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  /** 0 at top → 1 after ~160px scroll; drives smooth header fade */
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [headerHidden, setHeaderHidden] = useState(false);
+  const menuOpenRef = useRef(false);
+  menuOpenRef.current = menuOpen;
+
+  useEffect(() => {
+    let frame = 0;
+    let touchY = 0;
+    let wheelIntent = 0;
+    let lockUntil = 0;
+
+    const updateFade = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const range = 160;
+      const next = Math.min(1, Math.max(0, y / range));
+      setScrollProgress((prev) =>
+        Math.abs(prev - next) < 0.001 ? prev : next,
+      );
+      if (hideOnScrollDown && y <= 0) {
+        wheelIntent = 0;
+        setHeaderHidden(false);
+      }
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateFade);
+    };
+
+    /** Commit hide/show with a short lock so trackpads don’t jitter mid-animation */
+    const commitHidden = (hidden: boolean) => {
+      if (!hideOnScrollDown || menuOpenRef.current) return;
+      const now = performance.now();
+      if (now < lockUntil) return;
+      setHeaderHidden((prev) => {
+        if (prev === hidden) return prev;
+        lockUntil = now + 420;
+        wheelIntent = 0;
+        return hidden;
+      });
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY === 0) return;
+      wheelIntent += e.deltaY;
+      if (wheelIntent > 18) commitHidden(true);
+      else if (wheelIntent < -18) commitHidden(false);
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchY = e.touches[0]?.clientY ?? 0;
+      wheelIntent = 0;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      const y = e.touches[0]?.clientY ?? 0;
+      const delta = touchY - y;
+      if (Math.abs(delta) < 4) return;
+      commitHidden(delta > 0);
+      touchY = y;
+    };
+
+    updateFade();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    if (hideOnScrollDown) {
+      window.addEventListener("wheel", onWheel, { passive: true });
+      window.addEventListener("touchstart", onTouchStart, { passive: true });
+      window.addEventListener("touchmove", onTouchMove, { passive: true });
+    } else {
+      setHeaderHidden(false);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [hideOnScrollDown]);
+
+  useEffect(() => {
+    if (menuOpen) setHeaderHidden(false);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const active = hideOnScrollDown && headerHidden && !menuOpen;
+    document.documentElement.classList.toggle("pdp-header-hidden", active);
+    return () => document.documentElement.classList.remove("pdp-header-hidden");
+  }, [hideOnScrollDown, headerHidden, menuOpen]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
+  const fade = menuOpen ? 0 : scrollProgress;
+
   return (
-    <span
-      className={cn(
-        "pointer-events-none absolute -right-0.5 -top-0.5 z-10 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[var(--louve-primal-rouge)] px-1 text-[10px] font-semibold tabular-nums leading-none text-white shadow-sm",
-        className,
-      )}
-      aria-hidden
-    >
-      {label}
-    </span>
-  );
-}
-
-export function Header() {
-  const { sidebarOpen, toggleSidebar } = useLayoutContext();
-  const m = useMessages();
-  const { itemCount: cartItemCount } = useCart();
-
-  return (
-    <header className="fixed inset-x-0 top-0 z-40 w-full border-b bg-background/95 pt-[env(safe-area-inset-top,0px)] backdrop-blur-md transition-none">
-      <div className="flex h-16 w-full min-w-0 items-center px-3 sm:px-4 md:px-6 lg:px-10 xl:px-[46px]">
-        {/* Left: Menu */}
-        <div className="flex min-w-0 flex-1 items-center justify-start">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-10 shrink-0 touch-manipulation hover:bg-transparent sm:size-9"
-            aria-label={m.common.openMenu}
-            onClick={toggleSidebar}
+    <>
+      <header
+        className={`header${menuOpen ? " is-menu-open" : ""}${scrolledFill === "white" ? " header--fill-white" : ""}${scrolledFill === "pdp" ? " header--pdp" : ""}${headerHidden && !menuOpen ? " header--hidden" : ""}`}
+        style={
+          {
+            "--header-fade": menuOpen ? "0" : String(fade),
+          } as CSSProperties
+        }
+      >
+        <div className="header__glow" aria-hidden="true" />
+        <div className="header__inner">
+          <button
+            className={`header__menu${menuOpen ? " is-open" : ""}`}
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="nav-overlay"
+            onClick={() => setMenuOpen((v) => !v)}
           >
-            <Menu className="size-5 stroke-[1.5]" />
-          </Button>
+            <span className="header__menu-lines" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+          </button>
+
+          <div className="header__brand">
+            <a
+              href="/"
+              className="header__brand-link"
+              aria-label="LOUVE home"
+              onClick={(e) => {
+                e.preventDefault();
+                onGoHome();
+              }}
+            >
+              <img
+                className="header__logo"
+                src={ASSETS.logo}
+                alt="LOUVE Fine Jewellery Maison"
+                width={180}
+                height={180}
+              />
+            </a>
+          </div>
+
+          <div className="header__actions">
+            <button className="header__icon" type="button" aria-label="Search">
+              <img src={ASSETS.search} alt="" width={22} height={22} />
+            </button>
+            <button className="header__icon" type="button" aria-label="Wishlist">
+              <img src={ASSETS.heart} alt="" width={22} height={22} />
+            </button>
+            <button
+              className="header__icon header__icon--account"
+              type="button"
+              aria-label="Account"
+            >
+              <img src={ASSETS.user} alt="" width={22} height={22} />
+            </button>
+          </div>
         </div>
-
-        {/* Center: Logo */}
-        <div className="flex min-w-0 flex-none items-center justify-center px-1">
-          <Link
-            href="/"
-            className="flex max-w-[min(100%,9rem)] items-center sm:max-w-[10rem] md:max-w-none"
-            aria-label={`${m.site.name} home`}
-          >
-            <Image
-              src="/logo.png"
-              alt={m.site.name}
-              width={140}
-              height={40}
-              priority
-              className="h-7 w-auto object-contain dark:invert sm:h-8"
-            />
-          </Link>
-        </div>
-
-        <div className="flex min-w-0 flex-1 items-center justify-end gap-0.5 sm:gap-1 md:gap-1.5">
-          <LanguageSwitcher />
-          {m.navigation.header.actions.map((a) => {
-            if (a.key === "account") return null;
-            /* Wishlist hidden — route redirects to /cart */
-            if (a.key === "wishlist") return null;
-
-            if (a.key === "search") {
-              return <HeaderSearch key={a.key} ariaLabel={a.ariaLabel} />;
-            }
-
-            const Icon = HEADER_ACTION_ICONS[a.key];
-            if (!Icon) return null;
-
-            const badgeCount = a.key === "cart" ? cartItemCount : 0;
-            const ariaLabel =
-              badgeCount > 0 ? `${a.ariaLabel}, ${badgeCount}` : a.ariaLabel;
-
-            return (
-              <Link
-                key={a.key}
-                href={a.href}
-                aria-label={ariaLabel}
-                className="relative inline-flex"
-              >
-                <Button variant="ghost" size="icon" className="relative size-10 touch-manipulation sm:size-9">
-                  <Icon className="size-5" />
-                  {a.key === "cart" && (
-                    <HeaderCountBadge count={badgeCount} />
-                  )}
-                </Button>
-              </Link>
-            );
-          })}
-          <UserMenu />
-        </div>
-      </div>
-
-      <MegaMenu 
-        isOpen={sidebarOpen} 
-        onClose={() => toggleSidebar()} 
+      </header>
+      {/* Keeps layout when header switches sticky → fixed with menu open */}
+      <div
+        className={`header-spacer${menuOpen ? " is-active" : ""}`}
+        aria-hidden="true"
       />
-    </header>
+
+      <NavOverlay
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onExplore={() => {
+          setMenuOpen(false);
+          onExploreCollection();
+        }}
+      />
+    </>
   );
 }

@@ -1,0 +1,38 @@
+:root {
+  /* Louve primary colours */
+  --vintage-wine: #3f1521;
+  --white-sand: #dbd5d1;
+  --serenity: rgb(147, 169, 209);
+  --black-oyster: #414143;
+
+  /* Site-wide accent (Serenity) */
+  --accent: var(--serenity);
+  --accent-rgb: 147, 169, 209;
+  --accent-soft: rgba(147, 169, 209, 0.18);
+  --accent-mid: rgba(147, 169, 209, 0.45);
+  --accent-shine: rgb(190, 205, 230);
+
+  /* Legacy alias — maps former champagne gold accents to Serenity */
+  --champagne-gold: var(--serenity);
+
+  --color-white: #ffffff;
+  --color-text: var(--black-oyster);
+  --color-text-muted: #666666;
+  --color-text-link: #888888;
+  --color-maroon: var(--vintage-wine);
+  --color-star: var(--serenity);
+  --font-sans: "Neue Haas Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Editorial New", Georgia, "Times New Roman", serif;
+  --header-height: 112px;
+  --header-sticky-offset: 112px;
+  --header-hide-ease: cubic-bezier(0.33, 1, 0.32, 1);
+  --header-hide-duration: 0.55s;
+  --page-pad: 40px;
+  --hero-height: min(1120px, 85vh);
+}
+
+@property --header-sticky-offset {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 112px;
+}

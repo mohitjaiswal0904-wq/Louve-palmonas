@@ -1,0 +1,49 @@
+/* Shared frosted glass overlay panel */
+.glass-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(10px) saturate(1.18);
+  backdrop-filter: blur(10px) saturate(1.18);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.22) inset,
+    0 24px 50px rgba(63, 21, 33, 0.12);
+  overflow: hidden;
+}
+
+.glass-panel__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+.glass-panel__close {
+  height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vintage-wine);
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.glass-panel__close:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(147, 169, 209, 0.7);
+}

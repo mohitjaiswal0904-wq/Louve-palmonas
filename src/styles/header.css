@@ -1,0 +1,416 @@
+/* —— Header —— */
+.header {
+  --header-fade: 0;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  will-change: transform, opacity;
+  transition:
+    transform var(--header-hide-duration) var(--header-hide-ease),
+    opacity calc(var(--header-hide-duration) * 0.85) var(--header-hide-ease);
+  /* Solid wine → clear glass (light frost, content still readable behind) */
+  background-color: color-mix(
+    in srgb,
+    rgba(63, 21, 33, 1) calc((1 - var(--header-fade)) * 100%),
+    rgba(255, 255, 255, 0.12) calc(var(--header-fade) * 100%)
+  );
+  color: color-mix(
+    in srgb,
+    var(--white-sand) calc((1 - var(--header-fade)) * 100%),
+    var(--vintage-wine) calc(var(--header-fade) * 100%)
+  );
+  box-shadow:
+    0 12px 40px rgba(63, 21, 33, calc(0.28 * (1 - var(--header-fade)))),
+    0 1px 0 rgba(255, 255, 255, calc(0.16 * var(--header-fade))) inset,
+    0 2px 10px rgba(31, 31, 31, calc(0.03 * var(--header-fade)));
+  -webkit-backdrop-filter: blur(calc(var(--header-fade) * 7px))
+    saturate(calc(100% + var(--header-fade) * 18%));
+  backdrop-filter: blur(calc(var(--header-fade) * 7px))
+    saturate(calc(100% + var(--header-fade) * 18%));
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: calc(var(--header-fade) * 0.28);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+}
+
+/* White header at rest → clear glass while scrolling (dark chrome) */
+.header.header--fill-white {
+  background-color: color-mix(
+    in srgb,
+    #ffffff calc((1 - var(--header-fade)) * 100%),
+    rgba(255, 255, 255, 0.12) calc(var(--header-fade) * 100%)
+  );
+  color: var(--vintage-wine);
+  box-shadow:
+    0 1px 0 rgba(63, 21, 33, calc(0.06 * (1 - var(--header-fade)))),
+    0 10px 28px rgba(31, 31, 31, calc(0.04 * (1 - var(--header-fade)))),
+    0 1px 0 rgba(255, 255, 255, calc(0.16 * var(--header-fade))) inset,
+    0 2px 10px rgba(31, 31, 31, calc(0.03 * var(--header-fade)));
+  -webkit-backdrop-filter: blur(calc(var(--header-fade) * 8px))
+    saturate(calc(100% + var(--header-fade) * 22%));
+  backdrop-filter: blur(calc(var(--header-fade) * 8px))
+    saturate(calc(100% + var(--header-fade) * 22%));
+}
+
+.header.header--fill-white::before {
+  opacity: calc(var(--header-fade) * 0.22);
+}
+
+.header.header--fill-white .header__inner {
+  border-bottom-color: color-mix(
+    in srgb,
+    rgba(63, 21, 33, 0.08) calc((1 - var(--header-fade)) * 100%),
+    rgba(255, 255, 255, 0.22) calc(var(--header-fade) * 100%)
+  );
+}
+
+.header.header--fill-white .header__logo {
+  filter: brightness(0);
+  transform: scale(0.94);
+}
+
+.header.header--fill-white .header__icon img {
+  filter: brightness(0);
+}
+
+.header.header--fill-white .header__menu-lines span:hover,
+.header.header--fill-white .header__menu:hover .header__menu-lines span {
+  background: var(--champagne-gold);
+}
+
+.header.header--fill-white .header__badge {
+  background: var(--vintage-wine);
+  box-shadow: 0 0 0 2px #ffffff;
+}
+
+/* PDP: white at rest → clear glass while scrolling (icons/logo stay dark) */
+.header.header--pdp {
+  background-color: color-mix(
+    in srgb,
+    #ffffff calc((1 - var(--header-fade)) * 100%),
+    rgba(255, 255, 255, 0.1) calc(var(--header-fade) * 100%)
+  );
+  color: var(--vintage-wine);
+  box-shadow:
+    0 1px 0 rgba(63, 21, 33, calc(0.06 * (1 - var(--header-fade)))),
+    0 10px 28px rgba(31, 31, 31, calc(0.04 * (1 - var(--header-fade)))),
+    0 1px 0 rgba(255, 255, 255, calc(0.16 * var(--header-fade))) inset,
+    0 2px 10px rgba(31, 31, 31, calc(0.03 * var(--header-fade)));
+  -webkit-backdrop-filter: blur(calc(var(--header-fade) * 7px))
+    saturate(calc(100% + var(--header-fade) * 18%));
+  backdrop-filter: blur(calc(var(--header-fade) * 7px))
+    saturate(calc(100% + var(--header-fade) * 18%));
+}
+
+.header.header--pdp::before {
+  opacity: calc(var(--header-fade) * 0.22);
+}
+
+.header.header--pdp .header__inner {
+  border-bottom-color: color-mix(
+    in srgb,
+    rgba(63, 21, 33, 0.08) calc((1 - var(--header-fade)) * 100%),
+    rgba(255, 255, 255, 0.2) calc(var(--header-fade) * 100%)
+  );
+}
+
+.header.header--pdp .header__logo {
+  filter: brightness(0);
+  transform: scale(0.94);
+}
+
+.header.header--pdp .header__icon img {
+  filter: brightness(0);
+}
+
+.header.header--pdp .header__menu-lines span:hover,
+.header.header--pdp .header__menu:hover .header__menu-lines span {
+  background: var(--champagne-gold);
+}
+
+/* PDP: tuck header away on the first downward scroll gesture */
+.header.header--hidden {
+  transform: translate3d(0, -100%, 0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+html.pdp-header-hidden {
+  --header-sticky-offset: 0px;
+}
+
+/* body { overflow: hidden } breaks sticky — pin header while menu is open */
+.header.is-menu-open {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  --header-fade: 0;
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  pointer-events: auto;
+  background-color: var(--vintage-wine);
+  color: var(--white-sand);
+  box-shadow: 0 12px 40px rgba(63, 21, 33, 0.28);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.header.is-menu-open::before {
+  opacity: 0;
+}
+
+.header.is-menu-open .header__inner {
+  border-bottom-color: rgba(147, 169, 209, 0.28);
+}
+
+.header.is-menu-open .header__logo {
+  filter: none;
+  transform: none;
+}
+
+.header.is-menu-open .header__icon img {
+  filter: brightness(0) invert(0.92) sepia(0.08);
+}
+
+.header.is-menu-open .header__badge {
+  background: var(--serenity);
+  box-shadow: 0 0 0 2px var(--vintage-wine);
+}
+
+.header-spacer {
+  display: none;
+  height: var(--header-height);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.header-spacer.is-active {
+  display: block;
+}
+
+.header__glow {
+  display: none;
+}
+
+.header__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  height: var(--header-height);
+  padding: 12px var(--page-pad);
+  border-bottom: 1px solid
+    rgba(147, 169, 209, calc(0.28 * (1 - var(--header-fade))));
+}
+
+.header__menu {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: transparent;
+  color: inherit;
+  transition: transform 0.25s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.header__menu:hover {
+  transform: translateY(-1px);
+}
+
+.header__menu-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 18px;
+}
+
+.header__menu-lines span {
+  display: block;
+  height: 1.5px;
+  width: 100%;
+  background: currentColor;
+  transform-origin: center;
+  transition:
+    background 0.35s ease,
+    width 0.2s ease,
+    transform 0.25s ease,
+    opacity 0.2s ease;
+}
+
+.header__menu-lines span:nth-child(2) {
+  width: 72%;
+}
+
+.header__menu:hover .header__menu-lines span {
+  background: var(--champagne-gold);
+  width: 100%;
+}
+
+.header__menu.is-open .header__menu-lines span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.header__menu.is-open .header__menu-lines span:nth-child(2) {
+  opacity: 0;
+  width: 0;
+}
+
+.header__menu.is-open .header__menu-lines span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+.header__brand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.header__brand-link {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  transition: transform 0.3s ease;
+}
+
+.header__brand-link:hover {
+  transform: translateY(-1px);
+}
+
+.header__logo {
+  width: auto;
+  height: 92px;
+  max-width: min(180px, 42vw);
+  object-fit: contain;
+  /* White lockup → black as fade goes 0→1 */
+  filter: brightness(calc(1 - var(--header-fade)));
+  transform: scale(calc(1 - 0.06 * var(--header-fade)));
+  will-change: filter, transform;
+}
+
+.header__rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: min(220px, 42vw);
+}
+
+.header__rule-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--champagne-gold) 20%,
+    var(--champagne-gold) 80%,
+    transparent
+  );
+  opacity: 0.75;
+}
+
+.header__rule-star {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  background: var(--champagne-gold);
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  opacity: 0.9;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.header__icon {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+  border: none;
+  background: transparent;
+  color: var(--white-sand);
+  transition: transform 0.25s ease;
+}
+
+.header__icon img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  /* Light icons at top → dark icons when faded */
+  filter: brightness(0) invert(calc(0.92 * (1 - var(--header-fade))));
+  will-change: filter;
+}
+
+.header__icon:hover {
+  transform: translateY(-1px);
+}
+
+.header__icon:hover img {
+  filter: brightness(0) saturate(100%) invert(72%) sepia(18%) saturate(650%)
+    hue-rotate(185deg) brightness(95%) contrast(88%);
+}
+
+.header__badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: color-mix(
+    in srgb,
+    var(--serenity) calc((1 - var(--header-fade)) * 100%),
+    var(--vintage-wine) calc(var(--header-fade) * 100%)
+  );
+  box-shadow: 0 0 0 2px
+    rgba(63, 21, 33, calc(1 - var(--header-fade)));
+}
+

@@ -1,0 +1,23 @@
+// Louve — Prisma schema.
+//
+// The frontend currently stores session/account/wishlist state in the
+// browser (localStorage via `src/lib/{session,account,wishlist}.ts`). To
+// avoid speculative schema design, this file ships a single minimal
+// `HealthProbe` model used only by `/api/v1/db/health`. Add real domain
+// models (User, Session, WishlistItem, Order, …) in follow-up migrations
+// once the business requirements are confirmed. See
+// docs/architecture/DATABASE_GUIDELINES.md for conventions.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model HealthProbe {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+}

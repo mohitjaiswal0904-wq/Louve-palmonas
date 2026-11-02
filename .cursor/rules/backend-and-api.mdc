@@ -1,0 +1,60 @@
+---
+description: Route handler + Server Action standards: validation, envelope, status codes, authz.
+globs:
+  - "src/app/api/**/route.ts"
+  - "src/actions/**"
+  - "src/features/**/actions/**"
+  - "src/server/services/**"
+alwaysApply: false
+---
+
+# Backend and API
+
+Canonical: [API conventions](mdc:docs/api/API_CONVENTIONS.md).
+
+## Route handlers must
+
+1. Export the right HTTP verb (`GET`, `POST`, …).
+2. Set `export const runtime = "nodejs"` and
+   `export const dynamic = "force-dynamic"` when the response depends on
+   request state or should never be cached.
+3. Validate every input (body / query / dynamic segment) with Zod
+   **before use**.
+4. Enforce authentication / authorisation inside the handler or in a
+   trusted service it calls. Route groups like `(protected)` are
+   organisational only.
+5. Delegate anything non-trivial to a service in
+   [`src/server/services/**`](mdc:src/server/services/).
+6. Return responses via
+   [`ok`/`fail`/`toErrorResponse`](mdc:src/lib/http/response.ts). No
+   hand-rolled envelopes.
+7. Throw `AppError(code, message)` for expected failures; let the catch
+   block call `toErrorResponse(error)`.
+
+## Server Actions
+
+- Start the file with `"use server"`.
+- Zod-validate every argument.
+- Authorise inside the action or trusted service — being a Server
+  Action does not make it privileged.
+- Do not return raw Prisma records containing sensitive fields.
+- Prefer a Server Action over a route handler for UI-initiated
+  mutations that don't need a public HTTP contract.
+
+## Status codes
+
+Use the right one. See
+[API_CONVENTIONS.md](mdc:docs/api/API_CONVENTIONS.md). Never return 200
+for a failure. Never leak stack traces, SQL, env values, or Prisma
+internals.
+
+## Versioning
+
+All public endpoints under `/api/v1`. Breaking changes bump the version.
+Within a version: adding optional fields is OK; removing or changing
+field types is not.
+
+## When adding an endpoint
+
+Follow the full procedure in
+[`.cursor/skills/api-development/SKILL.md`](mdc:.cursor/skills/api-development/SKILL.md).

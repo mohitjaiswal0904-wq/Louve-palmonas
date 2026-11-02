@@ -1,0 +1,39 @@
+---
+description: TypeScript conventions for strict, inference-first, safe code.
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# TypeScript
+
+Canonical: [coding standards](mdc:docs/architecture/CODING_STANDARDS.md).
+
+## Rules
+
+- `strict: true` stays on. Do not relax it.
+- **No `any`.** Prefer `unknown` + narrowing, or a Zod schema.
+- **No `@ts-ignore` / `@ts-expect-error`** to make a build pass. Fix
+  the type.
+- **No non-null `!`** when a check or Zod schema is possible.
+- Infer types from Zod (`z.infer<typeof Schema>`) and Prisma. Do not
+  duplicate shapes.
+- Server-only Prisma types must not reach the client. Define DTOs.
+- Each file has one primary export; co-locate tightly-related types.
+- Use the `@/*` alias; no deep `../../..` chains.
+- Named exports by default. Default export only when the framework
+  requires it (route handlers, pages, layouts, loading, error).
+
+## Naming
+
+- Component / Type / Interface — `PascalCase`.
+- Hook — `useXxx`.
+- Function / variable — `camelCase`.
+- True module constant — `UPPER_SNAKE_CASE`.
+- Zod schema — `PascalCaseSchema`, inferred type `PascalCase`.
+
+## Zod boundaries
+
+Every external input (request body, query, dynamic segment, env, upstream
+response, user-provided file) is parsed through a Zod schema before use.
+Validation failures become `VALIDATION_ERROR` / 422 via
+[`toErrorResponse`](mdc:src/lib/http/response.ts).

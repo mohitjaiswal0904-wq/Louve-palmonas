@@ -1,0 +1,45 @@
+---
+description: Testing expectations and verification standards.
+globs:
+  - "tests/**"
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+alwaysApply: false
+---
+
+# Testing
+
+Canonical: [Testing strategy](mdc:docs/testing/TESTING_STRATEGY.md).
+
+> No test framework is wired in the repo today. The rules below apply
+> whenever tests are added.
+
+## Layout
+
+- `tests/unit/` — fast, no I/O, no DB, no network.
+- `tests/integration/` — route handlers hitting a dedicated test DB
+  via `TEST_DATABASE_URL`.
+- `tests/e2e/` — Playwright specs.
+- Colocated `src/<path>/__tests__/` allowed for tightly-coupled module
+  tests.
+
+## Rules
+
+- One `describe` per module, one `it` per behaviour.
+- Arrange / Act / Assert with blank lines between.
+- Each test wraps DB work in a transaction that rolls back, or uses a
+  truncated per-worker schema. Never run against `DATABASE_URL`.
+- Fake timers; never `setTimeout` + real wait.
+- No snapshot tests of large UI without an owner.
+- Do **not** report a test as passing unless it actually ran green.
+- Do **not** change the UI or product behaviour to make a test pass.
+
+## New API endpoint
+
+Minimum: happy path + the primary failure case (validation / 503).
+
+## Visual regression
+
+Required for any PR touching `src/components/layout/*`,
+`src/styles/*`, or `src/app/layout.tsx`. `puppeteer` is already
+installed; a scripted harness is planned.

@@ -1,0 +1,56 @@
+---
+description: App Router conventions, Server vs Client Components, caching, SSR safety.
+globs:
+  - "src/app/**"
+  - "src/views/**"
+  - "src/components/**"
+  - "src/features/**/components/**"
+  - "src/features/**/hooks/**"
+alwaysApply: false
+---
+
+# Next.js rendering
+
+Canonical: [Rendering strategy](mdc:docs/architecture/RENDERING_STRATEGY.md).
+
+## Default
+
+- **Server Components by default.** `src/app/**/page.tsx` and
+  `src/app/layout.tsx` are Server Components. No `"use client"` there.
+- Mount a client wrapper (`*View.tsx` or a feature client entry) only
+  when interactivity requires it.
+
+## Add `"use client"` only when a file needs
+
+- React state / effects / refs
+- Event handlers
+- Browser APIs (`window`, `document`, `localStorage`, `navigator`,
+  canvas, three.js / R3F)
+- Client-defined context
+
+## Push the boundary down
+
+Prefer a Server Component page that mounts a small `<View />` client
+component. Don't mark the whole tree client-side.
+
+## SSR safety
+
+- Never read `window`, `document`, `localStorage` at module scope.
+- Guard inside effects or with `typeof window !== "undefined"`.
+- Load `three` / R3F through `lazy()` inside a client component.
+- No hydration mismatches: don't branch render on `typeof window` or
+  on `Date.now()` / `Math.random()`.
+
+## Caching
+
+- Pick per route: static (`○`), dynamic (`ƒ`), or ISR
+  (`export const revalidate = N`). Do not disable globally.
+- `/api/v1/*` route handlers use `runtime = "nodejs"` and
+  `dynamic = "force-dynamic"` when they must not be cached.
+
+## New rendering patterns
+
+If you want to introduce streaming, PPR, parallel routes, intercepting
+routes, or a non-default caching behaviour — document it in
+[`RENDERING_STRATEGY.md`](mdc:docs/architecture/RENDERING_STRATEGY.md)
+first.

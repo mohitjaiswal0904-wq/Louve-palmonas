@@ -1,0 +1,64 @@
+---
+description: Prisma usage, server-only boundaries, migrations, DTOs, production safety.
+globs:
+  - "prisma/**"
+  - "src/server/db/**"
+  - "src/server/repositories/**"
+  - "src/server/services/**"
+alwaysApply: false
+---
+
+# Database & Prisma
+
+Canonical: [Database guidelines](mdc:docs/database/DATABASE_GUIDELINES.md).
+
+## Server-only
+
+Every file in `src/server/**` begins with
+`import "server-only";`. No React component or client hook may import
+anything from `src/server/**`, `@prisma/client`, or
+`src/lib/env/server`.
+
+## Access rules
+
+- `getPrisma()` from
+  [`src/server/db/prisma.ts`](mdc:src/server/db/prisma.ts) is the only
+  way to obtain a Prisma Client.
+- Put queries in a repository under
+  [`src/server/repositories/`](mdc:src/server/repositories/). One
+  repository per aggregate, not per table.
+- Repositories return DTOs, not raw Prisma records. Services compose
+  repositories and enforce invariants.
+- Never return sensitive fields (hashes, tokens, PII) to callers that
+  surface to the client.
+
+## Transactions
+
+Use `prisma.$transaction` for multi-write operations that must succeed
+or fail atomically. Prefer the interactive callback form when a middle
+step depends on earlier results.
+
+## Migrations
+
+- Local: `npm run prisma:migrate -- --name <descriptive>`.
+- Production: `npm run prisma:deploy` only.
+- **Never** `prisma migrate dev`, `prisma db push`, or any destructive
+  statement against production without explicit authorisation and a
+  verified backup.
+
+## Raw SQL
+
+Allowed only via Prisma's tagged templates
+(`prisma.$queryRaw` with `${param}`). Never concatenate user input into
+SQL strings.
+
+## Schema
+
+Edit [`prisma/schema.prisma`](mdc:prisma/schema.prisma) following the
+conventions in
+[DATABASE_GUIDELINES](mdc:docs/database/DATABASE_GUIDELINES.md).
+After editing, run `npm run db:validate` and `npm run prisma:generate`.
+
+## When adding a model
+
+Follow [`.cursor/skills/database-changes/SKILL.md`](mdc:.cursor/skills/database-changes/SKILL.md).

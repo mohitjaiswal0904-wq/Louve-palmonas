@@ -1,0 +1,43 @@
+---
+description: When to update READMEs, architecture docs, agent rules, and skills.
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Documentation maintenance
+
+**Material architecture / API / schema / env / convention changes
+update the relevant documentation in the same change.** Not a follow-up
+task.
+
+## Change → docs to touch
+
+| Change | Update |
+|---|---|
+| New architectural folder | its `README.md` + [`FOLDER_STRUCTURE.md`](mdc:docs/architecture/FOLDER_STRUCTURE.md) |
+| New feature module | `src/features/<name>/README.md` |
+| New shared component | [`src/components/README.md`](mdc:src/components/README.md) + [UI guidelines](mdc:docs/frontend/UI_AND_COMPONENT_GUIDELINES.md) if a convention changes |
+| New shared type / schema / hook | matching folder README |
+| New API endpoint | [`docs/api/API_CONVENTIONS.md`](mdc:docs/api/API_CONVENTIONS.md) + [`src/app/api/v1/README.md`](mdc:src/app/api/v1/README.md) endpoint table |
+| API contract change | [API conventions](mdc:docs/api/API_CONVENTIONS.md) |
+| DB schema change | [`DATABASE_GUIDELINES.md`](mdc:docs/database/DATABASE_GUIDELINES.md) + migration notes |
+| New env var | `.env.example` + [`src/lib/env/server.ts`](mdc:src/lib/env/server.ts) + [`LOCAL_DEVELOPMENT.md`](mdc:docs/development/LOCAL_DEVELOPMENT.md) |
+| New rendering pattern | [`RENDERING_STRATEGY.md`](mdc:docs/architecture/RENDERING_STRATEGY.md) |
+| New coding convention | [`CODING_STANDARDS.md`](mdc:docs/architecture/CODING_STANDARDS.md) + the relevant `.cursor/rules/*.mdc` |
+| New reusable workflow | new skill under [`.cursor/skills/`](mdc:.cursor/skills/) |
+| New ADR-worthy decision | append to [`ARCHITECTURE_DECISIONS.md`](mdc:docs/architecture/ARCHITECTURE_DECISIONS.md) or add an ADR in [`docs/decisions/`](mdc:docs/decisions/) |
+| Removed / deprecated code | remove obsolete guidance, mark the status in the owning README |
+| Build / setup change | [`README.md`](mdc:README.md) + [`LOCAL_DEVELOPMENT.md`](mdc:docs/development/LOCAL_DEVELOPMENT.md) |
+
+## Do not
+
+- Update unrelated docs for cosmetic activity.
+- Mark a feature as implemented if it isn't.
+- Record a decision as "accepted" when it has not been.
+- Leave broken links to moved / deleted files.
+
+## When reporting
+
+List which docs were updated and why. If a change deliberately
+*doesn't* require doc updates, say so — "no doc change required because
+the behaviour is covered by the existing convention in X".

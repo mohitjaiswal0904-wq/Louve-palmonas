@@ -1,0 +1,51 @@
+---
+description: Preserve the existing UI, design tokens, responsive behaviour, and interactions.
+globs:
+  - "src/components/**"
+  - "src/views/**"
+  - "src/styles/**"
+  - "src/app/layout.tsx"
+  - "src/app/**/page.tsx"
+alwaysApply: false
+---
+
+# UI preservation
+
+Canonical: [UI & component guidelines](mdc:docs/frontend/UI_AND_COMPONENT_GUIDELINES.md).
+
+## Do not change
+
+- HTML structure, class names, data attributes.
+- Design tokens in [`src/styles/tokens.css`](mdc:src/styles/tokens.css).
+- The CSS import order in
+  [`src/app/layout.tsx`](mdc:src/app/layout.tsx).
+- Font loading or `@font-face` rules.
+- Image sizing, cropping, alt text, loading strategy.
+- Hover / focus / active / disabled / loading states.
+- Scroll behaviour and animations.
+- The three.js store scene's lazy-loading boundary.
+- Legacy query-string URL redirects in
+  [`next.config.ts`](mdc:next.config.ts).
+
+## If you touch chrome or globals
+
+Chrome files (`src/components/layout/*`), global CSS (`src/styles/*`),
+or the root layout affect every route. **Before merging:**
+
+1. Capture before/after screenshots of `/`, `/collection`,
+   `/pdp/<id>`, `/stores`, `/stores/<id>`, `/account`.
+2. Desktop + mobile breakpoints.
+3. Verify keyboard navigation and overlay close behaviour.
+
+`puppeteer` is available as a dev dependency for ad-hoc screenshots.
+
+## Do not swap `<img>` for `<Image>` casually
+
+`next/image` changes sizing, loading, and intrinsic dimensions. If you
+adopt it, do so per-component with explicit `width`, `height`, and a
+visual verification pass.
+
+## Follow the UI-preserving refactor procedure
+
+For any architecture refactor that touches rendered components:
+[`.cursor/skills/ui-preserving-refactors/SKILL.md`](mdc:.cursor/skills/ui-preserving-refactors/SKILL.md).

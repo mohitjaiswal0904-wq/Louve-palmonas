@@ -1,0 +1,64 @@
+---
+description: Source of truth for folder placement, dependency direction, and layer boundaries.
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Project architecture
+
+Canonical references:
+- [Folder structure](mdc:docs/architecture/FOLDER_STRUCTURE.md)
+- [Dependency rules](mdc:docs/architecture/DEPENDENCY_RULES.md)
+- [Root AGENTS.md](mdc:AGENTS.md)
+
+## Where things go
+
+| Adding… | Folder |
+|---|---|
+| New URL / layout / handler | `src/app/**` |
+| Shared primitive | `src/components/ui/` |
+| Shared chrome | `src/components/layout/` |
+| React provider | `src/components/providers/` |
+| New product feature | `src/features/<name>/` |
+| Pre-migration page tweak | `src/views/<name>/` (don't add new ones) |
+| Shared hook (≥2 features) | `src/hooks/` |
+| Browser-safe service / API client | `src/services/` |
+| Shared Server Action | `src/actions/` |
+| Shared type | `src/types/` |
+| Shared Zod schema | `src/schemas/` |
+| Prisma access | `src/server/db/`, `src/server/repositories/` |
+| Server business logic | `src/server/services/` |
+| Auth integration (server) | `src/server/auth/` |
+| Security helper (server) | `src/server/security/` |
+| Framework-agnostic util | `src/lib/<topic>/` |
+| Validated config | `src/config/` |
+| Shared constant | `src/constants/` |
+| XML parse/serialize | `src/xml/` |
+| Global CSS / tokens | `src/styles/` |
+| Static image / font | `public/assets/**` |
+
+## Hard rules
+
+- **Server-only stays server-only.** `src/server/**` and
+  `src/lib/env/server.ts` import `server-only`. Client code may not
+  reach them.
+- **New features go in `src/features/<name>/`.** Not in `views/`,
+  `components/`, or `lib/`.
+- **Shared folders must not import feature internals.**
+- **No circular imports.**
+- **Validate every external input** with Zod before use.
+- **Preserve the UI.** Architectural moves must not alter rendered
+  output.
+
+## Checks before you say "done"
+
+```
+npm run typecheck
+npm run lint
+npm run build
+```
+
+If you add a folder, change a responsibility, change a boundary, or
+touch a dependency rule — update
+[`docs/architecture/FOLDER_STRUCTURE.md`](mdc:docs/architecture/FOLDER_STRUCTURE.md)
+and the affected folder READMEs in the same change.
